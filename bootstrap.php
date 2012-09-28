@@ -8,6 +8,7 @@
 // Aliasing rules
 use Nerd\Autoloader;
 
+// Definitions
 define('DS', DIRECTORY_SEPARATOR);
 define('LIBRARY_PATH', dirname(__DIR__));
 define('DOCROOT', dirname(LIBRARY_PATH).'/public');
