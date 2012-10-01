@@ -36,7 +36,7 @@ class Version
 	 *
 	 * @var    string
 	 */
-	const SIMPLE = '0.0.1';
+	const SIMPLE = '0.1.0';
 
 	/**
 	 * Major version number
@@ -50,14 +50,14 @@ class Version
 	 *
 	 * @var    integer
 	 */
-	const MINOR = 0;
+	const MINOR = 1;
 
 	/**
 	 * Release version number
 	 *
 	 * @var    integer
 	 */
-	const RELEASE = 1;
+	const RELEASE = 0;
 
 	/**
 	 * Nerd version ID, this contains the version id in the form of:
@@ -72,7 +72,7 @@ class Version
 	 *
 	 * @var    integer
 	 */
-	const ID = 0000001;
+	const ID = 000100;
 
 	/**
 	 * Development preview mode, this is set to true if this is a development
@@ -110,5 +110,5 @@ class Version
 	 *
 	 * @var    string
 	 */
-	const FULL = '0.0.1 Alpha';
+	const FULL = '0.1.0 Alpha';
 }
