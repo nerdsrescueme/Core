@@ -24,8 +24,7 @@ namespace Nerd\Form;
 class Label
 {
 	// Traits
-	use \Nerd\Design\Attributable
-	  , \Nerd\Design\Renderable;
+	use \Nerd\Design\Attributable;
 
 	private static $localAttributes = ['form'];
 

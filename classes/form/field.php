@@ -31,7 +31,6 @@ abstract class Field
 {
 	// Traits
 	use \Nerd\Design\Attributable
-	  , \Nerd\Design\Renderable
 	  , \Nerd\Design\Wrappable;
 
 	private static $localAttributes = ['form'];

@@ -13,7 +13,7 @@
 namespace Nerd\Design;
 
 // Aliasing rules
-use \Nerd\Arr;
+use \Nerd\Arr
   , \Nerd\Config;
 
 /**
@@ -124,7 +124,6 @@ trait Attributable
 			}
 
 			return Arr::get($this->options, $option, false);
-			}
 		}
 
 		if ($option === 'class')
@@ -148,11 +147,14 @@ trait Attributable
 	 * @param    array          Array of option or attribute key/pairs.
 	 * @return   chainable
 	 */
-	public function options(array $options)
+	public function options(array $options = null)
 	{
-		foreach($options as $key => $value)
+		if ($options !== null)
 		{
-			$this->option($key, $value);
+			foreach($options as $key => $value)
+			{
+				$this->option($key, $value);
+			}
 		}
 
 		return $this;

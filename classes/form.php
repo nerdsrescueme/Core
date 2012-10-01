@@ -28,7 +28,6 @@ class Form
 	// Traits
 	use Design\Eventable
 	  , Design\Attributable
-	  , Design\Renderable
 	  , Design\Wrappable;
 
 	/**
