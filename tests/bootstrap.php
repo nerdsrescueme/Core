@@ -8,9 +8,8 @@
 // Aliasing rules
 use Nerd\Autoloader;
 
-// Definitions
 define('DS', DIRECTORY_SEPARATOR);
-define('LIBRARY_PATH', dirname(__DIR__));
+define('LIBRARY_PATH', dirname(dirname(__DIR__)));
 define('VENDOR_PATH', dirname(LIBRARY_PATH).'/vendor');
 define('DOCROOT', dirname(LIBRARY_PATH).'/public');
 
@@ -19,15 +18,3 @@ define('DOCROOT', dirname(LIBRARY_PATH).'/public');
  */
 require LIBRARY_PATH.'/nerd/classes/autoloader.php';
 Autoloader::register();
-
-/**
- * Test for CLI, load either application or Geek bootstrap.
- */
-if (PHP_SAPI === 'cli')
-{
-	require LIBRARY_PATH.DS.'geek/bootstrap.php';
-}
-else
-{
-	require LIBRARY_PATH.DS.'application/bootstrap.php';
-}

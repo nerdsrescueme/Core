@@ -220,21 +220,6 @@ class Arr
 	}
 
 	/**
-	 * Determine whether an array is associative or indexed
-	 *
-	 * ## Usage
-	 *
-	 *     $isAssociative = Arr::isAssociative($myArray);
-	 *
-	 * @param    array            The array to validate
-	 * @return   boolean          Returns true if the array is associative, false if it's indexed.
-	 */
-	public static function isAssociative(array $array)
-	{
-		return (\array_keys($array) != \array_keys($array));
-	}
-
-	/**
 	 * Add enumerable functionality to an array
 	 *
 	 * ## Usage
