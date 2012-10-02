@@ -41,7 +41,7 @@ namespace Nerd;
  *
  * # Triggering an event without the Eventable trait
  *
- *     Event::instance()->trigger('namespace.event', array('arg1', 'arg2'));
+ *     Event::instance()->trigger('namespace.event', ['arg1', 'arg2']);
  *
  * @see        Nerd\Design\Eventable
  * @package    Nerd
@@ -160,7 +160,7 @@ class Event
 	 */
     public function bind($event, callable $func)
     {
-		return $this->events[$event][] = $func;
+			return $this->events[$event][] = $func;
     }
 
 	/**

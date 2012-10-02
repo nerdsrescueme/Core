@@ -35,9 +35,9 @@ class Autoloader
 	 *
 	 * @return   boolean          Returns true on success, otherwise false
 	 */
-	public static function register()
+	public static function register($prepend = false)
 	{
-		return spl_autoload_register('Nerd\Autoloader::load', true, true);
+		return spl_autoload_register('Nerd\Autoloader::load', true, $prepend);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Autoloader
 
 		if(($position = strpos($class, '\\')) !== false)
 		{
-			$namespace .= substr($class, 0, $position).\DS;
+			$namespace .= strtolower(substr($class, 0, $position)).DS;
 			$class      = substr($class, ($position + 1));
 		}
 
