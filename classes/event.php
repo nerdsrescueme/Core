@@ -82,7 +82,7 @@ class Event
 	{
 		list($package, $file, $event) = static::parse($key);
 
-		$events = include LIBRARY_PATH.DS.$package.'/events/'.$file.'.php';
+		$events = include \Nerd\LIBRARY_PATH.DS.$package.'/events/'.$file.'.php';
 		$this->loaded[] = $file;
 
 		if ($events === false)

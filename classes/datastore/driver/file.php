@@ -30,7 +30,7 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 *
 	 * @var    string
 	 */
-	public static $path = STORAGE_PATH;
+	public static $path = \Nerd\STORAGE_PATH;
 
 	/**
 	 * Magic method called when a class is first encountered by the Autoloader,
@@ -40,7 +40,7 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public static function __initialize()
 	{
-		self::$path = \STORAGE_PATH.\DS.'datastore'.\DS.Datastore::key();
+		self::$path = \Nerd\STORAGE_PATH.DS.'datastore'.DS.Datastore::key();
 	}
 
 	/**
@@ -121,7 +121,7 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public function resetPath()
 	{
-		static::$path = \STORAGE_PATH;
+		static::$path = \Nerd\STORAGE_PATH;
 	}
 	
 	/**
@@ -135,5 +135,3 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 		static::$path = $to;
 	}
 }
-
-/* End of file memcached.php */

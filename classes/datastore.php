@@ -56,9 +56,9 @@ class Datastore extends Design\Creational\SingletonFactory implements Design\Ini
 	 */
 	public static function __initialize()
 	{
-		if(!\is_dir(STORAGE_PATH) and !\mkdir(STORAGE_PATH))
+		if(!\is_dir(\Nerd\STORAGE_PATH) and !\mkdir(\Nerd\STORAGE_PATH))
 		{
-			throw new \RuntimeException('Could not create the STORAGE_PATH ['.STORAGE_PATH.'], please create this directory as a writable path in order to utilize the Datastore');
+			throw new \RuntimeException('Could not create the STORAGE_PATH ['.\Nerd\STORAGE_PATH.'], please create this directory as a writable path in order to utilize the Datastore');
 		}
 
 		static::$defaultDriver = Config::get('datastore.driver', 'file');

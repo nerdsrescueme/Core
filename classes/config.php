@@ -117,11 +117,11 @@ class Config
 		// is loaded, we can merge the modules configuration options into the
 		// base array. This allows for the convenient cascading of configuration
 		// options.
-		$config = (file_exists($path = LIBRARY_PATH.'/nerd/config/'.$file.'.php') ? include $path : []);
+		$config = (file_exists($path = \Nerd\LIBRARY_PATH.'/nerd/config/'.$file.'.php') ? include $path : []);
 
 		if($package !== 'nerd')
 		{
-			if(file_exists($path = LIBRARY_PATH.'/'.$package.'/config/'.$file.'.php'))
+			if(file_exists($path = \Nerd\LIBRARY_PATH.'/'.$package.'/config/'.$file.'.php'))
 			{
 				$config = array_merge($config, include $path);
 			}

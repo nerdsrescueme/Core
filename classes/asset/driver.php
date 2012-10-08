@@ -59,7 +59,7 @@ abstract class Driver
 	public function __construct($file)
 	{
 		$this->file = Url::asset($file);
-		$this->fullPath = DOCROOT.DS.'assets'.DS.trim($file, '/');
+		$this->fullPath = \Nerd\DOCROOT.DS.'assets'.DS.trim($file, '/');
 
 		if(!file_exists($this->fullPath))
 		{

@@ -13,7 +13,7 @@ class Generate extends \Geek\Design\Task
 	{
 		$library = $this->geek->flag('library', 'application');
 		$class   = $this->geek->flag('name', 'newclass');
-		$file    = LIBRARY_PATH.DS.$library.DS.'classes'.DS.$class.'.php';
+		$file    = \Nerd\LIBRARY_PATH.DS.$library.DS.'classes'.DS.$class.'.php';
 
 		$class = ucfirst($class) and $library = ucfirst($library);
 

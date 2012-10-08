@@ -34,9 +34,9 @@ trait Dotparser
 	 */
 	private static function parse($key)
 	{
-		$package = (strpos($key, '::') !== false) ? substr($key, 0, strpos($key, ':')) : APPLICATION_NS;
+		$package = (strpos($key, '::') !== false) ? substr($key, 0, strpos($key, ':')) : \Nerd\APPLICATION_NS;
 
-		if($package !== APPLICATION_NS)
+		if($package !== \Nerd\APPLICATION_NS)
 		{
 			$key = substr($key, strpos($key, ':') + 2);
 		}

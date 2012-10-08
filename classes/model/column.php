@@ -199,7 +199,7 @@ class Column {
 			// application's namespace.
 			if (!class_exists($assumption))
 			{
-				$assumption = str_replace('Nerd', ucfirst(APPLICATION_NS), $assumption);
+				$assumption = str_replace('Nerd', ucfirst(\Nerd\APPLICATION_NS), $assumption);
 			}
 
 			if (class_exists($assumption))

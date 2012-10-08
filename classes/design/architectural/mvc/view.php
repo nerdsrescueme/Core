@@ -57,7 +57,7 @@ class View implements \Nerd\Design\Initializable
 	 */
 	public static function __initialize()
 	{
-		self::$default_path = \LIBRARY_PATH.\DS.\APPLICATION_NS.\DS.'views';
+		self::$default_path = \Nerd\LIBRARY_PATH.DS.\Nerd\APPLICATION_NS.DS.'views';
 	}
 
 	/**

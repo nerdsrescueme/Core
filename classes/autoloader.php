@@ -86,7 +86,7 @@ class Autoloader
 			$class      = substr($class, ($position + 1));
 		}
 
-		$path = LIBRARY_PATH.$namespace.'classes'.DS.strtolower(trim(str_replace('\\', DS, $class))).'.php';
+		$path = \Nerd\LIBRARY_PATH.$namespace.'classes'.DS.strtolower(trim(str_replace('\\', DS, $class))).'.php';
 
 		if(!is_file($path))
 		{

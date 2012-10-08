@@ -71,9 +71,9 @@ class Router implements Design\Initializable
 	 */
 	public static function __initialize()
 	{
-		static::$defaultNamespace = '\\'.ucfirst(APPLICATION_NS).'\\Controller\\';
+		static::$defaultNamespace = '\\'.ucfirst(\Nerd\APPLICATION_NS).'\\Controller\\';
 		
-		static::registerPackage(APPLICATION_NS);
+		static::registerPackage(\Nerd\APPLICATION_NS);
 	}
 
 	/**
@@ -179,17 +179,17 @@ class Router implements Design\Initializable
 		$segments = explode('/', trim($uri, '/'));
 		$package  = array_shift($segments);
 
-		$path  = LIBRARY_PATH.'/'
-		       . (isset(static::$packages[$package]) ? $package : strtolower(APPLICATION_NS))
+		$path  = \Nerd\LIBRARY_PATH.'/'
+		       . (isset(static::$packages[$package]) ? $package : strtolower(\Nerd\APPLICATION_NS))
 		       . '/classes/controller/';
 		$class = '\\'
-		       . (isset(static::$packages[$package]) ? ucfirst($package) : ucfirst(APPLICATION_NS))
+		       . (isset(static::$packages[$package]) ? ucfirst($package) : ucfirst(\Nerd\APPLICATION_NS))
 		       . '\\Controller\\';
 
 		if(!isset(static::$packages[$package]))
 		{
 			array_unshift($segments, $package);
-			$package = APPLICATION_NS;
+			$package = \Nerd\APPLICATION_NS;
 		}
 
 		$current = array_shift($segments);

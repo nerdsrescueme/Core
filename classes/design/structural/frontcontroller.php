@@ -64,8 +64,8 @@ class FrontController
 
 		unset($default);
 
-		$directory = \LIBRARY_PATH.\DS;
-		$namespace = \APPLICATION_NS;
+		$directory = \Nerd\LIBRARY_PATH.\DS;
+		$namespace = \Nerd\APPLICATION_NS;
 		$segments  = array_merge(array_filter(explode('/', ltrim($uri, '/'))), []);
 
 		// Determine if we're attempting to load a package or the application

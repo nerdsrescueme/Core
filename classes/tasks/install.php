@@ -18,7 +18,7 @@ class Install extends \Geek\Design\Task
 
 			$this->geek->write_nobreak('  Making storage folders writable... ');
 
-			if (chmod(LIBRARY_PATH.DS.$library.DS.'storage', 0777))
+			if (chmod(\Nerd\LIBRARY_PATH.DS.$library.DS.'storage', 0777))
 			{
 				$this->geek->write('Success', 'green');
 			}
