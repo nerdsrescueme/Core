@@ -7,16 +7,15 @@ namespace Nerd;
  * do it in the bootstrap.php file that lives within the application directory.
  */
 
-// Aliasing rules
-use Nerd\Autoloader;
-
 !defined('DS') and define('DS', DIRECTORY_SEPARATOR);
 define('Nerd\LIBRARY_PATH', dirname(dirname(__DIR__)));
-define('Nerd\VENDOR_PATH', dirname(\Nerd\LIBRARY_PATH).DS.'vendor');
-define('Nerd\DOCROOT', dirname(\Nerd\LIBRARY_PATH).DS.'public');
+define('Nerd\VENDOR_PATH',  dirname(\Nerd\LIBRARY_PATH).DS.'vendor');
+define('Nerd\DOCROOT',      dirname(\Nerd\LIBRARY_PATH).DS.'public');
+define('Nerd\APPLICATION_NS', 'nerd');
 
 /**
  * Get and register the Nerd autoloader.
  */
-require join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'classes', 'autoloader.php']);
-Autoloader::register(true);
+require_once join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'classes', 'autoloader.php']);
+
+\Nerd\Autoloader::register(true);

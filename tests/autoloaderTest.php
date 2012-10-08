@@ -47,20 +47,4 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
     {
         // Need to test
     }
-
-    /**
-     * @covers \Nerd\Autoloader::register
-     */
-    public function testAutoloaderRegister()
-    {
-        $this->assertTrue(Autoloader::register());
-    }
-
-    /**
-     * @covers \Nerd\Autoloader::unregister
-     */
-    public function testAutoloaderUnregister()
-    {
-        $this->assertTrue(Autoloader::unregister());
-    }
 }

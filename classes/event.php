@@ -176,7 +176,7 @@ class Event
 	 * @param    string          Event name with namespace
 	 * @return   boolean
 	 */
-	public static function unbind($event)
+	public function unbind($event)
 	{
 		if (isset($this->events[$event]))
 		{

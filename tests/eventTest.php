@@ -4,6 +4,8 @@ use \Nerd\Event;
 
 class EventTest extends \PHPUnit_Framework_TestCase
 {
+    protected $event;
+
     public function setUp()
     {
         $this->event = Event::instance();
@@ -15,7 +17,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function testEventSingleton()
     {
-        $this-assertSame($this->event, Event::instance());
+        $this->assertSame($this->event, Event::instance());
     }
 
     /**
