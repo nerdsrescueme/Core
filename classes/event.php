@@ -82,7 +82,14 @@ class Event
 	{
 		list($package, $file, $event) = static::parse($key);
 
-		$events = include \Nerd\LIBRARY_PATH.DS.$package.'/events/'.$file.'.php';
+		$path = \Nerd\LIBRARY_PATH.DS.$package.'/events/'.$file.'.php';
+
+		if (!file_exists($path))
+		{
+			return false;
+		}
+
+		$events = include $path;
 		$this->loaded[] = $file;
 
 		if ($events === false)
@@ -160,7 +167,7 @@ class Event
 	 */
     public function bind($event, callable $func)
     {
-			return $this->events[$event][] = $func;
+			return (bool) $this->events[$event][] = $func;
     }
 
 	/**

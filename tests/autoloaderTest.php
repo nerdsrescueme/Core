@@ -12,8 +12,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderDenamespace()
     {
-        $actual = '\\Nerd\\Test\\Klass';
-        $this->assertEquals(Autoloader::denamespace($actual), 'Klass');
+        $this->assertEquals(Autoloader::denamespace('\\Nerd\\Test\\Klass'), 'Klass');
     }
 
     /**
@@ -29,7 +28,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsFail()
     {
-        $this->assertFalse(Autoloader::exists('Shouldfail'));
+        $this->assertFalse(Autoloader::exists('\\Nerd\\Shouldfail'));
     }
 
     /**
@@ -37,7 +36,7 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadSucceed()
     {
-        // Need to test
+        $this->assertTrue(\Nerd\Autoloader::load('\\Nerd\\Autoloader'));
     }
 
     /**
@@ -45,6 +44,6 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadFail()
     {
-        // Need to test
+        $this->assertFalse(\Nerd\Autoloader::load('\\Nerd\\ShouldFail'));
     }
 }

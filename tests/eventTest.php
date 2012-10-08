@@ -9,7 +9,6 @@ class EventTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->event = Event::instance();
-        $this->event->bind('test.bind', function() { $i = 0; });
     }
 
     /**
@@ -25,16 +24,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function testEventBind()
     {
-       $this->assertTrue($this->event->bind('test.bind', function() { $i = 0; }));
-    }
-
-    /**
-     * @covers \Nerd\Event::bind
-     */
-    public function testEventMultipleBind()
-    {
-       $this->assertTrue($this->event->bind('test.bind', function() { $i = 0; }));
-       $this->assertTrue($this->event->bind('test.bind', function() { $i = 1; }));
+       $this->assertTrue($this->event->bind('test.bind', function() { $i = 0; }) !== null);
     }
 
     /**
@@ -42,7 +32,16 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function testEventBindReturnsBoolean()
     {
-       $this->assertTrue(is_bool($this->event->bind('test.bind', function() { $i = 0; })));
+        $this->assertTrue(is_bool($this->event->bind('test.bind', function() { $i = 0; })));
+    }
+
+    /**
+     * @covers \Nerd\Event::bind
+     */
+    public function testEventMultipleBind()
+    {
+       $this->assertTrue($this->event->bind('test.bind', function() { $i = 0; }) !== null);
+       $this->assertTrue($this->event->bind('test.bind', function() { $i = 1; }) !== null);
     }
 
     /**
@@ -66,6 +65,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function testEventTrigger()
     {
+        $this->event->bind('test.bind', function() { $i = 0; });
         $this->assertTrue($this->event->trigger('test.bind'));
     }
 
@@ -74,7 +74,26 @@ class EventTest extends \PHPUnit_Framework_TestCase
      */
     public function testEventTriggerReturnsBoolean()
     {
+        $this->event->bind('test.bind', function() { $i = 0; });
         $this->assertTrue(is_bool($this->event->trigger('test.bind')));
+    }
+
+    /**
+     * @covers \Nerd\Event::trigger
+     */
+    public function testEventTriggerSucceeds()
+    {
+        $this->event->bind('test.bind', function() { $i = 0; });
+        $this->assertTrue($this->event->trigger('test.bind'));
+    }
+
+    /**
+     * @covers \Nerd\Event::trigger
+     */
+    public function testEventTriggerFails()
+    {
+        // This should fail because no event can be found.
+        $this->assertFalse($this->event->trigger('test.shouldfail'));
     }
     
 }
