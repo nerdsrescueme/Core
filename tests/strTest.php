@@ -4,6 +4,21 @@ use \Nerd\Str;
 
 class StrTest extends PHPUnit_Framework_TestCase
 {
+	protected $ref;
+
+	public function setUp()
+	{
+		$this->ref = new \ReflectionClass('\\Nerd\\Str');
+	}
+
+	/**
+	 * @covers \Nerd\Str
+	 */
+	public function testStrIsUninstantiable()
+	{
+		$this->assertFalse($this->ref->hasMethod('__construct'));
+	}
+
 	/**
 	 * @covers \Nerd\Str::lower
 	 */
@@ -49,9 +64,7 @@ class StrTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testStrCanBeCalledStatically()
 	{
-		$class = new ReflectionClass('\\Nerd\\Str');
-
-		$this->assertTrue($class->hasMethod('__callStatic'));
+		$this->assertTrue($this->ref->hasMethod('__callStatic'));
 		$this->assertEquals(Str::__callStatic('lower', ['NAME']), 'name');
 	}
 
@@ -147,11 +160,7 @@ class StrTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testStrHasInitializer()
 	{
-		$class = new ReflectionClass('\\Nerd\\Str');
-
-		$this->assertTrue($class->hasMethod('__initialize'));
-		$this->assertTrue((bool) $class->implementsInterface('\\Nerd\\Design\\Initializable'));
+		$this->assertTrue($this->ref->hasMethod('__initialize'));
+		$this->assertTrue($this->ref->implementsInterface('\\Nerd\\Design\\Initializable'));
 	}
-
-	
 }

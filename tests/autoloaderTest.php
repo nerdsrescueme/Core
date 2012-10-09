@@ -12,7 +12,17 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderDenamespace()
     {
-        $this->assertEquals(Autoloader::denamespace('\\Nerd\\Test\\Klass'), 'Klass');
+		$actual = Autoloader::denamespace('\\Nerd\\Test\\Klass');
+        $this->assertEquals($actual, 'Klass', 'Autoloader::denamespace cannot determine the correct class name');
+    }
+
+	/**
+     * @covers \Nerd\Autoloader::denamespace
+     */
+    public function testAutoloaderDenamespaceReturnsString()
+    {
+		$actual = Autoloader::denamespace('\\Nerd\\Test\\Klass');
+        $this->assertTrue(is_string($actual), 'Autoloader::denamespace does not return a string value');
     }
 
     /**
@@ -20,7 +30,18 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsSuccess()
     {
-        $this->assertTrue(Autoloader::exists('\\Nerd\\Autoloader'));
+		$result = Autoloader::exists('\\Nerd\\Autoloader');
+        $this->assertTrue($result, 'Autoloader::exists can not determine if a class exists');
+    }
+
+	/**
+     * @covers \Nerd\Autoloader::exists
+     * @depends testAutoloaderExistsSuccess
+     */
+    public function testAutoloaderExistsSuccessReturnsBoolean()
+    {
+		$result = Autoloader::exists('\\Nerd\\Autoloader');
+        $this->assertTrue(is_bool($result), 'Autoloader::exists does not return a boolean value on success');
     }
 
     /**
@@ -28,7 +49,18 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsFail()
     {
-        $this->assertFalse(Autoloader::exists('\\Nerd\\Shouldfail'));
+		$result = Autoloader::exists('\\Nerd\\Shouldfail');
+        $this->assertFalse($result, 'Autoloader::exists falsely identifies classes that do not exist');
+    }
+
+	/**
+     * @covers \Nerd\Autoloader::exists
+     * @depends testAutoloaderExistsFail
+     */
+    public function testAutoloaderExistsFailReturnsBoolean()
+    {
+		$result = Autoloader::exists('\\Nerd\\Shouldfail');
+        $this->assertTrue(is_bool($result), 'Autoloader::exists does not return a boolean value on failure');
     }
 
     /**
@@ -36,7 +68,17 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadSucceed()
     {
-        $this->assertTrue(\Nerd\Autoloader::load('\\Nerd\\Autoloader'));
+		$result = \Nerd\Autoloader::load('\\Nerd\\Autoloader');
+        $this->assertTrue($result, 'Autoloader::load can not load an existing class');
+    }
+
+	/**
+     * @covers \Nerd\Autoloader::load
+     */
+    public function testAutoloaderLoadSuccessReturnsBoolean()
+    {
+		$result = \Nerd\Autoloader::load('\\Nerd\\Autoloader');
+        $this->assertTrue(is_bool($result), 'Autoloader::load does not return a boolean value on success');
     }
 
     /**
@@ -44,6 +86,16 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadFail()
     {
-        $this->assertFalse(\Nerd\Autoloader::load('\\Nerd\\ShouldFail'));
+		$result = \Nerd\Autoloader::load('\\Nerd\\ShouldFail');
+        $this->assertFalse($result, 'Autoloader::load falsely reports it can load a class that does not exist');
+    }
+
+	/**
+     * @covers \Nerd\Autoloader::load
+     */
+    public function testAutoloaderLoadFailReturnsBoolean()
+    {
+		$result = \Nerd\Autoloader::load('\\Nerd\\ShouldFail');
+        $this->assertTrue(is_bool($result), 'Autoloader::load does not return a boolean value on failure');
     }
 }

@@ -11,19 +11,39 @@ class ArrTest extends PHPUnit_Framework_TestCase
 	public function testArrGet($users)
 	{
 		$actual = Arr::get($users, 'Frank.id');
-		$this->assertEquals($actual, 123);
+		$this->assertEquals($actual, 123, 'Arr::get cannot retrieve values');
 	}
 
 	/**
 	 * @dataProvider data
 	 * @covers \Nerd\Arr::get
 	 */
-	public function testArrGetDefault($users)
+	public function testArrGetDefaultToNull($users)
 	{
-		$this->assertNull(Arr::get($users, 'nonexistent.key'));
+		$this->assertNull(Arr::get($users, 'nonexistent.key'), 'Arr::get does not default to null when no $default is provided');
+	}
 
+	/**
+	 * @dataProvider data
+	 * @covers \Nerd\Arr::get
+	 */
+	public function testArrGetDefaultWhenProvided($users)
+	{
 		$actual = Arr::get($users, 'nonexistent.key', 'default');
-		$this->assertEquals($actual, 'default');
+		$this->assertEquals($actual, 'default', 'Arr::get does not return $default value when no key is present');
+	}
+
+	/**
+	 * @dataProvider data
+	 * @covers \Nerd\Arr::get
+	 * @depends testArrGetDefaultWhenProvided
+	 */
+	public function testArrGetDefaultClosureIsInvoked($users)
+	{
+		$closure = function() { return true; };
+		$actual  = Arr::get($users, 'nonexistent.key', $closure);
+
+		$this->assertTrue($actual);
 	}
 
 	/**
@@ -36,7 +56,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 
 		// Remove one key and test count again
 		Arr::delete($users, 'Frank');
-		$this->assertCount(1, $users);
+		$this->assertCount(1, $users, 'Arr::delete does not delete from referenced array');
 	}
 
 	/**
@@ -49,7 +69,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 
 		// Add a key and test count again
 		Arr::set($users, 'NewUser', 'testdata');
-		$this->assertCount(3, $users);
+		$this->assertCount(3, $users, 'Arr::set does not set a value on the referenced array');
 	}
 
 	/**
@@ -58,7 +78,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testArrHasSuccess($users)
 	{
-		$this->assertTrue(Arr::has($users, 'Frank'));
+		$this->assertTrue(Arr::has($users, 'Frank'), 'Arr::has cannot determine if an array has a key');
 	}
 
 	/**
@@ -67,7 +87,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testArrHasFail($users)
 	{
-		$this->assertFalse(Arr::has($users, 'nonexistent'));
+		$this->assertFalse(Arr::has($users, 'nonexistent'), 'Arr::has finds array keys that do not exist');
 	}
 
 	/**
@@ -75,8 +95,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
    */
 	public function testArrIsSuccess()
 	{
-		$this->assertTrue(Arr::is( [1] ));
-		$this->assertTrue(Arr::is( [1], [2] ));
+		$this->assertTrue(Arr::is( [1] ), 'Arr::is is unable to properly determine if it had an array passed to it');
 	}
 
 	/**
@@ -84,13 +103,10 @@ class ArrTest extends PHPUnit_Framework_TestCase
    */
 	public function testArrIsFail()
 	{
-		$this->assertFalse(Arr::is('string'));
-		$this->assertFalse(Arr::is(123));
-		$this->assertFalse(Arr::is(false));
-
-		// Should fail for objects
-		$obj = new \StdClass();
-		$this->assertFalse(Arr::is($obj));
+		$this->assertFalse(Arr::is('string'), 'Arr::is believes that strings are arrays');
+		$this->assertFalse(Arr::is(123), 'Arr::is believes that integers are arrays');
+		$this->assertFalse(Arr::is(false), 'Arr::is believes that booleans are arrays');
+		$this->assertFalse(Arr::is(new \StdClass()), 'Arr::is believes that objects are arrays');
 	}
 
 	/**
@@ -98,7 +114,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
    */
 	public function testArrIsMultipleSucceed()
 	{
-		$this->assertTrue(Arr::is([1], [3]));
+		$this->assertTrue(Arr::is( [1], [2] ), 'Arr::is is unable to determine if it had multiple arrays passed to it');
 	}
 
 	/**
@@ -106,7 +122,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
    */
 	public function testArrIsMultipleFail()
 	{
-		$this->assertFalse(Arr::is([1], 'string'));
+		$this->assertFalse(Arr::is([1], 'string'), 'Arr::is does not fail if an array and another non-array is passed to it');
 	}
 
 	/**
@@ -116,7 +132,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 	{
 		$enum = Arr::toEnumerable([1, 2, 3]);
 
-		$this->assertTrue($enum instanceof \Nerd\Design\Enumerable);
+		$this->assertTrue($enum instanceof \Nerd\Design\Enumerable, 'Arr::toEnumerable is unable to convert an array to an enumerable object');
 	}
 
 	/**
@@ -126,7 +142,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 	{
 		// Should succeed on an assoc array
 		$obj = Arr::toObject(['test' => 'one']);
-		$this->assertTrue(is_object($obj));
+		$this->assertTrue(is_object($obj), 'Arr::toObject is unable to convert an array to an object');
 	}
 
 	/**
@@ -136,7 +152,7 @@ class ArrTest extends PHPUnit_Framework_TestCase
 	{
 		// Should fail on a normal array
 		$obj = Arr::toObject([1,2,3]);
-		$this->assertFalse(is_object($obj));
+		$this->assertFalse(is_object($obj), 'Arr::toObject is able to convert a non-associative array to an object, it shouldnt');
 	}
 
 	public function data()

@@ -80,7 +80,7 @@ class Version
 	 *
 	 * @var    boolean
 	 */
-	const PREVIEW = false;
+	const PREVIEW = true;
 
 	/**
 	 * Development preview type, this is set to the preview type, like 'Alpha',
