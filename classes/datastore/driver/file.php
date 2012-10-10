@@ -9,11 +9,10 @@
  */
 namespace Nerd\Datastore\Driver;
 
-// Aliasing rules
-use Nerd\Datastore;
-use Nerd\Config;
-use Nerd\File as F;
-use Nerd\Str;
+use Nerd\Datastore
+  , Nerd\Config
+  , Nerd\File as F
+  , Nerd\Str;
 
 /**
  * File datastore driver class
@@ -40,14 +39,11 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public static function __initialize()
 	{
-		self::$path = \Nerd\STORAGE_PATH.DS.'datastore'.DS.Datastore::key();
+		self::$path = join(DS, [\Nerd\STORAGE_PATH, 'datastore', Datastore::key()]);
 	}
 
 	/**
-	 * Read all data from a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @return   string           Returns the contents of the datastore, otherwise null
+	 * {@inheritdoc}
 	 */
 	public function read($key)
 	{
@@ -70,10 +66,7 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Determine whether a datastore key exists
-	 *
-	 * @param    string           The datastore key to check
-	 * @return   boolean          Returns true if the datastore key exists, otherwise false
+	 * {@inheritdoc}
 	 */
 	public function exists($key)
 	{
@@ -81,12 +74,7 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Write data to a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @param    mixed            The data to be written to the key
-	 * @param    integer          The time, in minutes, to store the data. Defaults to the time value in your datastore configuration file
-	 * @return   boolean          Returns true if the datastore was successfully written, otherwise false
+	 * {@inheritdoc}
 	 */
 	public function write($key, $value, $minutes = false)
 	{
@@ -104,10 +92,7 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Delete all data from a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @return   boolean          Returns true if the datastore was successfully deleted, otherwise false
+	 * {@inheritdoc}
 	 */
 	public function delete($key)
 	{
@@ -115,23 +100,10 @@ class File implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Reset the file path to the default location.
-	 *
-	 * @return    null
+	 * {@inheritdoc}
 	 */
-	public function resetPath()
+	public function flush()
 	{
-		static::$path = \Nerd\STORAGE_PATH;
-	}
-	
-	/**
-	 * Set the file path to a new location
-	 *
-	 * @param    string           Location to set the datastore path to
-	 * @return   null
-	 */
-	public function setPath($to)
-	{
-		static::$path = $to;
+		rmdir(dirname(self::$path));
 	}
 }

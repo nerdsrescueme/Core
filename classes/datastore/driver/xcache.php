@@ -9,32 +9,15 @@
  */
 namespace Nerd\Datastore\Driver;
 
-use Nerd\Datastore
-  , Nerd\Memcached as M;
-
 /**
- * Memcached datastore driver class
+ * Xcache datastore driver class
  *
  * @package    Nerd
  * @subpackage Datastore
  */
-class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
+class Xcache implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 {
 	use \Nerd\Design\Creational\Singleton;
-
-	/**
-	 * A cached version of the Datstore key
-	 *
-	 * @var    string
-	 */
-	protected static $key;
-
-	/**
-	 * The Memcached instance
-	 *
-	 * @var    Memcached
-	 */
-	protected static $memcached;
 
 	/**
 	 * Magic method called when a class is first encountered by the Autoloader,
@@ -44,8 +27,10 @@ class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public static function __initialize()
 	{
-		self::$memcached = M::instance();
-		self::$key       = Datastore::key();
+		if (!function_exists('xcache_set'))
+		{
+			throw new \RuntimeException('Xcache must be installed to utilize the Xcache datastore driver.');
+		}
 	}
 
 	/**
@@ -53,10 +38,7 @@ class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public function read($key)
 	{
-		if(($cache = self::$memcached->get(self::$key.$key)) !== false)
-		{
-			return $cache;
-		}
+		return xcache_get($key);
 	}
 
 	/**
@@ -64,7 +46,7 @@ class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public function exists($key)
 	{
-		return (!is_null($this->get($key)));
+		return xcache_exists($key);
 	}
 
 	/**
@@ -72,8 +54,7 @@ class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public function write($key, $value, $minutes = false)
 	{
-		!is_numeric($minutes) and $minutes = Config::get('datastore.time');
-		self::$memcached->set(self::$key.$key, $value, 0, ($minutes * 60));
+		return xcache_set($key, $value, $minutes);
 	}
 
 	/**
@@ -81,7 +62,7 @@ class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public function delete($key)
 	{
-		self::$memcached->delete(self::$key.$key);
+		return xcache_unset($key);
 	}
 
 	/**
@@ -89,6 +70,6 @@ class Memcached implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	 */
 	public function flush()
 	{
-		self::$memcached->flush();
+		xcache_clear_cache(XC_TYPE_VAR, 0);
 	}
 }

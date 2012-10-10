@@ -9,7 +9,6 @@
  */
 namespace Nerd\Datastore\Driver;
 
-// Aliasing rules
 use Nerd\Datastore;
 
 /**
@@ -21,6 +20,7 @@ use Nerd\Datastore;
 class APC implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 {
 	use \Nerd\Design\Creational\Singleton;
+
 	/**
 	 * A cached version of the Datstore key
 	 *
@@ -40,10 +40,7 @@ class APC implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Read all data from a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @return   string           Returns the contents of the datastore, otherwise null
+	 * {@inheritdoc}
 	 */
 	public function read($key)
 	{
@@ -54,10 +51,7 @@ class APC implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Determine whether a datastore key exists
-	 *
-	 * @param    string           The datastore key to check
-	 * @return   boolean          Returns true if the datastore key exists, otherwise false
+	 * {@inheritdoc}
 	 */
 	public function exists($key)
 	{
@@ -65,12 +59,7 @@ class APC implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Write data to a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @param    mixed            The data to be written to the key
-	 * @param    integer          The time, in minutes, to store the data. Defaults to the time value in your datastore configuration file
-	 * @return   boolean          Returns true if the datastore was successfully written, otherwise false
+	 * {@inheritdoc}
 	 */
 	public function write($key, $value, $minutes = false)
 	{
@@ -79,15 +68,18 @@ class APC implements \Nerd\Datastore\Driver, \Nerd\Design\Initializable
 	}
 
 	/**
-	 * Delete all data from a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @return   boolean          Returns true if the datastore was successfully deleted, otherwise false
+	 * {@inheritdoc}
 	 */
 	public function delete($key)
 	{
 		return (bool) \apc_delete(self::$key.$key);
 	}
-}
 
-/* End of file apc.php */
+	/**
+	 * {@inheritdoc}
+	 */
+	public function flush()
+	{
+		apc_clear_cache();
+	}
+}

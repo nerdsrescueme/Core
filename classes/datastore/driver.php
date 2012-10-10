@@ -55,6 +55,11 @@ interface Driver
 	 * @return   boolean          Returns true if the datastore was successfully deleted, otherwise false
 	 */
 	public function delete($key);
-}
 
-/* End of file driver.php */
+	/**
+	 * Flush all data from the datastore
+	 *
+	 * @return   void
+	 */
+	public function flush();
+}
