@@ -2,7 +2,7 @@
 
 use \Nerd\Autoloader;
 
-class AutoloaderTest extends PHPUnit_Framework_TestCase
+class AutoloaderTest extends \PHPUnit_Framework_TestCase
 {
     // We kind of just have to trust that register and unregister work...
     // Not sure how to test that.

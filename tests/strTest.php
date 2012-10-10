@@ -1,8 +1,8 @@
 <?php
 
-use \Nerd\Str;
+namespace Nerd;
 
-class StrTest extends PHPUnit_Framework_TestCase
+class StrTest extends \PHPUnit_Framework_TestCase
 {
 	protected $ref;
 

@@ -23,6 +23,11 @@ namespace Nerd;
  * you may use from anywhere in your codebase. Lastly, it must hold a response object
  * in order to send output to your user.
  *
+ * In a way, the Application class can be thought of as a way to mix dependencies for
+ * your application in one class that determines how to prepare and execute your web
+ * application. Sort of a coupling mechanism without the need for a complex dependency
+ * injection or inversion of control system.
+ *
  * @package Nerd
  * @subpackage Core
  */

@@ -1,6 +1,6 @@
 <?php
 
-use \Nerd\Event;
+namespace Nerd;
 
 class EventTest extends \PHPUnit_Framework_TestCase
 {

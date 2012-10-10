@@ -1,8 +1,8 @@
 <?php
 
-use \Nerd\Input;
+namespace Nerd;
 
-class InputTest extends PHPUnit_Framework_TestCase
+class InputTest extends \PHPUnit_Framework_TestCase
 {
 	// Currently not testing Input::put... not sure how I'm going to accomplish
 	// that just yet.

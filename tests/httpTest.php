@@ -1,8 +1,8 @@
 <?php
 
-use \Nerd\Http;
+namespace Nerd;
 
-class HttpTest extends PHPUnit_Framework_TestCase
+class HttpTest extends \PHPUnit_Framework_TestCase
 {
 	protected $ref;
 

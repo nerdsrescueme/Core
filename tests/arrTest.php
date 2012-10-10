@@ -1,8 +1,8 @@
 <?php
 
-use \Nerd\Arr;
+namespace Nerd;
 
-class ArrTest extends PHPUnit_Framework_TestCase
+class ArrTest extends \PHPUnit_Framework_TestCase
 {
 	/**
 	 * @dataProvider data
