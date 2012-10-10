@@ -41,5 +41,3 @@ interface Driver
 	 */
 	public function from($data, $flags = null);
 }
-
-/* End of file driver.php */
