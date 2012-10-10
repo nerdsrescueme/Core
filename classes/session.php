@@ -23,11 +23,12 @@ namespace Nerd;
 * @package Nerd
 * @subpackage Core
 */
-class Session implements Design\Initializable
+class Session implements Design\Initializable, Design\Serializable
 {
 	// Traits
 	use Design\Creational\Singleton
-	  , Design\Eventable;
+	  , Design\Eventable
+	  , Design\Formattable;
 
 	/**
 	 * Static constructor
@@ -218,5 +219,14 @@ class Session implements Design\Initializable
 	{
 		$this->triggerEvent('session.close', [$this]);
 		session_write_close();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function __sleep()
+	{
+		$this->triggerEvent('session.sleep', [$this]);
+		return $_SESSION;
 	}
 }

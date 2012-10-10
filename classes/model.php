@@ -12,8 +12,8 @@
 namespace Nerd;
 
 // Aliasing rules
-use Nerd\Model\Column;
-use Nerd\Model\Constraint;
+use Nerd\Model\Column
+  , Nerd\Model\Constraint;
 
 /**
  * Model Class
@@ -48,9 +48,10 @@ use Nerd\Model\Constraint;
  * @package    Nerd
  * @subpackage Core
  */
-abstract class Model implements \JsonSerializable
+abstract class Model implements Design\Serializable
 {
-	use Design\Eventable;
+	use Design\Eventable
+	  , Design\Formattable;
 
 	/**
 	 * Database connection instance
@@ -713,11 +714,9 @@ abstract class Model implements \JsonSerializable
 	}
 
 	/**
-	 * Return all values to the json serializer
-	 *
-	 * @return    array
+	 * {@inheritdoc}
 	 */
-	public function jsonSerialize()
+	public function __sleep()
 	{
 		return $this->_values;
 	}

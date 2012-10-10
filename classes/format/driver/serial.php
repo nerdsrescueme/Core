@@ -32,6 +32,8 @@ class Serial implements \Nerd\Format\Driver
 	 */
 	public function to($data, $flags = null)
 	{
-		return serialize(trim($data));
+		// I know supression is bad, but I don't know how else
+		// to get around the non member notices.
+		return @serialize($data);
 	}
 }

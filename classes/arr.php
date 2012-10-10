@@ -23,150 +23,6 @@ namespace Nerd;
 class Arr
 {
 	/**
-	 * Determine whether a variable, or multiple variables, is of the array
-	 * type. The only difference of this function compared to the native
-	 * is_array function is that it allows you to pass multiple arrays.
-	 * Additionally, this method allows for instances of \ArrayAccess to be
-	 * considered valid arrays.
-	 *
-	 * ## Usage
-	 *
-	 *     $return = Arr::is($array1, $array2, $array3);
-	 *
-	 * @param    mixed            Argument #n of variables to check
-	 * @return   boolean          Returns true if all variables passed are arrays, otherwise false
-	 */
-	public static function is()
-	{
-		$args = \func_get_args();
-
-		if(!\count($args))
-		{
-			return false;
-		}
-
-		foreach($args as $var)
-		{
-			if(!(\is_array($var) or ($var instanceof \ArrayAccess)))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
-	 * Get an item from an array.
-	 *
-	 * If the specified key is null, the entire array will be returned. The
-	 * array may also be accessed using JavaScript "dot" style notation.
-	 * Retrieving items nested in multiple arrays is also supported.
-	 *
-	 * ## Usage
-	 *
-	 *     Arr::get($myArray, 'parentKey.childKey', 'defaultValue');
-	 *
-	 * @param    array            The array to be searched
-	 * @param    string           The key to retrieve, using "dot" style notation
-	 * @param    mixed            A default value to provide if none if found, defaults to null
-	 * @param    boolean          In the event a closure is encountered, call it. Defaults to true
-	 * @return   mixed            Returns the value of the key, otherwise the default
-	 */
-	public static function get(array $array, $key, $default = null, $useClosure = true)
-	{
-		if($key === null)
-		{
-			return $array;
-		}
-
-		$keys = \explode('.', $key);
-
-		foreach($keys as $segment)
-		{
-			if(!static::is($array) or !isset($array[$segment]))
-			{
-				return \is_callable($default) ? \call_user_func($default) : $default;
-			}
-
-			$array = $array[$segment];
-		}
-
-		return (($array instanceof \Closure) and $useClosure) ? \call_user_func($array) : $array;
-	}
-
-	/**
-	 * Set an array item to a given value.
-	 *
-	 * This method is primarily helpful for setting the value in an array with
-	 * a variable depth, such as configuration arrays.
-	 *
-	 * If the specified item doesn't exist, it will be created. If the item's
-	 * parents do not exist, they will also be created as arrays.
-	 *
-	 * Like the Arr::get method, JavaScript "dot" notation is supported.
-	 *
-	 * ## Usage
-	 *
-	 *     Arr::get($myArray, 'some.random.key', $theValue);
-	 *
-	 * @param    array            The array to be append
-	 * @param    string           The key, or chain of keys to set
-	 * @param    mixed            The value to be assigned to the key
-	 * @return   void             No value is returned
-	 */
-	public static function set(array &$array, $key, $value)
-	{
-		if($key === null)
-		{
-			return $array = $value;
-		}
-
-		$keys = \explode('.', $key);
-
-		while(\count($keys) > 1)
-		{
-			$key = \array_shift($keys);
-
-			if(!isset($array[$key]) or !static::is($array[$key]))
-			{
-				$array[$key] = [];
-			}
-
-			$array =& $array[$key];
-		}
-
-		$array[\array_shift($keys)] = $value;
-	}
-
-	/**
-	 * Determine if an array key (or keys) exists, with JavaScript "dot"
-	 * notation.
-	 *
-	 * ## Usage
-	 *
-	 *     $exists = Arr::has($myArray, 'some.key');
-	 *
-	 * @param    array            The array to search
-	 * @param    mixed            The dot-notated key, or an array of keys
-	 * @return   boolean          Returns true if the array key (or keys) exist, otherwise false
-	 */
-	public static function has(array $array, $key)
-	{
-		foreach(\explode('.', $key) as $key_part)
-		{
-			if(!static::is($array) or !isset($array[$key_part]))
-			{
-				return false;
-			}
-
-			$array = $array[$key_part];
-		}
-
-		return true;
-	}
-
-	/**
 	 * Unsets an array key, using JavaScript "dot" notation
 	 *
 	 * ## Usage
@@ -217,6 +73,181 @@ class Arr
 		}
 
 		return true;
+	}
+
+	/**
+	 * @todo Document and test
+	 */
+	public static function flatten(array $array)
+	{
+		for($x = 0; $x <= count($array); $x++)
+		{
+			if (is_array($array[$x]))
+			{
+				$return = array_flatten($array[$x],$return);
+			}
+			else
+			{
+				if($array[$x])
+				{
+					$return[] = $array[$x];
+				}
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Get an item from an array.
+	 *
+	 * If the specified key is null, the entire array will be returned. The
+	 * array may also be accessed using JavaScript "dot" style notation.
+	 * Retrieving items nested in multiple arrays is also supported.
+	 *
+	 * ## Usage
+	 *
+	 *     Arr::get($myArray, 'parentKey.childKey', 'defaultValue');
+	 *
+	 * @param    array            The array to be searched
+	 * @param    string           The key to retrieve, using "dot" style notation
+	 * @param    mixed            A default value to provide if none if found, defaults to null
+	 * @param    boolean          In the event a closure is encountered, call it. Defaults to true
+	 * @return   mixed            Returns the value of the key, otherwise the default
+	 */
+	public static function get(array $array, $key, $default = null, $useClosure = true)
+	{
+		if($key === null)
+		{
+			return $array;
+		}
+
+		$keys = \explode('.', $key);
+
+		foreach($keys as $segment)
+		{
+			if(!static::is($array) or !isset($array[$segment]))
+			{
+				return \is_callable($default) ? \call_user_func($default) : $default;
+			}
+
+			$array = $array[$segment];
+		}
+
+		return (($array instanceof \Closure) and $useClosure) ? \call_user_func($array) : $array;
+	}
+
+	/**
+	 * Determine if an array key (or keys) exists, with JavaScript "dot"
+	 * notation.
+	 *
+	 * ## Usage
+	 *
+	 *     $exists = Arr::has($myArray, 'some.key');
+	 *
+	 * @param    array            The array to search
+	 * @param    mixed            The dot-notated key, or an array of keys
+	 * @return   boolean          Returns true if the array key (or keys) exist, otherwise false
+	 */
+	public static function has(array $array, $key)
+	{
+		foreach(\explode('.', $key) as $key_part)
+		{
+			if(!static::is($array) or !isset($array[$key_part]))
+			{
+				return false;
+			}
+
+			$array = $array[$key_part];
+		}
+
+		return true;
+	}
+
+	/**
+	 * Determine whether a variable, or multiple variables, is of the array
+	 * type. The only difference of this function compared to the native
+	 * is_array function is that it allows you to pass multiple arrays.
+	 * Additionally, this method allows for instances of \ArrayAccess to be
+	 * considered valid arrays.
+	 *
+	 * ## Usage
+	 *
+	 *     $return = Arr::is($array1, $array2, $array3);
+	 *
+	 * @param    mixed            Argument #n of variables to check
+	 * @return   boolean          Returns true if all variables passed are arrays, otherwise false
+	 */
+	public static function is()
+	{
+		$args = \func_get_args();
+
+		if(!\count($args))
+		{
+			return false;
+		}
+
+		foreach($args as $var)
+		{
+			if(!(\is_array($var) or ($var instanceof \ArrayAccess)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * @todo Document and test
+	 */
+	public static function isMulti($array)
+	{
+		return count(array_filter($array, 'is_array')) > 0;
+	}
+
+	/**
+	 * Set an array item to a given value.
+	 *
+	 * This method is primarily helpful for setting the value in an array with
+	 * a variable depth, such as configuration arrays.
+	 *
+	 * If the specified item doesn't exist, it will be created. If the item's
+	 * parents do not exist, they will also be created as arrays.
+	 *
+	 * Like the Arr::get method, JavaScript "dot" notation is supported.
+	 *
+	 * ## Usage
+	 *
+	 *     Arr::get($myArray, 'some.random.key', $theValue);
+	 *
+	 * @param    array            The array to be append
+	 * @param    string           The key, or chain of keys to set
+	 * @param    mixed            The value to be assigned to the key
+	 * @return   void             No value is returned
+	 */
+	public static function set(array &$array, $key, $value)
+	{
+		if($key === null)
+		{
+			return $array = $value;
+		}
+
+		$keys = \explode('.', $key);
+
+		while(\count($keys) > 1)
+		{
+			$key = \array_shift($keys);
+
+			if(!isset($array[$key]) or !static::is($array[$key]))
+			{
+				$array[$key] = [];
+			}
+
+			$array =& $array[$key];
+		}
+
+		$array[\array_shift($keys)] = $value;
 	}
 
 	/**
