@@ -21,7 +21,8 @@ namespace Nerd\Str;
  * @package Nerd
  * @subpackage Str
  */
-class Compare extends Str {
+class Compare extends \Nerd\Str
+{
 
 	/**
 	 * Maximum length of comparison strings
@@ -31,7 +32,7 @@ class Compare extends Str {
 	 *
 	 * @var    int
 	 */
-	public static $string_limit = 255;
+	public static $stringLimit = 255;
 
 	/**
 	 * Precision of percentage values returned from class methods
@@ -54,18 +55,18 @@ class Compare extends Str {
 	 * @param    boolean   Case sensitive comparison?
 	 * @return   integer   Levenstein distance between two strings
 	 */
-	public static function levenstein($comparer, $comparee, bool $case_sensitive = false)
+	public static function levenshtein($comparer, $comparee, $caseSensitive = false)
 	{
-		if(!$case_sensitive)
+		if (!$caseSensitive)
 		{
 			$comparer = static::lower($comparer);
 			$comparee = static::lower($comparee);
 		}
 		
-		$comparer = static::sub($comparer, static::$string_limit);
-		$comparee = static::sub($comparee, static::$string_limit);
+		$comparer = static::sub($comparer, 0, static::$stringLimit);
+		$comparee = static::sub($comparee, 0, static::$stringLimit);
 		
-		return (int) levenstein($comparer, $comparee);
+		return (int) levenshtein($comparer, $comparee);
 	}
 
 	/**
@@ -81,9 +82,9 @@ class Compare extends Str {
 	 */
 	public static function metaphone($comparer, $comparee)
 	{
-		$comparer = metaphone(static::sub($comparer), static::$string_limit);
-		$comparee = metaphone(static::sub($comparee), static::$string_limit);
-		$ls       = static::levenstein($comparer, $comparee);
+		$comparer = metaphone(static::sub($comparer), static::$stringLimit);
+		$comparee = metaphone(static::sub($comparee), static::$stringLimit);
+		$ls       = static::levenshtein($comparer, $comparee);
 
 		return (int) number_format(($ls/static::length($comparee)*100), static::$precision);
 	}
@@ -100,16 +101,16 @@ class Compare extends Str {
 	 * @param    boolean    Return result as a percentage?
 	 * @return   integer    Character match count or a percentage of that value
 	 */
-	public static function similar($comparer, $comparee, bool $as_percentage = false)
+	public static function similar($comparer, $comparee, $asPercentage = false)
 	{
-		if($as_percentage)
+		if ($asPercentage)
 		{
 			$percentage = 0;
-			similar_text($comparer, $comparee, $percentage)
+			similar_text($comparer, $comparee, $percentage);
 			return $percentage;
 		}
 
-		return similar_text($comparer, $comparee)
+		return similar_text($comparer, $comparee);
 	}
 
 	/**
@@ -125,9 +126,9 @@ class Compare extends Str {
 	 */
 	public static function soundex($comparer, $comparee)
 	{
-		$comparer = soundex(static::sub($comparer), static::$string_limit);
-		$comparee = soundex(static::sub($comparee), static::$string_limit);
-		$ls       = static::levenstein($comparer, $comparee);
+		$comparer = soundex(static::sub($comparer), static::$stringLimit);
+		$comparee = soundex(static::sub($comparee), static::$stringLimit);
+		$ls       = static::levenshtein($comparer, $comparee);
 		
 		return (float) number_format(($ls/static::length($comparee)*100), static::$precision);
 	}

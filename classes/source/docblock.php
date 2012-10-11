@@ -291,7 +291,7 @@ class Docblock implements \Reflector {
 		$this->tags->each(function($tag) use(&$str)
 		{
 			$str .= (string) $tag;
-		})
+		});
 
 		$str .= '  }'.PHP_EOL;
 		$str .= '}'.PHP_EOL;
