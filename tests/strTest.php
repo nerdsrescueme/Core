@@ -12,11 +12,33 @@ class StrTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+     * @covers \Nerd\Str
+     */
+    public function testStrInNerdNamespace()
+    {
+	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+    }
+
+	/**
 	 * @covers \Nerd\Str
 	 */
 	public function testStrIsUninstantiable()
 	{
 		$this->assertFalse($this->ref->hasMethod('__construct'));
+	}
+
+	/**
+	 * @covers \Nerd\Str
+	 */
+	public function testStrAllMethodsStatic()
+	{
+		$methods = $this->ref->getMethods();
+		$this->assertNotEmpty($methods, 'Str does not contain any methods');
+
+		foreach($methods as $method)
+		{
+			$this->assertTrue($method->isStatic(), 'Str::'.$method->getName().' is not a static method');
+		}
 	}
 
 	/**

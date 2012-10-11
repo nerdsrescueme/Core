@@ -7,6 +7,35 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
     // We kind of just have to trust that register and unregister work...
     // Not sure how to test that.
 
+	protected $ref;
+
+    public function setUp()
+    {
+        $this->ref = new \ReflectionClass('\\Nerd\\Autoloader');
+    }
+
+	/**
+	 * @covers \Nerd\Autoloader
+	 */
+	public function testAutoloaderAllMethodsStatic()
+	{
+		$methods = $this->ref->getMethods();
+		$this->assertNotEmpty($methods, 'Autoloader does not contain any methods');
+
+		foreach($methods as $method)
+		{
+			$this->assertTrue($method->isStatic(), 'Autoloader::'.$method->getName().' is not a static method');
+		}
+	}
+
+	/**
+     * @covers \Nerd\Autoloader
+     */
+    public function testAutoloaderInNerdNamespace()
+    {
+	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+    }
+
     /**
      * @covers \Nerd\Autoloader::denamespace
      */

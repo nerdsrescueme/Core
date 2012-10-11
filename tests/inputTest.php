@@ -29,6 +29,28 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+     * @covers \Nerd\Input
+     */
+    public function testInputInNerdNamespace()
+    {
+	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+    }
+
+	/**
+	 * @covers \Nerd\Input
+	 */
+	public function testInputAllMethodsStatic()
+	{
+		$methods = $this->ref->getMethods();
+		$this->assertNotEmpty($methods, 'Input does not contain any methods');
+
+		foreach($methods as $method)
+		{
+			$this->assertTrue($method->isStatic(), 'Input::'.$method->getName().' is not a static method');
+		}
+	}
+
+	/**
 	 * @covers \Nerd\Input::cookie
 	 */
 	public function testInputCookie()

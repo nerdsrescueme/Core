@@ -89,7 +89,7 @@ class Config
 
 		if(!static::load($package, $file))
 		{
-			throw new \OutOfBoundsException('Error setting configuration option. Configuration file [%s] is not defined.', $file);
+			throw new \OutOfBoundsException("Error setting configuration option. Configuration file [$file] is not defined.");
 		}
 
 		Arr::set(static::$items[$package][$file], $key, $value);
@@ -117,11 +117,13 @@ class Config
 		// is loaded, we can merge the modules configuration options into the
 		// base array. This allows for the convenient cascading of configuration
 		// options.
-		$config = (file_exists($path = \Nerd\LIBRARY_PATH.'/nerd/config/'.$file.'.php') ? include $path : []);
+		$path   = join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'config']);
+		$config = (file_exists($path = $path.DS.$file.'.php') ? include $path : []);
 
 		if($package !== 'nerd')
 		{
-			if(file_exists($path = \Nerd\LIBRARY_PATH.'/'.$package.'/config/'.$file.'.php'))
+			$path = join(DS, [\Nerd\LIBRARY_PATH, $package, 'config', "$file.php"]);
+			if(file_exists($path))
 			{
 				$config = array_merge($config, include $path);
 			}

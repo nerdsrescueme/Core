@@ -12,6 +12,14 @@ class HttpTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+     * @covers \Nerd\Http
+     */
+    public function testHttpInNerdNamespace()
+    {
+	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+    }
+
+	/**
 	 * @covers \Nerd\Http
 	 */
 	public function testHttpIsUninstantiable()

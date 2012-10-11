@@ -12,6 +12,14 @@ class VersionTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+     * @covers \Nerd\Version
+     */
+    public function testVersionInNerdNamespace()
+    {
+	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+    }
+
+	/**
 	 * @covers \Nerd\Version
 	 */
 	public function testVersionIsUninstantiable()

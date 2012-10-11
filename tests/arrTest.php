@@ -4,6 +4,35 @@ namespace Nerd;
 
 class ArrTest extends \PHPUnit_Framework_TestCase
 {
+	protected $ref;
+
+    public function setUp()
+    {
+        $this->ref = new \ReflectionClass('\\Nerd\\Arr');
+    }
+
+	/**
+     * @covers \Nerd\Arr
+     */
+    public function testArrInNerdNamespace()
+    {
+	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+    }
+
+	/**
+	 * @covers \Nerd\Arr
+	 */
+	public function testArrAllMethodsStatic()
+	{
+		$methods = $this->ref->getMethods();
+		$this->assertNotEmpty($methods, 'Arr does not contain any methods');
+
+		foreach($methods as $method)
+		{
+			$this->assertTrue($method->isStatic(), 'Arr::'.$method->getName().' is not a static method');
+		}
+	}
+
 	/**
 	 * @dataProvider data
 	 * @covers \Nerd\Arr::get
