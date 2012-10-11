@@ -25,6 +25,27 @@ class Test extends \Geek\Design\Task
 
 	public function help()
 	{
-		return 'Write some help!';
+		/**
+	 * {@inheritdoc}
+	 */
+	public function help()
+	{
+		return <<<HELP
+
+Usage:
+  php geek nerd.lint [flags]
+
+Runtime options:
+  --library        # Library to test
+
+Description:
+  The test task is used to run PHPUnit test suites against
+  individual libraries.
+
+Documentation:
+  http://nerdphp.com/docs/classes/tasks/test
+
+HELP;
+	}
 	}
 }

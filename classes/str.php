@@ -218,7 +218,7 @@ class Str implements Design\Initializable
 				return '~`!@#$%^&*()_-+=/?><,.:;"\'[]{}|\\';
 				break;
 			case 'alnumsym':
-				return '~`!@#$%^&*()_-+=/?><,.:;"\'[]{}|\\0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				return '~`!@#$%^&*()_-+=/?><,.:;[]{}|\\0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				break;
 			case 'distinct':
 				return '2345679ACDEFHJKLMNPRSTUVWXYZ';

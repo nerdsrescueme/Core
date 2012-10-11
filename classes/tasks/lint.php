@@ -28,6 +28,7 @@ class Lint extends \Geek\Design\Task
 				continue;
 			}
 
+			$this->geek->fail();
 			$errors = true;
 			$this->geek->write('  - '.$message);
 			$return = [];
@@ -44,10 +45,32 @@ class Lint extends \Geek\Design\Task
 		}
 
 		$this->geek->write('');
+
+		!$errors and $this->geek->succeed();
 	}
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function help()
 	{
-		return 'Write some help!';
+		return <<<HELP
+
+Usage:
+  php geek nerd.lint [flags]
+
+Runtime options:
+  --library        # Library to traverse and check
+
+Description:
+  The Lint task can be used to check the syntax on each of
+  your .php files. Primarily, this was designed to be used
+  with a pre-commit hook in order to stop a commit from
+  being pushed with invalid PHP syntax.
+
+Documentation:
+  http://nerdphp.com/docs/classes/tasks/lint
+
+HELP;
 	}
 }
