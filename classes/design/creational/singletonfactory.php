@@ -118,8 +118,18 @@ abstract class SingletonFactory
 			$driver = static::$defaultDriver;
 		}
 
-		$instance = $class.'\\'.\ucfirst(static::$factoryType).'\\'.\ucfirst($driver);
-		$key      = \str_replace('\\', '_', $class);
+		// If the driver used is namespaced, do not use the
+		// default folder to resolve the path.
+		if (strpos($driver, '\\') !== false)
+		{
+			$instance = $driver;
+		}
+		else
+		{
+			$instance = $class.'\\'.ucfirst(static::$factoryType).'\\'.ucfirst($driver);
+		}
+
+		$key = str_replace('\\', '_', $class);
 
 		if(!isset(self::$instances[$key]))
 		{
@@ -137,7 +147,7 @@ abstract class SingletonFactory
 				throw new \OutOfBoundsException('The '.$instance.' class could not be loaded, as it does not follow the SingletonFactory access layer specification');
 			}
 
-			self::$instances[$key][$driver] = \call_user_func($instance.'::instance', $args);
+			self::$instances[$key][$driver] = call_user_func($instance.'::instance', $args);
 		}
 
 		return self::$instances[$key][$driver];
