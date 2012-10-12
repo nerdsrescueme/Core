@@ -23,9 +23,7 @@ class Test extends \Geek\Design\Task
 		}
 	}
 
-	public function help()
-	{
-		/**
+	/**
 	 * {@inheritdoc}
 	 */
 	public function help()
@@ -46,6 +44,5 @@ Documentation:
   http://nerdphp.com/docs/classes/tasks/test
 
 HELP;
-	}
 	}
 }
