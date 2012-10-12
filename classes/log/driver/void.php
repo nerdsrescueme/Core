@@ -8,7 +8,7 @@
  * @package Nerd
  * @subpackage Log
  */
-namespace Nerd\Datastore\Driver;
+namespace Nerd\Log\Driver;
 
 use Nerd\Log;
 

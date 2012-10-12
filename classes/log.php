@@ -1,9 +1,29 @@
 <?php
 
+/**
+ * Core Nerd library namespace. This namespace contains all the fundamental
+ * components of Nerd, plus additional utilities that are provided by default.
+ * Some of these default components have sub namespaces if they provide child
+ * objects.
+ *
+ * @package    Nerd
+ * @subpackage Core
+ */
 namespace Nerd;
 
+/**
+ * Log class
+ *
+ * The log class provides a convenient way to manage several loggers in your
+ * application. Various log handlers are available to alert you to the status and
+ * health of your application
+ *
+ * @package    Nerd
+ * @subpackage Core
+ */
 class Log extends Design\Creational\SingletonFactory implements Design\Initializable
 {
+	// Class constants
 	const DEBUG     = 100;
 	const INFO      = 200;
 	const NOTICE    = 250;
@@ -17,10 +37,15 @@ class Log extends Design\Creational\SingletonFactory implements Design\Initializ
 	 * The default driver to be utilized by your application in the event a
 	 * specific driver isn't called.
 	 *
-	 * @var    string
+	 * @var string
 	 */
 	public static $defaultDriver = 'void';
 
+	/**
+	 * Integer to level array
+	 *
+	 * @var array
+	 */
 	protected static $levels = [
 		100 => 'DEBUG',
 		200 => 'INFO',
@@ -32,8 +57,20 @@ class Log extends Design\Creational\SingletonFactory implements Design\Initializ
 		600 => 'EMERGENCY',
 	];
 
+	/**
+	 * Current timezone, used for dates
+	 *
+	 * @var string
+	 */
 	protected static $timezone;
 
+	/**
+	 * Initialize the Log
+	 *
+	 * Sets information required to insert valid and accurate log entries
+	 * 
+	 * @return   void             No value is returned
+	 */
 	public static function __initialize()
 	{
 		static::$timezone = Config::get('application.timezone', 'UTC');
