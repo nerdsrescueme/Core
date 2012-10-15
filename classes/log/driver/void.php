@@ -21,14 +21,14 @@ use Nerd\Log;
  */
 class Void implements \Nerd\Log\Driver
 {
-	// Traits
-	use \Nerd\Design\Creational\Singleton;
+    // Traits
+    use \Nerd\Design\Creational\Singleton;
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function write($level, $message)
-	{
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function write($level, $message)
+    {
+        return true;
+    }
 }

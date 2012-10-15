@@ -23,32 +23,30 @@ namespace Nerd\Form;
  */
 class Label
 {
-	// Traits
-	use \Nerd\Design\Attributable;
+    // Traits
+    use \Nerd\Design\Attributable;
 
-	private static $localAttributes = ['form'];
+    private static $localAttributes = ['form'];
 
-	public $text;
-	private $field;
+    public $text;
+    private $field;
 
-	public function __construct($text, array $options = [], Field $field = null)
-	{
-		foreach ($options as $key => $value)
-		{
-			$this->option($key, $value);
-		}
+    public function __construct($text, array $options = [], Field $field = null)
+    {
+        foreach ($options as $key => $value) {
+            $this->option($key, $value);
+        }
 
-		$this->field = $field;
-		$this->text  = trim($text);
-	}
+        $this->field = $field;
+        $this->text  = trim($text);
+    }
 
-	public function render()
-	{
-		if (isset($this->field) and $id = $this->field->option('id'))
-		{
-			$this->option('for', $id);
-		}
+    public function render()
+    {
+        if (isset($this->field) and $id = $this->field->option('id')) {
+            $this->option('for', $id);
+        }
 
-		return "<label{$this->attributes(true)}>{$this->text}</label>";
-	}
+        return "<label{$this->attributes(true)}>{$this->text}</label>";
+    }
 }

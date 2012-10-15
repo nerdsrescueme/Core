@@ -21,181 +21,178 @@ namespace Nerd\Http;
  */
 class Response extends \Nerd\Http
 {
-	/**
-	 * Method-chainable constructor method, providing ease-of-use and cleaner
-	 * options when working with class construction.
-	 *
-	 * ## Usage
-	 *
-	 *     $response = Response::instance();
-	 *
-	 * @see      static::__construct()
-	 */
-	public static function instance($body = null, $status = null)
-	{
-		return new static($body, $status);
-	}
-	
-	/**
-	 * The HTTP standard protocol to utilize
-	 *
-	 * @var    string
-	 */
-	public $protocol = 'HTTP/1.1';
+    /**
+     * Method-chainable constructor method, providing ease-of-use and cleaner
+     * options when working with class construction.
+     *
+     * ## Usage
+     *
+     *     $response = Response::instance();
+     *
+     * @see      static::__construct()
+     */
+    public static function instance($body = null, $status = null)
+    {
+        return new static($body, $status);
+    }
 
-	/**
-	 * The HTTP status code of this response
-	 *
-	 * @var    integer
-	 */
-	public $status = 200;
+    /**
+     * The HTTP standard protocol to utilize
+     *
+     * @var    string
+     */
+    public $protocol = 'HTTP/1.1';
 
-	/**
-	 * Response headers
-	 *
-	 * @var    array
-	 */
-	public $headers = [];
+    /**
+     * The HTTP status code of this response
+     *
+     * @var    integer
+     */
+    public $status = 200;
 
-	/**
-	 * Body of the request
-	 *
-	 * @var    mixed
-	 */
-	public $body;
+    /**
+     * Response headers
+     *
+     * @var    array
+     */
+    public $headers = [];
 
-	/**
-	 * Creates a new instance to the Http Response class
-	 *
-	 * ## Usage
-	 *
-	 *     $response = new Response();
-	 *
-	 * @param    string           The body of the request
-	 * @param    integer          The response status code
-	 * @return   Response         Returns a new instance to the Response class
-	 */
-	public function __construct($body = null, $status = null)
-	{
-		$body !== null and $this->body($body);
-		$status !== null and $this->setStatus($status);
-	}
-	
-	/**
-	 * Redirect (document)
-	 */
-	public function redirect($to = null, $status = 302)
-	{
-		if(headers_sent())
-		{
-			throw new \RuntimeException("Cannot redirect to [$to] after headers have already been sent.");
-		}
+    /**
+     * Body of the request
+     *
+     * @var    mixed
+     */
+    public $body;
 
-		$this->headers = [];
-		$this->setStatus($status)->setHeader('Location', $to)->send(true);
-		exit;
-	}
+    /**
+     * Creates a new instance to the Http Response class
+     *
+     * ## Usage
+     *
+     *     $response = new Response();
+     *
+     * @param    string           The body of the request
+     * @param    integer          The response status code
+     * @return Response Returns a new instance to the Response class
+     */
+    public function __construct($body = null, $status = null)
+    {
+        $body !== null and $this->body($body);
+        $status !== null and $this->setStatus($status);
+    }
 
-	/**
-	 * Add or append an existing header for this response
-	 *
-	 * ## Usage
-	 *
-	 *     $response->setHeader('Location', 'http://google.com');
-	 *
-	 * @param    string           The literal name of the header
-	 * @param    string           The value of the header key
-	 * @return   Response         Returns the current instance of the Response object
-	 */
-	public function setHeader($name, $value)
-	{
-		$this->headers[$name] = $value;
-		return $this;
-	}
+    /**
+     * Redirect (document)
+     */
+    public function redirect($to = null, $status = 302)
+    {
+        if (headers_sent()) {
+            throw new \RuntimeException("Cannot redirect to [$to] after headers have already been sent.");
+        }
 
-	/**
-	 * Sets the status code for this response
-	 *
-	 * ## Usage
-	 *
-	 *     $response->setStatus(404);
-	 *
-	 * @param    integer          The response status code
-	 * @return   Response         Returns the current instance of the Response object
-	 */
-	public function setStatus($status = 200)
-	{
-		$this->status = $status;
-		return $this;
-	}
+        $this->headers = [];
+        $this->setStatus($status)->setHeader('Location', $to)->send(true);
+        exit;
+    }
 
-	/**
-	 * Sets the body for this response
-	 *
-	 * ## Usage
-	 *
-	 *     $response->setBody('Hello World');
-	 *
-	 * @param    string           The response body to be set
-	 * @return   Response         Returns the current instance of the Response object
-	 */
-	public function setBody($value = null)
-	{
-		$this->body = $value;
-		return $this;
-	}
+    /**
+     * Add or append an existing header for this response
+     *
+     * ## Usage
+     *
+     *     $response->setHeader('Location', 'http://google.com');
+     *
+     * @param    string           The literal name of the header
+     * @param    string           The value of the header key
+     * @return Response Returns the current instance of the Response object
+     */
+    public function setHeader($name, $value)
+    {
+        $this->headers[$name] = $value;
 
-	/**
-	 * Sends the headers to the client, if they haven't already been sent.
-	 *
-	 * ## Usage
-	 *
-	 *     $response->sendHeaders();
-	 *
-	 * @return   Response         Returns the current instance of the Response object
-	 */
-	public function sendHeaders()
-	{
-		if(!headers_sent())
-		{
-			\header($this->protocol.' '.$this->status.' '.static::$statuses[$this->status]);
+        return $this;
+    }
 
-			foreach($this->headers as $name => $value)
-			{
-				\header($name.': '.$value, true);
-			}
-		}
+    /**
+     * Sets the status code for this response
+     *
+     * ## Usage
+     *
+     *     $response->setStatus(404);
+     *
+     * @param    integer          The response status code
+     * @return Response Returns the current instance of the Response object
+     */
+    public function setStatus($status = 200)
+    {
+        $this->status = $status;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Send the response to the browser
-	 *
-	 * ## Usage
-	 *
-	 *     $response->send();
-	 *     $response->send(true); // Sends the headers with the response
-	 *
-	 * @return   Response         Returns the current instance of the Response object
-	 */
-	public function send($send_headers = false)
-	{
-		if(!isset($this->headers['Content-Type']))
-		{
-			$this->setHeader('Content-Type', 'text/html; charset=utf-8');
-		}
+    /**
+     * Sets the body for this response
+     *
+     * ## Usage
+     *
+     *     $response->setBody('Hello World');
+     *
+     * @param    string           The response body to be set
+     * @return Response Returns the current instance of the Response object
+     */
+    public function setBody($value = null)
+    {
+        $this->body = $value;
 
-		$this->sendHeaders();
+        return $this;
+    }
 
-		if(is_object($this->body) and $this->body instanceof \Nerd\Design\Renderable)
-		{
-			$this->body = $this->body->render();
-		}
+    /**
+     * Sends the headers to the client, if they haven't already been sent.
+     *
+     * ## Usage
+     *
+     *     $response->sendHeaders();
+     *
+     * @return Response Returns the current instance of the Response object
+     */
+    public function sendHeaders()
+    {
+        if (!headers_sent()) {
+            \header($this->protocol.' '.$this->status.' '.static::$statuses[$this->status]);
 
-		if(!empty($this->body))
-		{
-			echo $this->body;
-		}
-	}
+            foreach ($this->headers as $name => $value) {
+                \header($name.': '.$value, true);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Send the response to the browser
+     *
+     * ## Usage
+     *
+     *     $response->send();
+     *     $response->send(true); // Sends the headers with the response
+     *
+     * @return Response Returns the current instance of the Response object
+     */
+    public function send($send_headers = false)
+    {
+        if (!isset($this->headers['Content-Type'])) {
+            $this->setHeader('Content-Type', 'text/html; charset=utf-8');
+        }
+
+        $this->sendHeaders();
+
+        if (is_object($this->body) and $this->body instanceof \Nerd\Design\Renderable) {
+            $this->body = $this->body->render();
+        }
+
+        if (!empty($this->body)) {
+            echo $this->body;
+        }
+    }
 }

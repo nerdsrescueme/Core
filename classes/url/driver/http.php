@@ -21,22 +21,23 @@ namespace Nerd\Url\Driver;
 */
 class Http extends \Nerd\Url\Driver
 {
-	/**
-	 * URI Scheme
-	 *
-	 * @var    string
-	 */
-	protected $scheme = 'http';
+    /**
+     * URI Scheme
+     *
+     * @var    string
+     */
+    protected $scheme = 'http';
 
-	/**
-	 * Set whether to create a secure link
-	 *
-	 * @param     boolean     Create a secure URI?
-	 * @return    Nerd\Uri\Driver\Http
-	 */
-	public function secure($secure = true)
-	{
-		$this->scheme = $secure ? 'https' : 'http';
-		return $this;
-	}
+    /**
+     * Set whether to create a secure link
+     *
+     * @param     boolean     Create a secure URI?
+     * @return Nerd\Uri\Driver\Http
+     */
+    public function secure($secure = true)
+    {
+        $this->scheme = $secure ? 'https' : 'http';
+
+        return $this;
+    }
 }

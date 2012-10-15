@@ -23,63 +23,59 @@ use \Nerd\Design\Collection;
 * @package Nerd
 * @subpackage Source
 */
-class Extension extends \ReflectionExtension {
+class Extension extends \ReflectionExtension
+{
+    /**
+     * Enumerable array of extension functions
+     *
+     * @var    Nerd\Design\Collection
+     */
+    protected $functions;
 
-	/**
-	 * Enumerable array of extension functions
-	 *
-	 * @var    Nerd\Design\Collection
-	 */
-	protected $functions;
+    /**
+     * Enumerable array of extension classes
+     *
+     * @var    Nerd\Design\Collection
+     */
+    protected $classes;
 
-	/**
-	 * Enumerable array of extension classes
-	 *
-	 * @var    Nerd\Design\Collection
-	 */
-	protected $classes;
+    /**
+     * Get all this extensions functions
+     *
+     * @return Nerd\Design\Collection Enumerable array of extension functions
+     */
+    public function getFunctions()
+    {
+        if ($this->functions === null) {
+            $functions = parent::getFunctions();
 
-	/**
-	 * Get all this extensions functions
-	 *
-	 * @return    Nerd\Design\Collection     Enumerable array of extension functions
-	 */
-	public function getFunctions()
-	{
-		if($this->functions === null)
-		{
-			$functions = parent::getFunctions();
+            foreach ($functions as $key => $function) {
+                $functions[$key] = new Funktion($function->getName());
+            }
 
-			foreach($functions as $key => $function)
-			{
-				$functions[$key] = new Funktion($function->getName());
-			}
+            $this->functions = new Collection($functions);
+        }
 
-			$this->functions = new Collection($functions);
-		}
+        return $this->functions;
+    }
 
-		return $this->functions;
-	}
+    /**
+     * Get all this extensions classes
+     *
+     * @return Nerd\Design\Collection Enumerable array of extension classes
+     */
+    public function getClasses()
+    {
+        if ($this->classes === null) {
+            $classes = parent::getClasses();
 
-	/**
-	 * Get all this extensions classes
-	 *
-	 * @return    Nerd\Design\Collection     Enumerable array of extension classes
-	 */
-	public function getClasses()
-	{
-		if($this->classes === null)
-		{
-			$classes = parent::getClasses();
+            foreach ($classes as $key => $class) {
+                $classes[$key] = new Klass($class->getName());
+            }
 
-			foreach($classes as $key => $class)
-			{
-				$classes[$key] = new Klass($class->getName());
-			}
+            $this->classes = new Collection($classes);
+        }
 
-			$this->classes = new Collection($classes);
-		}
-
-		return $this->classes;
-	}
+        return $this->classes;
+    }
 }

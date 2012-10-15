@@ -38,58 +38,56 @@ namespace Nerd;
  */
 class Asset
 {
-	use Design\Creational\Factory
-	  , Design\Eventable;
+    use Design\Creational\Factory
+      , Design\Eventable;
 
-	/**
-	 * The magic call static method is triggered when invoking inaccessible
-	 * methods in a static context.
-	 *
-	 * ## Usage
-	 *
-	 * This method exists to allow dynamic loading of different asset types.
-	 *
-	 *     Asset::css('mycssfile.css')
-	 *
-	 * @param    string           The method name being called
-	 * @param    array            The arguments being passed to the method call
-	 * @return   mixed            Returns the value of the intercepted method call
-	 */
-	public static function __callStatic($method, array $params)
-	{
-		return call_user_func_array('static::guess', $params);
-	}
+    /**
+     * The magic call static method is triggered when invoking inaccessible
+     * methods in a static context.
+     *
+     * ## Usage
+     *
+     * This method exists to allow dynamic loading of different asset types.
+     *
+     *     Asset::css('mycssfile.css')
+     *
+     * @param    string           The method name being called
+     * @param    array            The arguments being passed to the method call
+     * @return mixed Returns the value of the intercepted method call
+     */
+    public static function __callStatic($method, array $params)
+    {
+        return call_user_func_array('static::guess', $params);
+    }
 
-	/**
-	 * Create an enumerable collection of assets.
-	 *
-	 * @param    array          Array of assets to load within the collection
-	 * @return   \Nerd\Asset\Collection
-	 */
-	public static function collection(array $assets = [])
-	{
-		foreach($assets as $key => $asset)
-		{
-			if(!$asset instanceof Nerd\Asset\Driver)
-			{
-				$assets[$key] = static::guess($asset);
-			}
-		}
-		
-		return new Asset\Collection($assets);
-	}
+    /**
+     * Create an enumerable collection of assets.
+     *
+     * @param    array          Array of assets to load within the collection
+     * @return \Nerd\Asset\Collection
+     */
+    public static function collection(array $assets = [])
+    {
+        foreach ($assets as $key => $asset) {
+            if (!$asset instanceof Nerd\Asset\Driver) {
+                $assets[$key] = static::guess($asset);
+            }
+        }
 
-	/**
-	 * Attempts to guess what type of asset is currently being loaded and returns an
-	 * instance of that Asset driver.
-	 *
-	 * @param    string    Path to Asset file
-	 * @return   \Nerd\Asset\Type
-	 */
-	protected static function guess($file)
-	{
-		$file = explode('.', $file);
+        return new Asset\Collection($assets);
+    }
 
-		return static::instance(end($file), implode('.', $file));
-	}
+    /**
+     * Attempts to guess what type of asset is currently being loaded and returns an
+     * instance of that Asset driver.
+     *
+     * @param    string    Path to Asset file
+     * @return \Nerd\Asset\Type
+     */
+    protected static function guess($file)
+    {
+        $file = explode('.', $file);
+
+        return static::instance(end($file), implode('.', $file));
+    }
 }

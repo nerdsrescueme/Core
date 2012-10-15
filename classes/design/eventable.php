@@ -14,18 +14,18 @@ namespace Nerd\Design;
 
 trait Eventable
 {
-	public function bindEvent($event, callable $func)
-	{
-		return \Nerd\Event::instance()->bind($event, $func);
-	}
+    public function bindEvent($event, callable $func)
+    {
+        return \Nerd\Event::instance()->bind($event, $func);
+    }
 
-	public function unbindEvent($event)
-	{
-		return \Nerd\Event::instance()->unbind($event);
-	}
+    public function unbindEvent($event)
+    {
+        return \Nerd\Event::instance()->unbind($event);
+    }
 
-	public function triggerEvent($event, array $args = [])
-	{
-		return \Nerd\Event::instance()->trigger($event, $args);
-	}
+    public function triggerEvent($event, array $args = [])
+    {
+        return \Nerd\Event::instance()->trigger($event, $args);
+    }
 }

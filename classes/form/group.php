@@ -28,40 +28,38 @@ namespace Nerd\Form;
  */
 class Group extends Container
 {
-	public $element = 'div';
+    public $element = 'div';
 
-	public function field(Field $field, array $options = [])
-	{
-		$this->fields->add($field->wrap(false)->wrapField(false));
-		return $field;
-	}
+    public function field(Field $field, array $options = [])
+    {
+        $this->fields->add($field->wrap(false)->wrapField(false));
 
-	public function render()
-	{
-		if ($this->removed)
-		{
-			return '';
-		}
+        return $field;
+    }
 
-		$start = $end = null;
+    public function render()
+    {
+        if ($this->removed) {
+            return '';
+        }
 
-		if ($this->hasWrap())
-		{
-			list($start, $end) = $this->wrap;
-		}
+        $start = $end = null;
 
-		$out  = $start;
-		$out .= ($this->label ?: '');
-		$out .= "<{$this->element}{$this->attributes(true)}>";
+        if ($this->hasWrap()) {
+            list($start, $end) = $this->wrap;
+        }
 
-		$this->fields->each(function($field) use (&$out)
-		{
-			$out .= (string) $field->render().' '; // space is important for visuals?
-		});
+        $out  = $start;
+        $out .= ($this->label ?: '');
+        $out .= "<{$this->element}{$this->attributes(true)}>";
 
-		$out .= "</{$this->element}>";
-		$out .= $end;
+        $this->fields->each(function($field) use (&$out) {
+            $out .= (string) $field->render().' '; // space is important for visuals?
+        });
 
-		return $out;
-	}
+        $out .= "</{$this->element}>";
+        $out .= $end;
+
+        return $out;
+    }
 }

@@ -30,77 +30,75 @@ namespace Nerd\Asset;
  *     $js_assets = new Asset\Collection(array('one.js', 'two.js'));
  *
  * @see Nerd\Design\Collection for a list of available traversal methods
- * 
+ *
  * @package Nerd
  * @subpackage Asset
  */
 class Collection extends \Nerd\Design\Collection
 {
-	// Traits
-	use \Nerd\Design\Eventable
-	  , \Nerd\Design\Renderable;
+    // Traits
+    use \Nerd\Design\Eventable
+      , \Nerd\Design\Renderable;
 
-	/**
-	 * Enumerable container
-	 *
-	 * @var Nerd\Design\Collection
-	 */
-	public $assets;
+    /**
+     * Enumerable container
+     *
+     * @var Nerd\Design\Collection
+     */
+    public $assets;
 
-	/**
-	 * Rendered content of this collection
-	 *
-	 * @var string
-	 */
-	public $content;
+    /**
+     * Rendered content of this collection
+     *
+     * @var string
+     */
+    public $content;
 
-	/**
-	 * Should we compress the data on output?
-	 *
-	 * @var boolean
-	 */
-	public $compress = false;
+    /**
+     * Should we compress the data on output?
+     *
+     * @var boolean
+     */
+    public $compress = false;
 
-	/**
-	 * Should we return the rendered content as HTML tags?
-	 *
-	 * @var boolean
-	 */
-	public $tags = true;
+    /**
+     * Should we return the rendered content as HTML tags?
+     *
+     * @var boolean
+     */
+    public $tags = true;
 
-	/**
-	 * Instance constructor
-	 *
-	 * Simply provides a reference link from the enumerable property to a more aptly
-	 * named one, assets.
-	 *
-	 * @param    array    Array of assets to import into the collection
-	 * @return   Nerd\Asset\Collection
-	 */
-	public function __construct(array $assets = [])
-	{
-		parent::__construct($assets);
+    /**
+     * Instance constructor
+     *
+     * Simply provides a reference link from the enumerable property to a more aptly
+     * named one, assets.
+     *
+     * @param    array    Array of assets to import into the collection
+     * @return Nerd\Asset\Collection
+     */
+    public function __construct(array $assets = [])
+    {
+        parent::__construct($assets);
 
-		$this->triggerEvent('asset.collect', array($this));
-		$this->assets = &$this->enumerable;
-	}
+        $this->triggerEvent('asset.collect', array($this));
+        $this->assets = &$this->enumerable;
+    }
 
-	public function render()
-	{
-		if ($this->tags)
-		{
-			$out = '';
+    public function render()
+    {
+        if ($this->tags) {
+            $out = '';
 
-			$this->each(function($asset) use (&$out)
-			{
-				$out .= $asset->tag().PHP_EOL;
-			});
+            $this->each(function($asset) use (&$out) {
+                $out .= $asset->tag().PHP_EOL;
+            });
 
-			return $out;
-		}
+            return $out;
+        }
 
-		$this->triggerEvent('asset.render', array($this));
+        $this->triggerEvent('asset.render', array($this));
 
-		return (string) $this->content;
-	}
+        return (string) $this->content;
+    }
 }

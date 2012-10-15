@@ -16,52 +16,51 @@ namespace Nerd\Tasks;
  */
 class Help extends \Geek\Design\Task
 {
-	/**
-	 * Default method
-	 *
-	 * Outputs the help info for ion
-	 *
-	 * Usage: php ion help
-	 *
-	 * @return   void
-	 */
-	public function run()
-	{
-		if(count($this->geek->args) === 0)
-		{
-			$this->geek->write($this->format($this->help()), 'white');
-			return;
-		}
+    /**
+     * Default method
+     *
+     * Outputs the help info for ion
+     *
+     * Usage: php ion help
+     *
+     * @return void
+     */
+    public function run()
+    {
+        if (count($this->geek->args) === 0) {
+            $this->geek->write($this->format($this->help()), 'white');
 
-		// Resolve class help to show.
-		$path = explode('.', $this->geek->arg(1));
-		// Allow help per method… not impelmented yet.
-		//
-		
-		$class = '\\'.ucfirst($path[0]).'\\Tasks\\'.ucfirst($path[1]);
-		$class = new $class();
+            return;
+        }
 
-		$text = $class->help();
-		
-		if(!empty($text))
-		{
-			$this->geek->write($this->format($text), 'white');
-		}
-	}
+        // Resolve class help to show.
+        $path = explode('.', $this->geek->arg(1));
+        // Allow help per method… not impelmented yet.
+        //
 
-	/**
-	 * Help
-	 *
-	 * Usage: php geek help
-	 *
-	 * @return   boolean
-	 */
-	public function help()
-	{
-		return <<<HELP
+        $class = '\\'.ucfirst($path[0]).'\\Tasks\\'.ucfirst($path[1]);
+        $class = new $class();
+
+        $text = $class->help();
+
+        if (!empty($text)) {
+            $this->geek->write($this->format($text), 'white');
+        }
+    }
+
+    /**
+     * Help
+     *
+     * Usage: php geek help
+     *
+     * @return boolean
+     */
+    public function help()
+    {
+        return <<<HELP
 
 Default task usage:
-  php geek task[.method] [flags] [args] 
+  php geek task[.method] [flags] [args]
 
 Namespaced task usage:
   php geek namespace.task[.method] [flags] [args]
@@ -77,16 +76,16 @@ Documentation:
   http://nerdphp.com
 
 HELP;
-	}
+    }
 
-	/**
-	 * Format help output
-	 *
-	 * @param    string     Help text
-	 * @return   string     Formatted help text
-	 */
-	private function format($input = '')
-	{
-		return str_replace("\n", "\n    ", $input);
-	}
+    /**
+     * Format help output
+     *
+     * @param    string     Help text
+     * @return string Formatted help text
+     */
+    private function format($input = '')
+    {
+        return str_replace("\n", "\n    ", $input);
+    }
 }

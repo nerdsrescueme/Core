@@ -33,19 +33,19 @@ namespace Nerd;
  */
 class Application
 {
-	// Traits
-	use Design\Creational\Singleton
-	  , Design\Eventable;
+    // Traits
+    use Design\Creational\Singleton
+      , Design\Eventable;
 
-	/**
-	 * Redirect user
-	 *
-	 * @param    string          Url endpoint
-	 * @param    integer         Redirect status code
-	 * @return   void
-	 */
-	public function redirect($to = null, $status = 302)
-	{
-		(new \Nerd\Http\Response())->redirect($to, $status);
-	}
+    /**
+     * Redirect user
+     *
+     * @param    string          Url endpoint
+     * @param    integer         Redirect status code
+     * @return void
+     */
+    public function redirect($to = null, $status = 302)
+    {
+        (new \Nerd\Http\Response())->redirect($to, $status);
+    }
 }

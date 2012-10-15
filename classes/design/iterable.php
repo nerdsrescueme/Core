@@ -18,49 +18,49 @@ namespace Nerd\Design;
  * @package Nerd
  * @subpackage Core
  */
-class Iterable implements \Iterator {
+class Iterable implements \Iterator
+{
+    /**
+     * Array for object traversal
+     *
+     * @var    array
+     */
+    public $iterator = [];
 
-	/**
-	 * Array for object traversal
-	 *
-	 * @var    array
-	 */
-	public $iterator = [];
+    /**
+     * Position of the array pointer
+     *
+     * @var    integer
+     */
+    public $position = 0;
 
-	/**
-	 * Position of the array pointer
-	 *
-	 * @var    integer
-	 */
-	public $position = 0;
+    //
+    // The following methods are for object traversal
+    // @see    http://www.php.net/manual/en/class.iterator.php
+    //
 
-	//
-	// The following methods are for object traversal
-	// @see    http://www.php.net/manual/en/class.iterator.php
-	//
+    public function current()
+    {
+        return $this->iterator[$this->position];
+    }
 
-	public function current()
-	{
-		return $this->iterator[$this->position];
-	}
+    public function key()
+    {
+        return $this->position;
+    }
 
-	public function key()
-	{
-		return $this->position;
-	}
+    public function next()
+    {
+        $this->position++;
+    }
 
-	public function next()
-	{
-		$this->position++;
-	}
+    public function rewind()
+    {
+        $this->position = 0;
+    }
 
-	public function rewind()
-	{
-		$this->position = 0;
-	}
-
-	public function valid()
-	{
-		return isset($this->iterator[$this->position]);
-	}
+    public function valid()
+    {
+        return isset($this->iterator[$this->position]);
+    }
 }

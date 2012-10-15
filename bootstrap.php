@@ -26,11 +26,8 @@ Autoloader::register();
 /**
  * Test for CLI, load either application or Geek bootstrap.
  */
-if (PHP_SAPI === 'cli')
-{
-	require \Nerd\LIBRARY_PATH.DS.'geek/bootstrap.php';
-}
-else
-{
-	require \Nerd\LIBRARY_PATH.DS.'application/bootstrap.php';
+if (PHP_SAPI === 'cli') {
+    require \Nerd\LIBRARY_PATH.DS.'geek/bootstrap.php';
+} else {
+    require \Nerd\LIBRARY_PATH.DS.'application/bootstrap.php';
 }

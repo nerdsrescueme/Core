@@ -17,45 +17,45 @@ namespace Nerd\Datastore\Driver;
  */
 class Void implements \Nerd\Datastore\Driver
 {
-	use \Nerd\Design\Creational\Singleton;
+    use \Nerd\Design\Creational\Singleton;
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function read($key)
-	{
-		return null;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function read($key)
+    {
+        return null;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function exists($key)
-	{
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function exists($key)
+    {
+        return true;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function write($key, $value, $minutes = false)
-	{
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function write($key, $value, $minutes = false)
+    {
+        return true;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function delete($key)
-	{
-		return true;
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($key)
+    {
+        return true;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function flush()
-	{
-		// Nothing needs to happen
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function flush()
+    {
+        // Nothing needs to happen
+    }
 }

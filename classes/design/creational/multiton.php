@@ -53,7 +53,7 @@ namespace Nerd\Design\Creational;
  * singleton instances.
  *
  * __Note:__ Some classes may opt to not require the developer to specify a key
- * during the Multiton::instance() call. If they wish to specify a default, the 
+ * during the Multiton::instance() call. If they wish to specify a default, the
  * class must provide a `public static $defaultKey` which will be read during
  * the `::instance()` call.
  *
@@ -62,55 +62,52 @@ namespace Nerd\Design\Creational;
  */
 abstract class Multiton
 {
-	/**
-	 * Registered instances
-	 *
-	 * @var    array
-	 */
-	private static $instances = [];
+    /**
+     * Registered instances
+     *
+     * @var    array
+     */
+    private static $instances = [];
 
-	/**
-	 * A default key to provide, in the event non is specified. Defaults to
-	 * null.
-	 *
-	 * @var    string
-	 */
-	public static $defaultKey;
+    /**
+     * A default key to provide, in the event non is specified. Defaults to
+     * null.
+     *
+     * @var    string
+     */
+    public static $defaultKey;
 
-	/**
-	 * Construct a new object instance and assigns it to a unique key. In the
-	 * event the key has already been assigned, the same object is returned,
-	 * regardless of context.
-	 *
-	 * @param    string           The instance key
-	 * @return   object           The singleton instance to the object
-	 * @throws   \InvalidArgumentException   This exception is thrown when a key was not specified, and no `$defaultKey` is available
-	 */
-	final public static function instance($key = null)
-	{
-		$class = get_called_class();
+    /**
+     * Construct a new object instance and assigns it to a unique key. In the
+     * event the key has already been assigned, the same object is returned,
+     * regardless of context.
+     *
+     * @param    string           The instance key
+     * @return object                    The singleton instance to the object
+     * @throws \InvalidArgumentException This exception is thrown when a key was not specified, and no `$defaultKey` is available
+     */
+    final public static function instance($key = null)
+    {
+        $class = get_called_class();
 
-		if($key === null)
-		{
-			if(static::$defaultKey === null)
-			{
-				throw new \InvalidArgumentException('A $key was not specified during '.$class.'::instance(), and no $defaultKey is available. Please specify the driver you wish to use');
-			}
+        if ($key === null) {
+            if (static::$defaultKey === null) {
+                throw new \InvalidArgumentException('A $key was not specified during '.$class.'::instance(), and no $defaultKey is available. Please specify the driver you wish to use');
+            }
 
-			$key = static::$defaultKey;
-		}
+            $key = static::$defaultKey;
+        }
 
-		if(!isset(self::$instances[$key]))
-		{
-			self::$instances[$key] = new static;
-		}
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = new static;
+        }
 
-		return self::$instances[$key];
-	}
+        return self::$instances[$key];
+    }
 
-	// Disables the ability to construct the object, use `::instance()` instead
-	final protected function __construct() {}
+    // Disables the ability to construct the object, use `::instance()` instead
+    final protected function __construct() {}
 
-	// Disables the ability to clone the object, use `::instance()` instead
-	final protected function __clone() {}
+    // Disables the ability to clone the object, use `::instance()` instead
+    final protected function __clone() {}
 }

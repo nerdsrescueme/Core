@@ -24,77 +24,76 @@ namespace Nerd;
  */
 class Crypt extends Design\Creational\SingletonFactory implements Design\Initializable
 {
-	/**
-	 * The default driver to be utilized by your application in the event a
-	 * specific driver isn't called.
-	 *
-	 * @var    string
-	 */
-	public static $defaultDriver;
+    /**
+     * The default driver to be utilized by your application in the event a
+     * specific driver isn't called.
+     *
+     * @var    string
+     */
+    public static $defaultDriver;
 
-	/**
-	 * The hash type to use in Crypt::$hash
-	 *
-	 * @var    string
-	 */
-	protected static $hasher;
+    /**
+     * The hash type to use in Crypt::$hash
+     *
+     * @var    string
+     */
+    protected static $hasher;
 
-	/**
-	 * The encryption key
-	 *
-	 * @var    string
-	 */
-	protected static $key;
+    /**
+     * The encryption key
+     *
+     * @var    string
+     */
+    protected static $key;
 
-	/**
-	 * Magic method called when a class is first encountered by the Autoloader,
-	 * providing static initialization.
-	 *
-	 * @return   void             No value is returned
-	 */
-	public static function __initialize()
-	{
-		if((static::$key = Config::get('crypt.key')) == '')
-		{
-			throw new \Exception('The Crypt class cannot be used without providing a shared key. Please specify on in your crypt configuration file');
-		}
+    /**
+     * Magic method called when a class is first encountered by the Autoloader,
+     * providing static initialization.
+     *
+     * @return void No value is returned
+     */
+    public static function __initialize()
+    {
+        if ((static::$key = Config::get('crypt.key')) == '') {
+            throw new \Exception('The Crypt class cannot be used without providing a shared key. Please specify on in your crypt configuration file');
+        }
 
-		static::$defaultDriver = Config::get('crypt.driver', 'xcrypt');
-		static::$hasher        = Config::get('crypt.hasher', 'sha1');
-		static::$key           = md5(static::$key);
-	}
+        static::$defaultDriver = Config::get('crypt.driver', 'xcrypt');
+        static::$hasher        = Config::get('crypt.hasher', 'sha1');
+        static::$key           = md5(static::$key);
+    }
 
-	/**
-	 * Fetch the encryption key
-	 *
-	 * Returns the encrption key set in the application config, MD5'd in order
-	 * to ensure exact-length 128 bit keys. Mcrypt is sensitive to keys that are
-	 * not the correct length.
-	 *
-	 * ## Usage
-	 *
-	 *     $key = Crypt::key();
-	 *
-	 * @return   string
-	 */
-	public static function key()
-	{
-		return static::$key;
-	}
+    /**
+     * Fetch the encryption key
+     *
+     * Returns the encrption key set in the application config, MD5'd in order
+     * to ensure exact-length 128 bit keys. Mcrypt is sensitive to keys that are
+     * not the correct length.
+     *
+     * ## Usage
+     *
+     *     $key = Crypt::key();
+     *
+     * @return string
+     */
+    public static function key()
+    {
+        return static::$key;
+    }
 
-	/**
-	 * Hash a string using either sha1 or md5, with an extra layer of uniqueness
-	 * by attaching the crypt key.
-	 *
-	 * ## Usage
-	 *
-	 *     $hash = Crypt::hash($string);
-	 *
-	 * @param    string           The string to hash
-	 * @return   string           The hashed string
-	 */
-	public static function hash($string)
-	{
-		return static::$hasher === 'sha1' ? sha1($string.static::$key) : md5($string.static::$key);
-	}
+    /**
+     * Hash a string using either sha1 or md5, with an extra layer of uniqueness
+     * by attaching the crypt key.
+     *
+     * ## Usage
+     *
+     *     $hash = Crypt::hash($string);
+     *
+     * @param    string           The string to hash
+     * @return string The hashed string
+     */
+    public static function hash($string)
+    {
+        return static::$hasher === 'sha1' ? sha1($string.static::$key) : md5($string.static::$key);
+    }
 }

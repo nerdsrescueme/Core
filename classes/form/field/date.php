@@ -15,28 +15,27 @@ namespace Nerd\Form\Field;
  *
  * [!!] Form date fields automatically convert dates to the format required by the
  *      HTML5 date field specification.
- * 
+ *
  * @package    Nerd
  * @subpackage Form
  */
 class Date extends Input
 {
-	/**
-	 * Option/Attribute assignment overload
-	 *
-	 * Extends the value property allowing for automatic conversion of dates
-	 *
-	 * @param    string          Option/Attribute to set
-	 * @param    string          Value to set to this option
-	 */
-	public function option($option, $value = null)
-	{
-		if ($option == 'value')
-		{
-			// For date inputs date must be: yyyy-mm-dd
-			$value = date('Y-m-d', strtotime($value));
-		}
+    /**
+     * Option/Attribute assignment overload
+     *
+     * Extends the value property allowing for automatic conversion of dates
+     *
+     * @param    string          Option/Attribute to set
+     * @param    string          Value to set to this option
+     */
+    public function option($option, $value = null)
+    {
+        if ($option == 'value') {
+            // For date inputs date must be: yyyy-mm-dd
+            $value = date('Y-m-d', strtotime($value));
+        }
 
-		return parent::option($option, $value);
-	}
+        return parent::option($option, $value);
+    }
 }

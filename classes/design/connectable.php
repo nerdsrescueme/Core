@@ -22,26 +22,25 @@ namespace Nerd\Design;
  */
 trait Connectable
 {
-	/**
-	 * Nerd DB connection instance
-	 *
-	 * @var Nerd\DB
-	 */
-	protected static $connection;
+    /**
+     * Nerd DB connection instance
+     *
+     * @var Nerd\DB
+     */
+    protected static $connection;
 
-	/**
-	 * Inheritable class constructor
-	 *
-	 * If no connection has been set on the static class, then set one using the
-	 * default DB connection by default.
-	 *
-	 * @param    string          DB connection identifier
-	 */
-	public function __construct($connection = null)
-	{
-		if (static::$connection === null)
-		{
-			static::$connection = \Nerd\DB::connection($connection);
-		}
-	}
+    /**
+     * Inheritable class constructor
+     *
+     * If no connection has been set on the static class, then set one using the
+     * default DB connection by default.
+     *
+     * @param    string          DB connection identifier
+     */
+    public function __construct($connection = null)
+    {
+        if (static::$connection === null) {
+            static::$connection = \Nerd\DB::connection($connection);
+        }
+    }
 }

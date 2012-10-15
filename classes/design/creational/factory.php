@@ -62,7 +62,7 @@ namespace Nerd\Design\Creational;
  * type that can be loaded by the `::instance()` method, following this pattern:
  *
  *     namespace MyClass\Driver;
- *     
+ *
  *     class Mydriver
  *     {
  *     }
@@ -90,69 +90,65 @@ namespace Nerd\Design\Creational;
  */
 trait Factory
 {
-	/**
-	 * The factory driver verb to utilize, defaults to 'Driver'
-	 *
-	 * @var    string
-	 */
-	public static $factoryType = 'driver';
+    /**
+     * The factory driver verb to utilize, defaults to 'Driver'
+     *
+     * @var    string
+     */
+    public static $factoryType = 'driver';
 
-	/**
-	 * A default driver to provide, in the event non is specified. Defaults to
-	 * null.
-	 *
-	 * @var    string
-	 */
-	public static $defaultDriver;
+    /**
+     * A default driver to provide, in the event non is specified. Defaults to
+     * null.
+     *
+     * @var    string
+     */
+    public static $defaultDriver;
 
-	/**
-	 * Construct a new instance to the factory driver, and pass along any
-	 * additionally provided arguments that were defined.
-	 *
-	 * @param    string           The factory driver to be loaded, otherwise `$defaultDriver` will be utilized if available
-	 * @param    mixed            Argument #n to be passed along to the driver
-	 * @return   object           An instance to the appropriate driver, determined by this factory
-	 * @throws   \InvalidArgumentException   This exception is thrown when a driver was not specified, and no `$defaultDriver` is available
-	 * @throws   \OutOfBoundsException       This exception is thrown when the specified $driver, or $defaultDriver, does not exist and cannot be instantiated
-	 */
-	final public static function instance($driver = null)
-	{
-		$class = get_called_class();
-		$args  = func_get_args() and array_shift($args);
+    /**
+     * Construct a new instance to the factory driver, and pass along any
+     * additionally provided arguments that were defined.
+     *
+     * @param    string           The factory driver to be loaded, otherwise `$defaultDriver` will be utilized if available
+     * @param    mixed            Argument #n to be passed along to the driver
+     * @return object                    An instance to the appropriate driver, determined by this factory
+     * @throws \InvalidArgumentException This exception is thrown when a driver was not specified, and no `$defaultDriver` is available
+     * @throws \OutOfBoundsException     This exception is thrown when the specified $driver, or $defaultDriver, does not exist and cannot be instantiated
+     */
+    final public static function instance($driver = null)
+    {
+        $class = get_called_class();
+        $args  = func_get_args() and array_shift($args);
 
-		if($driver === null)
-		{
-			if(static::$defaultDriver === null)
-			{
-				throw new \InvalidArgumentException('A $driver was not specified during '.$class.'::instance(), and no $defaultDriver is available. Please specify the driver you wish to use');
-			}
+        if ($driver === null) {
+            if (static::$defaultDriver === null) {
+                throw new \InvalidArgumentException('A $driver was not specified during '.$class.'::instance(), and no $defaultDriver is available. Please specify the driver you wish to use');
+            }
 
-			$driver = static::$defaultDriver;
-		}
+            $driver = static::$defaultDriver;
+        }
 
-		try
-		{
-			$instance = '\\'.$class.'\\'.\ucfirst(static::$factoryType).'\\'.\ucfirst($driver);
-			$instance = new \ReflectionClass($instance);
-			$instance = $instance->newInstanceArgs($args);
-		}
-		catch(\ReflectionException $e)
-		{
-			throw new \OutOfBoundsException($class.' driver type ['.$driver.'] cannot be instanciated, ensure the driver exists and has a __construct method.');
-		}
+        try {
+            $instance = '\\'.$class.'\\'.\ucfirst(static::$factoryType).'\\'.\ucfirst($driver);
+            $instance = new \ReflectionClass($instance);
+            $instance = $instance->newInstanceArgs($args);
+        } catch (\ReflectionException $e) {
+            throw new \OutOfBoundsException($class.' driver type ['.$driver.'] cannot be instanciated, ensure the driver exists and has a __construct method.');
+        }
 
-		return $instance;
-	}
+        return $instance;
+    }
 
-	/**
-	 * Magic Static Caller
-	 *
-	 * This method enables convenient access to drivers as static methods, providing
-	 * better syntax.
-	 */
-	public static function __callStatic($driver, $parameters)
-	{
-		$class = get_called_class() and array_unshift($parameters, $driver);
-		return forward_static_call_array([$class, 'instance'], $parameters);
-	}
+    /**
+     * Magic Static Caller
+     *
+     * This method enables convenient access to drivers as static methods, providing
+     * better syntax.
+     */
+    public static function __callStatic($driver, $parameters)
+    {
+        $class = get_called_class() and array_unshift($parameters, $driver);
+
+        return forward_static_call_array([$class, 'instance'], $parameters);
+    }
 }

@@ -22,44 +22,44 @@ namespace Nerd\Datastore;
  */
 interface Driver
 {
-	/**
-	 * Read all data from a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @return   string           Returns the contents of the datastore, otherwise null
-	 */
-	public function read($key);
+    /**
+     * Read all data from a datastore key
+     *
+     * @param    string           The datastore key
+     * @return string Returns the contents of the datastore, otherwise null
+     */
+    public function read($key);
 
-	/**
-	 * Determine whether a datastore key exists
-	 *
-	 * @param    string           The datastore key to check
-	 * @return   boolean          Returns true if the datastore key exists, otherwise false
-	 */
-	public function exists($key);
+    /**
+     * Determine whether a datastore key exists
+     *
+     * @param    string           The datastore key to check
+     * @return boolean Returns true if the datastore key exists, otherwise false
+     */
+    public function exists($key);
 
-	/**
-	 * Write data to a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @param    mixed            The data to be written to the key
-	 * @param    integer          The time, in minutes, to store the data. Defaults to the time value in your datastore configuration file
-	 * @return   boolean          Returns true if the datastore was successfully written, otherwise false
-	 */
-	public function write($key, $value, $minutes = false);
+    /**
+     * Write data to a datastore key
+     *
+     * @param    string           The datastore key
+     * @param    mixed            The data to be written to the key
+     * @param    integer          The time, in minutes, to store the data. Defaults to the time value in your datastore configuration file
+     * @return boolean Returns true if the datastore was successfully written, otherwise false
+     */
+    public function write($key, $value, $minutes = false);
 
-	/**
-	 * Delete all data from a datastore key
-	 *
-	 * @param    string           The datastore key
-	 * @return   boolean          Returns true if the datastore was successfully deleted, otherwise false
-	 */
-	public function delete($key);
+    /**
+     * Delete all data from a datastore key
+     *
+     * @param    string           The datastore key
+     * @return boolean Returns true if the datastore was successfully deleted, otherwise false
+     */
+    public function delete($key);
 
-	/**
-	 * Flush all data from the datastore
-	 *
-	 * @return   void
-	 */
-	public function flush();
+    /**
+     * Flush all data from the datastore
+     *
+     * @return void
+     */
+    public function flush();
 }

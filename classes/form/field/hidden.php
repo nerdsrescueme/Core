@@ -18,13 +18,13 @@ namespace Nerd\Form\Field;
  */
 class Hidden extends Input
 {
-	public function hasWrap()
-	{
-		return false;
-	}
+    public function hasWrap()
+    {
+        return false;
+    }
 
-	public function hasFieldWrap()
-	{
-		return false;
-	}
+    public function hasFieldWrap()
+    {
+        return false;
+    }
 }

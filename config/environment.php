@@ -26,10 +26,10 @@ use Nerd\Environment as Env;
  */
 return [
 
-	'localhost' => [
-		'identifier' => ['127.0.0.1', '::1', 'localhost'],
-		'field'      => 'SERVER_ADDR',
-		'mode'       => Env::MODE_DEVELOPMENT,
-	],
+    'localhost' => [
+        'identifier' => ['127.0.0.1', '::1', 'localhost'],
+        'field'      => 'SERVER_ADDR',
+        'mode'       => Env::MODE_DEVELOPMENT,
+    ],
 
 ];

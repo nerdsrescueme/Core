@@ -25,78 +25,74 @@ use Nerd\Str;
  */
 class Xcrypt implements \Nerd\Crypt\Driver
 {
-	use \Nerd\Design\Creational\Singleton;
+    use \Nerd\Design\Creational\Singleton;
 
-	/**
-	 * Encrypt a value
-	 *
-	 * ## Usage
-	 *
-	 *     $driver->encrypt($string);
-	 *
-	 * @param    string           The value to encrypt
-	 * @return   string           The encrypted value
-	 */
-	public function encrypt($string)
-	{
-		$rand = Crypt::hash(Str::random(32));
-		$retval = '';
+    /**
+     * Encrypt a value
+     *
+     * ## Usage
+     *
+     *     $driver->encrypt($string);
+     *
+     * @param    string           The value to encrypt
+     * @return string The encrypted value
+     */
+    public function encrypt($string)
+    {
+        $rand = Crypt::hash(Str::random(32));
+        $retval = '';
 
-		for($i = 0; $i < Str::length($string); $i++)
-		{
-			$retval .= Str::sub($rand, ($i % Str::length($rand)), 1).(Str::sub($rand, ($i % Str::length($rand)), 1) ^ Str::sub($string, $i, 1));
-		}
+        for ($i = 0; $i < Str::length($string); $i++) {
+            $retval .= Str::sub($rand, ($i % Str::length($rand)), 1).(Str::sub($rand, ($i % Str::length($rand)), 1) ^ Str::sub($string, $i, 1));
+        }
 
-		return \base64_encode($this->merge($retval, Crypt::key()));
-	}
+        return \base64_encode($this->merge($retval, Crypt::key()));
+    }
 
-	/**
-	 * Decrypt a value
-	 *
-	 * ## Usage
-	 *
-	 *     $driver->decrypt($string);
-	 *
-	 * @param    string           The encrypted value
-	 * @return   string           The decrypted value
-	 */
-	public function decrypt($string)
-	{
-		if(!Str::is($string = \base64_decode($string, true)))
-		{
-			throw new \Exception('Decryption error. Input value is not valid base64 data.');
-		}
+    /**
+     * Decrypt a value
+     *
+     * ## Usage
+     *
+     *     $driver->decrypt($string);
+     *
+     * @param    string           The encrypted value
+     * @return string The decrypted value
+     */
+    public function decrypt($string)
+    {
+        if (!Str::is($string = \base64_decode($string, true))) {
+            throw new \Exception('Decryption error. Input value is not valid base64 data.');
+        }
 
-		$string = $this->merge($string, Crypt::key());
-		$retval = '';
+        $string = $this->merge($string, Crypt::key());
+        $retval = '';
 
-		for($i = 0; $i < Str::length($string); $i++)
-		{
-			$retval .= (Str::sub($string, $i++, 1) ^ Str::sub($string, $i, 1));
-		}
+        for ($i = 0; $i < Str::length($string); $i++) {
+            $retval .= (Str::sub($string, $i++, 1) ^ Str::sub($string, $i, 1));
+        }
 
-		return $retval;
-	}
+        return $retval;
+    }
 
-	/**
-	 * XOR key + string Combiner
-	 *
-	 * Takes a string and key as input and computes the difference using XOR
-	 *
-	 * @param    string
-	 * @param    string
-	 * @return   string
-	 */
-	private function merge($string)
-	{
-		$hash = Crypt::key();
-		$str  = '';
+    /**
+     * XOR key + string Combiner
+     *
+     * Takes a string and key as input and computes the difference using XOR
+     *
+     * @param    string
+     * @param    string
+     * @return string
+     */
+    private function merge($string)
+    {
+        $hash = Crypt::key();
+        $str  = '';
 
-		for($i = 0; $i < Str::length($string); $i++)
-		{
-			$str .= Str::sub($string, $i, 1) ^ Str::sub($hash, ($i % Str::length($hash)), 1);
-		}
+        for ($i = 0; $i < Str::length($string); $i++) {
+            $str .= Str::sub($string, $i, 1) ^ Str::sub($hash, ($i % Str::length($hash)), 1);
+        }
 
-		return $str;
-	}
+        return $str;
+    }
 }

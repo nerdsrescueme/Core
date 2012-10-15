@@ -25,20 +25,20 @@ namespace Nerd\Design;
  */
 trait Renderable
 {
-	/**
-	 * Evaluate and render the contents of this instance
-	 *
-	 * @return   string          The evaluated and rendered contents
-	 */
-	abstract public function render();
+    /**
+     * Evaluate and render the contents of this instance
+     *
+     * @return string The evaluated and rendered contents
+     */
+    abstract public function render();
 
-	/**
-	 * Define a common object to string call
-	 *
-	 * @return   string          The evaluated and rendered contents
-	 */
-	public function  __toString()
-	{
-		return (string) $this->render();
-	}
+    /**
+     * Define a common object to string call
+     *
+     * @return string The evaluated and rendered contents
+     */
+    public function  __toString()
+    {
+        return (string) $this->render();
+    }
 }

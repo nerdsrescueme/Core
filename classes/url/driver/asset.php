@@ -17,10 +17,11 @@ namespace Nerd\Url\Driver;
 */
 class Asset extends Site
 {
-	public function __construct($resource)
-	{
-		// NEED CONFIGURATION SOMEHOW
-		$resource = '/assets'.'/'.ltrim($resource, '/');
-		return parent::__construct($resource);
-	}
+    public function __construct($resource)
+    {
+        // NEED CONFIGURATION SOMEHOW
+        $resource = '/assets'.'/'.ltrim($resource, '/');
+
+        return parent::__construct($resource);
+    }
 }

@@ -21,39 +21,35 @@ namespace Nerd\Form\Field;
  */
 class Checkbox extends Input
 {
-	/**
-	 * Render this element
-	 *
-	 * @return    string          Rendered checkbox
-	 */
-	public function render()
-	{
-		if ($this->removed)
-		{
-			return '';
-		}
+    /**
+     * Render this element
+     *
+     * @return string Rendered checkbox
+     */
+    public function render()
+    {
+        if ($this->removed) {
+            return '';
+        }
 
-		$start = $end = $startField = $endField = '';
+        $start = $end = $startField = $endField = '';
 
-		if ($this->hasWrap())
-		{
-			list($start, $end) = $this->wrap;
-		}
+        if ($this->hasWrap()) {
+            list($start, $end) = $this->wrap;
+        }
 
-		if ($this->hasFieldWrap())
-		{
-			list($startField, $endField) = $this->fieldWrap;
-		}
+        if ($this->hasFieldWrap()) {
+            list($startField, $endField) = $this->fieldWrap;
+        }
 
-		$checkbox  = "<input {$this->attributes(true)}>";
+        $checkbox  = "<input {$this->attributes(true)}>";
 
-		if (isset($this->label))
-		{
-			$this->label->text  = "{$checkbox} {$this->label->text}";
-		}
+        if (isset($this->label)) {
+            $this->label->text  = "{$checkbox} {$this->label->text}";
+        }
 
-		return $start.$startField
-		     . (isset($this->label) ? $this->label : $checkbox)
-		     . $endField.$end;
-	}
+        return $start.$startField
+             . (isset($this->label) ? $this->label : $checkbox)
+             . $endField.$end;
+    }
 }

@@ -20,36 +20,35 @@ use \Nerd\Config;
 */
 class Site extends Http
 {
-	/**
-	 * The directory beyond the domain for this application
-	 *
-	 * @var string
-	 */
-	protected $prefix;
+    /**
+     * The directory beyond the domain for this application
+     *
+     * @var string
+     */
+    protected $prefix;
 
-	public function __construct($resource)
-	{
-		if (($url = Config::get('application.url')) === null)
-		{
-			throw new \InvalidArgumentException('You must set the application.url configuration variable in application.php');
-		}
+    public function __construct($resource)
+    {
+        if (($url = Config::get('application.url')) === null) {
+            throw new \InvalidArgumentException('You must set the application.url configuration variable in application.php');
+        }
 
-		parent::url($url);
-		$this->prefix = trim($this->path, '/');
-		$this->path   = null;
-		$this->uri($resource);
-	}
+        parent::url($url);
+        $this->prefix = trim($this->path, '/');
+        $this->path   = null;
+        $this->uri($resource);
+    }
 
-	/**
-	 * Get URL as string
-	 *
-	 * @returns    string    URL as string
-	 */
-	public function render()
-	{
-		$uri = parent::render();
-		$uri = str_replace($this->host, $this->host.'/'.$this->prefix, $uri);
+    /**
+     * Get URL as string
+     *
+     * @returns    string    URL as string
+     */
+    public function render()
+    {
+        $uri = parent::render();
+        $uri = str_replace($this->host, $this->host.'/'.$this->prefix, $uri);
 
-		return $uri;
-	}
+        return $uri;
+    }
 }

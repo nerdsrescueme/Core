@@ -20,18 +20,18 @@ namespace Nerd\Design;
  */
 trait Formattable
 {
-	/**
-	 * Json serialization
-	 *
-	 * @return array
-	 */
-	public function jsonSerialize()
-	{
-		return (array) $this->__sleep();
-	}
+    /**
+     * Json serialization
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return (array) $this->__sleep();
+    }
 
-	public function serialize()
-	{
-		return (array) $this->__sleep();
-	}
+    public function serialize()
+    {
+        return (array) $this->__sleep();
+    }
 }

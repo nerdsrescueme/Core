@@ -23,107 +23,90 @@ use Nerd\Log;
  */
 abstract class Driver
 {
-	// Traits
-	use \Nerd\Design\Eventable;
+    // Traits
+    use \Nerd\Design\Eventable;
 
-	/**
-	 * Write a message to the log storage medium
-	 *
-	 * @param    integer          Level in which to log this error
-	 * @param    mixed            Message to write to the database
-	 * @return   boolean          Was the log write successful?
-	 */
-	abstract public function write($level, $message);
+    /**
+     * Write a message to the log storage medium
+     *
+     * @param    integer          Level in which to log this error
+     * @param    mixed            Message to write to the database
+     * @return boolean Was the log write successful?
+     */
+    abstract public function write($level, $message);
 
-	/**
-	 * Get x rows from log storage medium
-	 *
-	 * @param    integer          Number of rows to pull from the log
-	 * @return   array            Log entries
-	 */
-	abstract public function get($rows = null);
+    /**
+     * Get x rows from log storage medium
+     *
+     * @param    integer          Number of rows to pull from the log
+     * @return array Log entries
+     */
+    abstract public function get($rows = null);
 
 
-	protected function parseLevel($level)
-	{
-		if (is_string($level))
-		{
-			$level = strtolower($level);
-		}
+    protected function parseLevel($level)
+    {
+        if (is_string($level)) {
+            $level = strtolower($level);
+        }
 
-		if ($level <= Log::DEBUG or $level === 'debug')
-		{
-			return Log::DEBUG;
-		}
-		elseif ($level <= Log::INFO or $level === 'info')
-		{
-			return Log::INFO;
-		}
-		elseif ($level <= Log::NOTICE or $level === 'notice')
-		{
-			return Log::NOTICE;
-		}
-		elseif ($level <= Log::WARNING or $level === 'warning')
-		{
-			return Log::WARNING;
-		}
-		elseif ($level <= Log::ERROR or $level === 'error')
-		{
-			return Log::ERROR;
-		}
-		elseif ($level <= Log::CRITICAL or $level === 'critical')
-		{
-			return Log::CRITICAL;
-		}
-		elseif ($level <= Log::ALERT or $level === 'alert')
-		{
-			return Log::ALERT;
-		}
-		elseif ($level <= Log::EMERGENCY or $level === 'emergency')
-		{
-			return Log::EMERGENCY;
-		}
+        if ($level <= Log::DEBUG or $level === 'debug') {
+            return Log::DEBUG;
+        } elseif ($level <= Log::INFO or $level === 'info') {
+            return Log::INFO;
+        } elseif ($level <= Log::NOTICE or $level === 'notice') {
+            return Log::NOTICE;
+        } elseif ($level <= Log::WARNING or $level === 'warning') {
+            return Log::WARNING;
+        } elseif ($level <= Log::ERROR or $level === 'error') {
+            return Log::ERROR;
+        } elseif ($level <= Log::CRITICAL or $level === 'critical') {
+            return Log::CRITICAL;
+        } elseif ($level <= Log::ALERT or $level === 'alert') {
+            return Log::ALERT;
+        } elseif ($level <= Log::EMERGENCY or $level === 'emergency') {
+            return Log::EMERGENCY;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * Convert any valid PHP type to a string
-	 *
-	 * @param    mixed          PHP value to convert
-	 * @return   string|false   String representation of message, or false
-	 */
-	protected function stringify($message)
-	{
-		$type = strtolower(gettype($message));
+    /**
+     * Convert any valid PHP type to a string
+     *
+     * @param    mixed          PHP value to convert
+     * @return string|false String representation of message, or false
+     */
+    protected function stringify($message)
+    {
+        $type = strtolower(gettype($message));
 
-		switch ($type)
-		{
-			case 'boolean' :
-				return $message ? 'True' : 'False';
-				break;
-			case 'integer' :
-				return (string) $message;
-				break;
-			case 'double' :
-			case 'float' :
-				return (string) $message;
-				break;
-			case 'string' :
-				return $message;
-				break;
-			case 'array' :
-				return print_r($message, true);
-				break;
-			case 'object' :
-				return var_export($message, true);
-				break;
-			case 'resource' :
-				return 'Resource: '.get_resource_type($message);
-			case 'null' :
-			default :
-				return false;
-				
-		}
-	}
+        switch ($type) {
+            case 'boolean' :
+                return $message ? 'True' : 'False';
+                break;
+            case 'integer' :
+                return (string) $message;
+                break;
+            case 'double' :
+            case 'float' :
+                return (string) $message;
+                break;
+            case 'string' :
+                return $message;
+                break;
+            case 'array' :
+                return print_r($message, true);
+                break;
+            case 'object' :
+                return var_export($message, true);
+                break;
+            case 'resource' :
+                return 'Resource: '.get_resource_type($message);
+            case 'null' :
+            default :
+                return false;
+
+        }
+    }
 }

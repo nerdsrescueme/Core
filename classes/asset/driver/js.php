@@ -16,17 +16,18 @@ namespace Nerd\Asset\Driver;
  * @package Nerd
  * @subpackage Asset
  */
-class Js extends \Nerd\Asset\Driver {
+class Js extends \Nerd\Asset\Driver
+{
+    public function compress()
+    {
+        parent::compress();
+        $this->contents .= '/** COMPRESSED **/';
 
-	public function compress()
-	{
-		parent::compress();
-		$this->contents .= '/** COMPRESSED **/';
-		return $this;
-	}
+        return $this;
+    }
 
-	public function tag()
-	{
-		return "<script src=\"{$this->file}\" type=\"text/javascript\"></script>";
-	}
+    public function tag()
+    {
+        return "<script src=\"{$this->file}\" type=\"text/javascript\"></script>";
+    }
 }

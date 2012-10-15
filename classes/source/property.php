@@ -23,6 +23,6 @@ namespace Nerd\Source;
 */
 class Property extends \ReflectionProperty
 {
-	use \Nerd\Source\Traits\Docblock
-	  , \Nerd\Source\Traits\Parentclass;
+    use \Nerd\Source\Traits\Docblock
+      , \Nerd\Source\Traits\Parentclass;
 }

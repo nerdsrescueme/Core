@@ -25,17 +25,18 @@ namespace Nerd\Form;
  */
 abstract class Container extends Field
 {
-	public $fields;
-	protected $element;
+    public $fields;
+    protected $element;
 
-	public function __construct()
-	{
-		$this->fields = new \Nerd\Design\Collection(func_get_args());
-	}
+    public function __construct()
+    {
+        $this->fields = new \Nerd\Design\Collection(func_get_args());
+    }
 
-	public function field(Field $field, array $options = [])
-	{
-		$this->fields->add($field);
-		return $field;
-	}
+    public function field(Field $field, array $options = [])
+    {
+        $this->fields->add($field);
+
+        return $field;
+    }
 }

@@ -18,69 +18,67 @@ namespace Nerd\Form\Field;
  */
 class Textarea extends Input
 {
-	/**
-	 * Extended allowed field attributes
-	 *
-	 * @see Nerd\Design\Attributable
-	 * @var array
-	 */
-	protected static $localAttributes = ['form'];
+    /**
+     * Extended allowed field attributes
+     *
+     * @see Nerd\Design\Attributable
+     * @var array
+     */
+    protected static $localAttributes = ['form'];
 
-	/**
-	 * Attributes placeholder
-	 *
-	 * @var array
-	 */
-	protected static $attributes;
+    /**
+     * Attributes placeholder
+     *
+     * @var array
+     */
+    protected static $attributes;
 
-	/**
-	 * Button text
-	 *
-	 * @var string
-	 */
-	public $text;
+    /**
+     * Button text
+     *
+     * @var string
+     */
+    public $text;
 
-	/**
-	 * Add text to this button object
-	 *
-	 * @param    string          Text to be displayed
-	 * @return   Button
-	 */
-	public function text($text)
-	{
-		$this->text = trim($text);
-		return $this;
-	}
+    /**
+     * Add text to this button object
+     *
+     * @param    string          Text to be displayed
+     * @return Button
+     */
+    public function text($text)
+    {
+        $this->text = trim($text);
 
-	/**
-	 * Render this element
-	 *
-	 * @return    string          Rendered button
-	 */
-	public function render()
-	{
-		if ($this->removed)
-		{
-			return '';
-		}
+        return $this;
+    }
 
-		$start = $end = $fieldStart = $fieldEnd = '';
+    /**
+     * Render this element
+     *
+     * @return string Rendered button
+     */
+    public function render()
+    {
+        if ($this->removed) {
+            return '';
+        }
 
-		if ($this->hasWrap())
-		{
-			list($start, $end) = $this->wrap;
-		}
+        $start = $end = $fieldStart = $fieldEnd = '';
 
-		if ($this->hasFieldWrap())
-		{
-			list($fieldStart, $fieldEnd) = $this->fieldWrap;
-		}
+        if ($this->hasWrap()) {
+            list($start, $end) = $this->wrap;
+        }
 
-		return $start
-		     . (isset($this->label) ? $this->label : '')
-			 . $fieldStart
-		     . "<textarea{$this->attributes(true)}>{$this->text}</textarea>"
-			 . $fieldEnd
-		     . $end;
-	}
+        if ($this->hasFieldWrap()) {
+            list($fieldStart, $fieldEnd) = $this->fieldWrap;
+        }
+
+        return $start
+             . (isset($this->label) ? $this->label : '')
+             . $fieldStart
+             . "<textarea{$this->attributes(true)}>{$this->text}</textarea>"
+             . $fieldEnd
+             . $end;
+    }
 }

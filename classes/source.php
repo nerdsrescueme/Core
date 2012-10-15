@@ -26,26 +26,26 @@ namespace Nerd;
 */
 class Source
 {
-	/**
-	 * Get a SOURCE Class object
-	 *
-	 * @param     string      Fully namespaced class to load
-	 * @return    Nerd\Source\Klass
-	 */
-	public static function getClass($class)
-	{
-		return new Source\Klass($class);
-	}
+    /**
+     * Get a SOURCE Class object
+     *
+     * @param     string      Fully namespaced class to load
+     * @return Nerd\Source\Klass
+     */
+    public static function getClass($class)
+    {
+        return new Source\Klass($class);
+    }
 
-	/**
-	 * Get a SOURCE Method object
-	 *
-	 * @param     string     Fully namespaced class to load
-	 * @param     string     Class method to retrieve
-	 * @return    Nerd\Source\Method
-	 */
-	public static function getMethod($class, $method)
-	{
-		return new Source\Method($class, $method);
-	}
+    /**
+     * Get a SOURCE Method object
+     *
+     * @param     string     Fully namespaced class to load
+     * @param     string     Class method to retrieve
+     * @return Nerd\Source\Method
+     */
+    public static function getMethod($class, $method)
+    {
+        return new Source\Method($class, $method);
+    }
 }

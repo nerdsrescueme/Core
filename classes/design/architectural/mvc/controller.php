@@ -30,30 +30,30 @@ namespace Nerd\Design\Architectural\MVC;
  */
 abstract class Controller
 {
-	// Traits
-	use \Nerd\Design\Eventable;
+    // Traits
+    use \Nerd\Design\Eventable;
 
-	/**
-	 * The before method is called before the requested action is called. This
-	 * empty function exists to allow us to skip method existance lookups for
-	 * controllers.
-	 *
-	 * @return   void             No value is returned
-	 */
-	public function before()
-	{
-		$this->triggerEvent('controller.setup', [$this]);
-	}
+    /**
+     * The before method is called before the requested action is called. This
+     * empty function exists to allow us to skip method existance lookups for
+     * controllers.
+     *
+     * @return void No value is returned
+     */
+    public function before()
+    {
+        $this->triggerEvent('controller.setup', [$this]);
+    }
 
-	/**
-	 * The after method is called after the request action is called. Like the
-	 * before method of this class, this exists simply to allow us to skip
-	 * method existance lookups.
-	 *
-	 * @return   void             No value is returned
-	 */
-	public function after()
-	{
-		$this->triggerEvent('controller.teardown', [$this]);
-	}
+    /**
+     * The after method is called after the request action is called. Like the
+     * before method of this class, this exists simply to allow us to skip
+     * method existance lookups.
+     *
+     * @return void No value is returned
+     */
+    public function after()
+    {
+        $this->triggerEvent('controller.teardown', [$this]);
+    }
 }

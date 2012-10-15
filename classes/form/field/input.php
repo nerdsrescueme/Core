@@ -20,31 +20,31 @@ namespace Nerd\Form\Field;
  */
 abstract class Input extends \Nerd\Form\Field
 {
-	/**
-	 * Extended allowed field attributes
-	 *
-	 * @see Nerd\Design\Attributable
-	 * @var array
-	 */
-	protected static $localAttributes = ['event.form', 'form.input', 'form.html5'];
+    /**
+     * Extended allowed field attributes
+     *
+     * @see Nerd\Design\Attributable
+     * @var array
+     */
+    protected static $localAttributes = ['event.form', 'form.input', 'form.html5'];
 
 
-	/**
-	 * Class Constructor overload
-	 *
-	 * Perform basic instantiation, but automatically assign the type attribute to
-	 * the name of the extended form class.
-	 *
-	 * @param    array          Field options/attributes
-	 * @return   Input
-	 */
-	public function __construct(array $options = [])
-	{
-		parent::__construct($options);
+    /**
+     * Class Constructor overload
+     *
+     * Perform basic instantiation, but automatically assign the type attribute to
+     * the name of the extended form class.
+     *
+     * @param    array          Field options/attributes
+     * @return Input
+     */
+    public function __construct(array $options = [])
+    {
+        parent::__construct($options);
 
-		$class = explode('\\', get_called_class());
-		$class = strtolower(end($class));
+        $class = explode('\\', get_called_class());
+        $class = strtolower(end($class));
 
-		$this->option('type', $class);
-	}
+        $this->option('type', $class);
+    }
 }

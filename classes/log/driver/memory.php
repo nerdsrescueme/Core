@@ -18,37 +18,36 @@ namespace Nerd\Log\Driver;
  */
 class Memory extends \Nerd\Log\Driver
 {
-	// Traits
-	use \Nerd\Design\Creational\Singleton;
+    // Traits
+    use \Nerd\Design\Creational\Singleton;
 
-	/**
-	 * In memory log
-	 *
-	 * @var array
-	 */
-	protected $log = [];
+    /**
+     * In memory log
+     *
+     * @var array
+     */
+    protected $log = [];
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function write($level, $message)
-	{
-		$level   = $this->parseLevel($level);
-		$message = $this->stringify($message);
+    /**
+     * {@inheritdoc}
+     */
+    public function write($level, $message)
+    {
+        $level   = $this->parseLevel($level);
+        $message = $this->stringify($message);
 
-		return array_unshift($this->log, $message);
-	}
+        return array_unshift($this->log, $message);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function get($rows = null)
-	{
-		if ($rows === null)
-		{
-			return $this->log;
-		}
+    /**
+     * {@inheritdoc}
+     */
+    public function get($rows = null)
+    {
+        if ($rows === null) {
+            return $this->log;
+        }
 
-		return array_slice($this->log, 0, $rows);
-	}
+        return array_slice($this->log, 0, $rows);
+    }
 }

@@ -22,91 +22,79 @@ namespace Nerd\Form\Field;
  */
 class Select extends \Nerd\Form\Field
 {
-	/**
-	 * Extended allowed field attributes
-	 *
-	 * @see Nerd\Design\Attributable
-	 * @var array
-	 */
-	protected static $localAttributes = ['event.form', 'form'];
+    /**
+     * Extended allowed field attributes
+     *
+     * @see Nerd\Design\Attributable
+     * @var array
+     */
+    protected static $localAttributes = ['event.form', 'form'];
 
-	/**
-	 * Attributes placeholder
-	 *
-	 * @var array
-	 */
-	protected static $attributes;
+    /**
+     * Attributes placeholder
+     *
+     * @var array
+     */
+    protected static $attributes;
 
-	/**
-	 * Render this element
-	 *
-	 * @return    string          Rendered select field
-	 */
-	public function render()
-	{
-		if ($this->removed)
-		{
-			return '';
-		}
+    /**
+     * Render this element
+     *
+     * @return string Rendered select field
+     */
+    public function render()
+    {
+        if ($this->removed) {
+            return '';
+        }
 
-		$start = $end = $startField = $endField = '';
+        $start = $end = $startField = $endField = '';
 
-		if ($this->hasWrap())
-		{
-			list($start, $end) = $this->wrap;
-		}
+        if ($this->hasWrap()) {
+            list($start, $end) = $this->wrap;
+        }
 
-		if ($this->hasFieldWrap())
-		{
-			list($startField, $endField) = $this->fieldWrap;
-		}
+        if ($this->hasFieldWrap()) {
+            list($startField, $endField) = $this->fieldWrap;
+        }
 
-		$options  = (array) $this->option('options');
-		$optstr   = '';
-		$selected = $this->option('selected');
+        $options  = (array) $this->option('options');
+        $optstr   = '';
+        $selected = $this->option('selected');
 
-		foreach ($options as $opt => $label)
-		{
-			// Support for optgroups.
-			if (is_array($label))
-			{
-				$optstr .= "<optgroup label=\"$opt\">";
+        foreach ($options as $opt => $label) {
+            // Support for optgroups.
+            if (is_array($label)) {
+                $optstr .= "<optgroup label=\"$opt\">";
 
-				foreach ($label as $opt2 => $label2)
-				{
-					$label2 = trim($label2, "'");
+                foreach ($label as $opt2 => $label2) {
+                    $label2 = trim($label2, "'");
 
-					if ((string) $opt2 === (string) $selected)
-					{
-						$optstr .= "<option value=\"$opt2\" selected>$label2</option>";
-					}
-					else
-					{
-						$optstr .= "<option value=\"$opt2\">$label2</option>";
-					}
-				}
+                    if ((string) $opt2 === (string) $selected) {
+                        $optstr .= "<option value=\"$opt2\" selected>$label2</option>";
+                    } else {
+                        $optstr .= "<option value=\"$opt2\">$label2</option>";
+                    }
+                }
 
-				$optstr .= '</optgroup>';
-				continue;
-			}
+                $optstr .= '</optgroup>';
+                continue;
+            }
 
-			$label = trim($label, "'");
+            $label = trim($label, "'");
 
-			if ((string) $opt === (string) $selected)
-			{
-				$optstr .= "<option value=\"$opt\" selected>$label</option>";
-			}
-			else
-			{
-				$optstr .= "<option value=\"$opt\">$label</option>";
-			}
-		}
+            if ((string) $opt === (string) $selected) {
+                $optstr .= "<option value=\"$opt\" selected>$label</option>";
+            } else {
+                $optstr .= "<option value=\"$opt\">$label</option>";
+            }
+        }
 
-		return $start
-		     . (isset($this->label) ? $this->label : '')
-			 . $startField
-		     . "<select {$this->attributes(true)}>{$optstr}</select>"
-			 . $endField
-		     . $end;
-	}
+        return $start
+             . (isset($this->label) ? $this->label : '')
+             . $startField
+             . "<select {$this->attributes(true)}>{$optstr}</select>"
+             . $endField
+             . $end;
+    }
 }

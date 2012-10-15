@@ -24,31 +24,30 @@ use \Nerd\Design\Enumerable as Enum;
 * @package Nerd
 * @subpackage Source
 */
-class Code {
+class Code
+{
+    /**
+     * Enumerable array containing lines of source code
+     *
+     * @var    Nerd\Design\Enumerable
+     */
+    protected $source;
 
-	/**
-	 * Enumerable array containing lines of source code
-	 *
-	 * @var    Nerd\Design\Enumerable
-	 */
-	protected $source;
+    /**
+     * Class Constructor
+     *
+     * Takes an absolute file path and converts it into an array of
+     * the files lines of code. The
+     *
+     * @param     string     Absolute path to a source file
+     * @return   $this
+     */
+    public function __construct($file)
+    {
+        if (!$lines = file($file)) {
+            throw new \OutOfBoundsException('File ['.$file.'] could not be found.');
+        }
 
-	/**
-	 * Class Constructor
-	 *
-	 * Takes an absolute file path and converts it into an array of
-	 * the files lines of code. The 
-	 *
-	 * @param     string     Absolute path to a source file
-	 * @return    $this
-	 */
-	public function __construct($file)
-	{
-		if(!$lines = file($file))
-		{
-			throw new \OutOfBoundsException('File ['.$file.'] could not be found.');
-		}
-
-		$this->source = new Enum($lines);
-	}
+        $this->source = new Enum($lines);
+    }
 }

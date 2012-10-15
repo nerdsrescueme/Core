@@ -20,10 +20,10 @@ namespace Nerd\Design;
  */
 interface Serializable extends \JsonSerializable
 {
-	/**
-	 * Return an array of object data to be formatted
-	 *
-	 * @return array
-	 */
-	public function __sleep();
+    /**
+     * Return an array of object data to be formatted
+     *
+     * @return array
+     */
+    public function __sleep();
 }

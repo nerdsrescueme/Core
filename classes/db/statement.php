@@ -18,23 +18,23 @@ namespace Nerd\DB;
  * @package    Nerd
  * @subpackage DB
  */
-class Statement extends \PDOStatement {
+class Statement extends \PDOStatement
+{
+    /**
+     * Database connection instance
+     *
+     * @var    object
+     */
+    public $dbh;
 
-	/**
-	 * Database connection instance
-	 *
-	 * @var    object
-	 */
-	public $dbh;
-
-	/**
-	 * Class constructor
-	 *
-	 * @param     \Nerd\DB     Database connection instance
-	 * @return    void
-	 */
-	protected function __construct(\Nerd\DB $connection)
-	{
-		$this->dbh = $connection;
-	}
+    /**
+     * Class constructor
+     *
+     * @param     \Nerd\DB     Database connection instance
+     * @return void
+     */
+    protected function __construct(\Nerd\DB $connection)
+    {
+        $this->dbh = $connection;
+    }
 }

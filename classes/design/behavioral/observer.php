@@ -24,6 +24,6 @@ namespace Nerd\Design\Behavioral;
  * @package    Nerd
  * @subpackage Design
  */
-abstract class Observer {
-
+abstract class Observer
+{
 }

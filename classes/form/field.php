@@ -14,7 +14,6 @@
 namespace Nerd\Form;
 
 // Aliasing rules
-use Nerd\Arr;
 use Nerd\Form;
 
 /**
@@ -29,102 +28,93 @@ use Nerd\Form;
  */
 abstract class Field
 {
-	// Traits
-	use \Nerd\Design\Attributable
-	  , \Nerd\Design\Wrappable;
+    // Traits
+    use \Nerd\Design\Attributable
+      , \Nerd\Design\Wrappable;
 
-	private static $localAttributes = ['form'];
+    private static $localAttributes = ['form'];
 
-	public $label;
-	public $removed = false;
+    public $label;
+    public $removed = false;
 
-	public function __construct(array $options = [])
-	{
-		foreach ($options as $key => $value)
-		{
-			$this->option($key, $value);
-		}
-	}
+    public function __construct(array $options = [])
+    {
+        foreach ($options as $key => $value) {
+            $this->option($key, $value);
+        }
+    }
 
-	public function label($text = null, array $options = [])
-	{
-		if ($text === null)
-		{
-			return $this->label ?: false;
-		}
+    public function label($text = null, array $options = [])
+    {
+        if ($text === null) {
+            return $this->label ?: false;
+        }
 
-		$this->label = new Label($text, $options, $this);
-		return $this;
-	}
+        $this->label = new Label($text, $options, $this);
 
-	public function wrap($false)
-	{
-		if ($false === false)
-		{
-			$this->wrap = null;
-		}
-		else
-		{
-			$this->wrap = func_get_args();
-		}
+        return $this;
+    }
 
-		return $this;
-	}
+    public function wrap($false)
+    {
+        if ($false === false) {
+            $this->wrap = null;
+        } else {
+            $this->wrap = func_get_args();
+        }
 
-	public function wrapField($false)
-	{
-		if ($false === false)
-		{
-			$this->fieldWrap = null;
-		}
-		else
-		{
-			$this->fieldWrap = func_get_args();
-		}
+        return $this;
+    }
 
-		return $this;
-	}
+    public function wrapField($false)
+    {
+        if ($false === false) {
+            $this->fieldWrap = null;
+        } else {
+            $this->fieldWrap = func_get_args();
+        }
 
-	public function hasWrap()
-	{
-		return is_array($this->wrap);
-	}
+        return $this;
+    }
 
-	public function hasFieldWrap()
-	{
-		return is_array($this->fieldWrap);
-	}
+    public function hasWrap()
+    {
+        return is_array($this->wrap);
+    }
 
-	public function render()
-	{
-		if ($this->removed)
-		{
-			return '';
-		}
+    public function hasFieldWrap()
+    {
+        return is_array($this->fieldWrap);
+    }
 
-		$start = $end = $fieldStart = $fieldEnd = '';
+    public function render()
+    {
+        if ($this->removed) {
+            return '';
+        }
 
-		if ($this->hasWrap())
-		{
-			list($start, $end) = $this->wrap;
-		}
+        $start = $end = $fieldStart = $fieldEnd = '';
 
-		if ($this->hasFieldWrap())
-		{
-			list($fieldStart, $fieldEnd) = $this->fieldWrap;
-		}
+        if ($this->hasWrap()) {
+            list($start, $end) = $this->wrap;
+        }
 
-		return $start
-		     . (isset($this->label) ? $this->label : '')
-			 . $fieldStart
-		     . "<input{$this->attributes(true)}>"
-			 . $fieldEnd
-		     . $end;
-	}
+        if ($this->hasFieldWrap()) {
+            list($fieldStart, $fieldEnd) = $this->fieldWrap;
+        }
 
-	public function remove()
-	{
-		$this->removed = true;
-		return $this;
-	}
+        return $start
+             . (isset($this->label) ? $this->label : '')
+             . $fieldStart
+             . "<input{$this->attributes(true)}>"
+             . $fieldEnd
+             . $end;
+    }
+
+    public function remove()
+    {
+        $this->removed = true;
+
+        return $this;
+    }
 }

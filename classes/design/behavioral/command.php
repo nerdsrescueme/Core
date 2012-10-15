@@ -34,37 +34,37 @@ namespace Nerd\Design\Behavioral;
  * @package    Nerd
  * @subpackage Design
  */
-abstract class Command {
+abstract class Command
+{
+    /**
+     * The object commanded by this class
+     *
+     * @var    object
+     */
+    protected $comandee;
 
-	/**
-	 * The object commanded by this class
-	 *
-	 * @var    object
-	 */
-	protected $comandee;
+    /**
+     * Class constructor
+     *
+     * @return void No value is returned
+     */
+    public function __construct($comandee = null)
+    {
+        $this->comandee = $commandee;
+    }
 
-	/**
-	 * Class constructor
-	 *
-	 * @return   void             No value is returned
-	 */
-	public function __construct($comandee = null)
-	{
-		$this->comandee = $commandee;
-	}
+    /**
+     * Magic class to function method
+     *
+     * Calls the child execute method upon invoke
+     *
+     * @return mixed Undefined
+     */
+    public function __invoke()
+    {
+        return call_user_func(array($this, 'execute'), func_get_args());
+    }
 
-	/**
-	 * Magic class to function method
-	 * 
-	 * Calls the child execute method upon invoke
-	 *
-	 * @return   mixed            Undefined
-	 */
-	public function __invoke()
-	{
-		return call_user_func(array($this, 'execute'), func_get_args());
-	}
-
-	// Implied method: execute
-	abstract public function execute();
+    // Implied method: execute
+    abstract public function execute();
 }

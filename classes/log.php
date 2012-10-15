@@ -23,56 +23,56 @@ namespace Nerd;
  */
 class Log extends Design\Creational\SingletonFactory implements Design\Initializable
 {
-	// Class constants
-	const DEBUG     = 100;
-	const INFO      = 200;
-	const NOTICE    = 250;
-	const WARNING   = 300;
-	const ERROR     = 400;
-	const CRITICAL  = 500;
-	const ALERT     = 550;
-	const EMERGENCY = 600;
+    // Class constants
+    const DEBUG     = 100;
+    const INFO      = 200;
+    const NOTICE    = 250;
+    const WARNING   = 300;
+    const ERROR     = 400;
+    const CRITICAL  = 500;
+    const ALERT     = 550;
+    const EMERGENCY = 600;
 
-	/**
-	 * The default driver to be utilized by your application in the event a
-	 * specific driver isn't called.
-	 *
-	 * @var string
-	 */
-	public static $defaultDriver = 'void';
+    /**
+     * The default driver to be utilized by your application in the event a
+     * specific driver isn't called.
+     *
+     * @var string
+     */
+    public static $defaultDriver = 'void';
 
-	/**
-	 * Integer to level array
-	 *
-	 * @var array
-	 */
-	protected static $levels = [
-		100 => 'DEBUG',
-		200 => 'INFO',
-		250 => 'NOTICE',
-		300 => 'WARNING',
-		400 => 'ERROR',
-		500 => 'CRITICAL',
-		550 => 'ALERT',
-		600 => 'EMERGENCY',
-	];
+    /**
+     * Integer to level array
+     *
+     * @var array
+     */
+    protected static $levels = [
+        100 => 'DEBUG',
+        200 => 'INFO',
+        250 => 'NOTICE',
+        300 => 'WARNING',
+        400 => 'ERROR',
+        500 => 'CRITICAL',
+        550 => 'ALERT',
+        600 => 'EMERGENCY',
+    ];
 
-	/**
-	 * Current timezone, used for dates
-	 *
-	 * @var string
-	 */
-	protected static $timezone;
+    /**
+     * Current timezone, used for dates
+     *
+     * @var string
+     */
+    protected static $timezone;
 
-	/**
-	 * Initialize the Log
-	 *
-	 * Sets information required to insert valid and accurate log entries
-	 * 
-	 * @return   void             No value is returned
-	 */
-	public static function __initialize()
-	{
-		static::$timezone = Config::get('application.timezone', 'UTC');
-	}
+    /**
+     * Initialize the Log
+     *
+     * Sets information required to insert valid and accurate log entries
+     *
+     * @return void No value is returned
+     */
+    public static function __initialize()
+    {
+        static::$timezone = Config::get('application.timezone', 'UTC');
+    }
 }

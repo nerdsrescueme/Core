@@ -16,11 +16,11 @@
  */
 return array(
 
-	/**
-	 * The default application route to utilize, when none is provided.
-	 *
-	 * @var    string
-	 */
-	'_default_' => 'home/index',
+    /**
+     * The default application route to utilize, when none is provided.
+     *
+     * @var    string
+     */
+    '_default_' => 'home/index',
 
 );

@@ -22,261 +22,239 @@ namespace Nerd;
  */
 class Arr
 {
-	/**
-	 * Unsets an array key, using JavaScript "dot" notation
-	 *
-	 * ## Usage
-	 *
-	 *     Arr::delete($myArray, 'some.key');
-	 *
-	 * @param    string|array     s
-	 * @param    array            The array to search
-	 * @param    string           The dot-notated key or array of keys
-	 * @return   boolean          Returns true if the array key was removed, otherwise false
-	 */
-	public static function delete(array &$array, $key)
-	{
-		if(\is_null($key))
-		{
-			return false;
-		}
+    /**
+     * Unsets an array key, using JavaScript "dot" notation
+     *
+     * ## Usage
+     *
+     *     Arr::delete($myArray, 'some.key');
+     *
+     * @param    string|array     s
+     * @param    array            The array to search
+     * @param    string           The dot-notated key or array of keys
+     * @return boolean Returns true if the array key was removed, otherwise false
+     */
+    public static function delete(array &$array, $key)
+    {
+        if (\is_null($key)) {
+            return false;
+        }
 
-		if(static::is($key))
-		{
-			$return = [];
+        if (static::is($key)) {
+            $return = [];
 
-			foreach($key as $k)
-			{
-				$return[$k] = static::delete($array, $k);
-			}
+            foreach ($key as $k) {
+                $return[$k] = static::delete($array, $k);
+            }
 
-			return $return;
-		}
+            return $return;
+        }
 
-		$key_parts = \explode('.', $key);
+        $key_parts = \explode('.', $key);
 
-		if(!static::is($array) or !isset($array[$key_parts[0]]))
-		{
-			return false;
-		}
+        if (!static::is($array) or !isset($array[$key_parts[0]])) {
+            return false;
+        }
 
-		$this_key = \array_shift($key_parts);
+        $this_key = \array_shift($key_parts);
 
-		if(!empty($key_parts))
-		{
-			$key = implode('.', $key_parts);
-			return static::delete($array[$this_key], $key);
-		}
-		else
-		{
-			unset($array[$this_key]);
-		}
+        if (!empty($key_parts)) {
+            $key = implode('.', $key_parts);
 
-		return true;
-	}
+            return static::delete($array[$this_key], $key);
+        } else {
+            unset($array[$this_key]);
+        }
 
-	/**
-	 * @todo Document and test
-	 */
-	public static function flatten(array $array)
-	{
-		for($x = 0; $x <= count($array); $x++)
-		{
-			if (is_array($array[$x]))
-			{
-				$return = array_flatten($array[$x],$return);
-			}
-			else
-			{
-				if($array[$x])
-				{
-					$return[] = $array[$x];
-				}
-			}
-		}
+        return true;
+    }
 
-		return $return;
-	}
+    /**
+     * @todo Document and test
+     */
+    public static function flatten(array $array)
+    {
+        for ($x = 0; $x <= count($array); $x++) {
+            if (is_array($array[$x])) {
+                $return = array_flatten($array[$x],$return);
+            } else {
+                if ($array[$x]) {
+                    $return[] = $array[$x];
+                }
+            }
+        }
 
-	/**
-	 * Get an item from an array.
-	 *
-	 * If the specified key is null, the entire array will be returned. The
-	 * array may also be accessed using JavaScript "dot" style notation.
-	 * Retrieving items nested in multiple arrays is also supported.
-	 *
-	 * ## Usage
-	 *
-	 *     Arr::get($myArray, 'parentKey.childKey', 'defaultValue');
-	 *
-	 * @param    array            The array to be searched
-	 * @param    string           The key to retrieve, using "dot" style notation
-	 * @param    mixed            A default value to provide if none if found, defaults to null
-	 * @param    boolean          In the event a closure is encountered, call it. Defaults to true
-	 * @return   mixed            Returns the value of the key, otherwise the default
-	 */
-	public static function get(array $array, $key, $default = null, $useClosure = true)
-	{
-		if($key === null)
-		{
-			return $array;
-		}
+        return $return;
+    }
 
-		$keys = \explode('.', $key);
+    /**
+     * Get an item from an array.
+     *
+     * If the specified key is null, the entire array will be returned. The
+     * array may also be accessed using JavaScript "dot" style notation.
+     * Retrieving items nested in multiple arrays is also supported.
+     *
+     * ## Usage
+     *
+     *     Arr::get($myArray, 'parentKey.childKey', 'defaultValue');
+     *
+     * @param    array            The array to be searched
+     * @param    string           The key to retrieve, using "dot" style notation
+     * @param    mixed            A default value to provide if none if found, defaults to null
+     * @param    boolean          In the event a closure is encountered, call it. Defaults to true
+     * @return mixed Returns the value of the key, otherwise the default
+     */
+    public static function get(array $array, $key, $default = null, $useClosure = true)
+    {
+        if ($key === null) {
+            return $array;
+        }
 
-		foreach($keys as $segment)
-		{
-			if(!static::is($array) or !isset($array[$segment]))
-			{
-				return \is_callable($default) ? \call_user_func($default) : $default;
-			}
+        $keys = \explode('.', $key);
 
-			$array = $array[$segment];
-		}
+        foreach ($keys as $segment) {
+            if (!static::is($array) or !isset($array[$segment])) {
+                return \is_callable($default) ? \call_user_func($default) : $default;
+            }
 
-		return (($array instanceof \Closure) and $useClosure) ? \call_user_func($array) : $array;
-	}
+            $array = $array[$segment];
+        }
 
-	/**
-	 * Determine if an array key (or keys) exists, with JavaScript "dot"
-	 * notation.
-	 *
-	 * ## Usage
-	 *
-	 *     $exists = Arr::has($myArray, 'some.key');
-	 *
-	 * @param    array            The array to search
-	 * @param    mixed            The dot-notated key, or an array of keys
-	 * @return   boolean          Returns true if the array key (or keys) exist, otherwise false
-	 */
-	public static function has(array $array, $key)
-	{
-		foreach(\explode('.', $key) as $key_part)
-		{
-			if(!static::is($array) or !isset($array[$key_part]))
-			{
-				return false;
-			}
+        return (($array instanceof \Closure) and $useClosure) ? \call_user_func($array) : $array;
+    }
 
-			$array = $array[$key_part];
-		}
+    /**
+     * Determine if an array key (or keys) exists, with JavaScript "dot"
+     * notation.
+     *
+     * ## Usage
+     *
+     *     $exists = Arr::has($myArray, 'some.key');
+     *
+     * @param    array            The array to search
+     * @param    mixed            The dot-notated key, or an array of keys
+     * @return boolean Returns true if the array key (or keys) exist, otherwise false
+     */
+    public static function has(array $array, $key)
+    {
+        foreach (\explode('.', $key) as $key_part) {
+            if (!static::is($array) or !isset($array[$key_part])) {
+                return false;
+            }
 
-		return true;
-	}
+            $array = $array[$key_part];
+        }
 
-	/**
-	 * Determine whether a variable, or multiple variables, is of the array
-	 * type. The only difference of this function compared to the native
-	 * is_array function is that it allows you to pass multiple arrays.
-	 * Additionally, this method allows for instances of \ArrayAccess to be
-	 * considered valid arrays.
-	 *
-	 * ## Usage
-	 *
-	 *     $return = Arr::is($array1, $array2, $array3);
-	 *
-	 * @param    mixed            Argument #n of variables to check
-	 * @return   boolean          Returns true if all variables passed are arrays, otherwise false
-	 */
-	public static function is()
-	{
-		$args = \func_get_args();
+        return true;
+    }
 
-		if(!\count($args))
-		{
-			return false;
-		}
+    /**
+     * Determine whether a variable, or multiple variables, is of the array
+     * type. The only difference of this function compared to the native
+     * is_array function is that it allows you to pass multiple arrays.
+     * Additionally, this method allows for instances of \ArrayAccess to be
+     * considered valid arrays.
+     *
+     * ## Usage
+     *
+     *     $return = Arr::is($array1, $array2, $array3);
+     *
+     * @param    mixed            Argument #n of variables to check
+     * @return boolean Returns true if all variables passed are arrays, otherwise false
+     */
+    public static function is()
+    {
+        $args = \func_get_args();
 
-		foreach($args as $var)
-		{
-			if(!(\is_array($var) or ($var instanceof \ArrayAccess)))
-			{
-				return false;
-			}
-		}
+        if (!\count($args)) {
+            return false;
+        }
 
-		return true;
-	}
+        foreach ($args as $var) {
+            if (!(\is_array($var) or ($var instanceof \ArrayAccess))) {
+                return false;
+            }
+        }
 
-	/**
-	 * @todo Document and test
-	 */
-	public static function isMulti($array)
-	{
-		return count(array_filter($array, 'is_array')) > 0;
-	}
+        return true;
+    }
 
-	/**
-	 * Set an array item to a given value.
-	 *
-	 * This method is primarily helpful for setting the value in an array with
-	 * a variable depth, such as configuration arrays.
-	 *
-	 * If the specified item doesn't exist, it will be created. If the item's
-	 * parents do not exist, they will also be created as arrays.
-	 *
-	 * Like the Arr::get method, JavaScript "dot" notation is supported.
-	 *
-	 * ## Usage
-	 *
-	 *     Arr::get($myArray, 'some.random.key', $theValue);
-	 *
-	 * @param    array            The array to be append
-	 * @param    string           The key, or chain of keys to set
-	 * @param    mixed            The value to be assigned to the key
-	 * @return   void             No value is returned
-	 */
-	public static function set(array &$array, $key, $value)
-	{
-		if($key === null)
-		{
-			return $array = $value;
-		}
+    /**
+     * @todo Document and test
+     */
+    public static function isMulti($array)
+    {
+        return count(array_filter($array, 'is_array')) > 0;
+    }
 
-		$keys = \explode('.', $key);
+    /**
+     * Set an array item to a given value.
+     *
+     * This method is primarily helpful for setting the value in an array with
+     * a variable depth, such as configuration arrays.
+     *
+     * If the specified item doesn't exist, it will be created. If the item's
+     * parents do not exist, they will also be created as arrays.
+     *
+     * Like the Arr::get method, JavaScript "dot" notation is supported.
+     *
+     * ## Usage
+     *
+     *     Arr::get($myArray, 'some.random.key', $theValue);
+     *
+     * @param    array            The array to be append
+     * @param    string           The key, or chain of keys to set
+     * @param    mixed            The value to be assigned to the key
+     * @return void No value is returned
+     */
+    public static function set(array &$array, $key, $value)
+    {
+        if ($key === null) {
+            return $array = $value;
+        }
 
-		while(\count($keys) > 1)
-		{
-			$key = \array_shift($keys);
+        $keys = \explode('.', $key);
 
-			if(!isset($array[$key]) or !static::is($array[$key]))
-			{
-				$array[$key] = [];
-			}
+        while (\count($keys) > 1) {
+            $key = \array_shift($keys);
 
-			$array =& $array[$key];
-		}
+            if (!isset($array[$key]) or !static::is($array[$key])) {
+                $array[$key] = [];
+            }
 
-		$array[\array_shift($keys)] = $value;
-	}
+            $array =& $array[$key];
+        }
 
-	/**
-	 * Add enumerable functionality to an array
-	 *
-	 * ## Usage
-	 *
-	 *     $enum = Arr::toEnumerable($myArray);
-	 *
-	 * @param    array                      The array to convert
-	 * @return   Nerd\Design\Enumerable     The converted array
-	 */
-	public static function toEnumerable(array $array)
-	{
-		return new \Nerd\Design\Enumerable($array);
-	}
-	
-	/**
-	 * Recursively converts an array data type to an object.
-	 *
-	 * ## Usage
-	 *
-	 *     $object = Arr::toObject($myArray);
-	 *
-	 * @param    array            The array to convert
-	 * @return   object           Returns the converted object
-	 */
-	public static function toObject(array $array)
-	{
-		return \json_decode(\json_encode((array) $array));
-	}
+        $array[\array_shift($keys)] = $value;
+    }
+
+    /**
+     * Add enumerable functionality to an array
+     *
+     * ## Usage
+     *
+     *     $enum = Arr::toEnumerable($myArray);
+     *
+     * @param    array                      The array to convert
+     * @return Nerd\Design\Enumerable The converted array
+     */
+    public static function toEnumerable(array $array)
+    {
+        return new \Nerd\Design\Enumerable($array);
+    }
+
+    /**
+     * Recursively converts an array data type to an object.
+     *
+     * ## Usage
+     *
+     *     $object = Arr::toObject($myArray);
+     *
+     * @param    array            The array to convert
+     * @return object Returns the converted object
+     */
+    public static function toObject(array $array)
+    {
+        return \json_decode(\json_encode((array) $array));
+    }
 }

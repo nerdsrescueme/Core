@@ -21,36 +21,35 @@ namespace Nerd;
  */
 class Url
 {
-	// Traits
-	use \Nerd\Design\Creational\Factory;
+    // Traits
+    use \Nerd\Design\Creational\Factory;
 
-	/**
-	 * The current application URL
-	 *
-	 * @var string
-	 */
-	public static $current;
+    /**
+     * The current application URL
+     *
+     * @var string
+     */
+    public static $current;
 
-	/**
-	 * Create an application URL.
-	 *
-	 * @todo Create more complex detection
-	 *
-	 * @param    string          The URI to append
-	 * @return   string          Compiled URL
-	 */
-	public static function construct($path)
-	{
-		return static::site($path)->render();
-	}
+    /**
+     * Create an application URL.
+     *
+     * @todo Create more complex detection
+     *
+     * @param    string          The URI to append
+     * @return string Compiled URL
+     */
+    public static function construct($path)
+    {
+        return static::site($path)->render();
+    }
 
-	public static function current()
-	{
-		if (static::$current === null)
-		{
-			static::$current = static::instance('current');
-		}
+    public static function current()
+    {
+        if (static::$current === null) {
+            static::$current = static::instance('current');
+        }
 
-		return static::$current;
-	}
+        return static::$current;
+    }
 }

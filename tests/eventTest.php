@@ -5,20 +5,20 @@ namespace Nerd;
 class EventTest extends \PHPUnit_Framework_TestCase
 {
     protected $event;
-	protected $ref;
+    protected $ref;
 
     public function setUp()
     {
-		$this->ref   = new \ReflectionClass('\\Nerd\\Event');
+        $this->ref   = new \ReflectionClass('\\Nerd\\Event');
         $this->event = Event::instance();
     }
 
-	/**
+    /**
      * @covers \Nerd\Event
      */
     public function testEventInNerdNamespace()
     {
-	   $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+       $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
     }
 
     /**
@@ -105,5 +105,5 @@ class EventTest extends \PHPUnit_Framework_TestCase
         // This should fail because no event can be found.
         $this->assertFalse($this->event->trigger('test.shouldfail'));
     }
-    
+
 }

@@ -2,34 +2,33 @@
 
 namespace Nerd\Model\Assumption;
 
-class Username extends \Nerd\Model\Assumption {
+class Username extends \Nerd\Model\Assumption
+{
+    private $_message;
 
-	private $_message;
+    public function check($username)
+    {
+        if (!ctype_alnum($username)) {
+            $this->_message = '%s may only use alphanumeric characters';
 
-	public function check($username)
-	{
-		if (!ctype_alnum($username))
-		{
-			$this->_message = '%s may only use alphanumeric characters';
-			return false;
-		}
+            return false;
+        }
 
-		if (strlen($username) < 3)
-		{
-			$this->_message = '%s must be longer than 3 characters';
-			return false;
-		}
+        if (strlen($username) < 3) {
+            $this->_message = '%s must be longer than 3 characters';
 
-		if (strlen($username) > 32)
-		{
-			$this->_message = '%s must be shorter than 32 characters';
-		}
+            return false;
+        }
 
-		return true;
-	}
+        if (strlen($username) > 32) {
+            $this->_message = '%s must be shorter than 32 characters';
+        }
 
-	public function errorText()
-	{
-		return $this->_message;
-	}
+        return true;
+    }
+
+    public function errorText()
+    {
+        return $this->_message;
+    }
 }

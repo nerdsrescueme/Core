@@ -41,11 +41,11 @@ namespace Nerd\Design;
  */
 interface Initializable
 {
-	/**
-	 * Magic method called when a class is first encountered by the Autoloader,
-	 * providing static initialization.
-	 *
-	 * @return   void             No value is returned
-	 */
-	public static function __initialize();
+    /**
+     * Magic method called when a class is first encountered by the Autoloader,
+     * providing static initialization.
+     *
+     * @return void No value is returned
+     */
+    public static function __initialize();
 }

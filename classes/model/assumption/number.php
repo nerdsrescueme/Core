@@ -2,53 +2,52 @@
 
 namespace Nerd\Model\Assumption;
 
-class Number extends \Nerd\Model\Assumption {
+class Number extends \Nerd\Model\Assumption
+{
+    private $_message;
 
-	private $_message;
+    public function check($number)
+    {
+        if ($this->column->automatic) {
+            $this->_message = '%s may not be set, it is automatically set be the database';
 
-	public function check($number)
-	{
-		if ($this->column->automatic)
-		{
-			$this->_message = '%s may not be set, it is automatically set be the database';
-			return false;
-		}
+            return false;
+        }
 
-		if ($this->column->unsigned)
-		{
-			if ((int) $number < 0)
-			{
-				$this->_message = '%s does not allow negative numbers';
-				return false;
-			}
-		}
+        if ($this->column->unsigned) {
+            if ((int) $number < 0) {
+                $this->_message = '%s does not allow negative numbers';
 
-		$i = 0;
-		$limit = '';
-		
-		while ($i < $this->column->constraint)
-		{
-			$limit .= '9';
-			$i++;
-		}
+                return false;
+            }
+        }
 
-		if ((int) $number > (int) $limit)
-		{
-			$this->_message = '%s may not be more than '.number_format($limit);
-			return false;
-		}
+        $i = 0;
+        $limit = '';
 
-		$this->_message = '%s does not contain a valid number';
-		return !filter_var($number, FILTER_VALIDATE_INT) === false;
-	}
+        while ($i < $this->column->constraint) {
+            $limit .= '9';
+            $i++;
+        }
 
-	public function modify($value)
-	{
-		return (int) $value;
-	}
+        if ((int) $number > (int) $limit) {
+            $this->_message = '%s may not be more than '.number_format($limit);
 
-	public function errorText()
-	{
-		return $this->_message;
-	}
+            return false;
+        }
+
+        $this->_message = '%s does not contain a valid number';
+
+        return !filter_var($number, FILTER_VALIDATE_INT) === false;
+    }
+
+    public function modify($value)
+    {
+        return (int) $value;
+    }
+
+    public function errorText()
+    {
+        return $this->_message;
+    }
 }

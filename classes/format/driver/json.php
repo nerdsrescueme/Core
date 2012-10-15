@@ -17,21 +17,21 @@ namespace Nerd\Format\Driver;
  */
 class Json implements \Nerd\Format\Driver
 {
-	use \Nerd\Design\Creational\Singleton;
+    use \Nerd\Design\Creational\Singleton;
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function from($data, $flags = null)
-	{
-		return json_decode($data, true);
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function from($data, $flags = null)
+    {
+        return json_decode($data, true);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function to($data, $flags = null)
-	{
-		return json_encode($data);
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function to($data, $flags = null)
+    {
+        return json_encode($data);
+    }
 }

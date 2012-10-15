@@ -42,7 +42,7 @@ namespace Nerd\Design\Creational;
  * following this pattern:
  *
  *     namespace MyClass\Driver;
- *     
+ *
  *     class Mydriver extends \Nerd\Design\Creational\Singleton
  *     {
  *     }
@@ -73,83 +73,73 @@ namespace Nerd\Design\Creational;
  */
 abstract class SingletonFactory
 {
-	/**
-	 * The factory driver verb to utilize, defaults to 'Driver'
-	 *
-	 * @var    string
-	 */
-	public static $factoryType = 'driver';
+    /**
+     * The factory driver verb to utilize, defaults to 'Driver'
+     *
+     * @var    string
+     */
+    public static $factoryType = 'driver';
 
-	/**
-	 * A default driver to provide, in the event non is specified. Defaults to
-	 * null.
-	 *
-	 * @var    string
-	 */
-	public static $defaultDriver;
+    /**
+     * A default driver to provide, in the event non is specified. Defaults to
+     * null.
+     *
+     * @var    string
+     */
+    public static $defaultDriver;
 
-	/**
-	 * Registered instances
-	 *
-	 * @var    array
-	 */
-	private static $instances = [];
+    /**
+     * Registered instances
+     *
+     * @var    array
+     */
+    private static $instances = [];
 
-	/**
-	 * Constructs a new instance to the factory driver, and passed along any
-	 * additional arguments that were defined.
-	 *
-	 * @param    string           The factory type to be loaded
-	 * @param    mixed            Argument #n to be passed along to the driver
-	 * @return   object           An instance to the appropriate driver, determined through factory
-	 */
-	public static function instance($driver = null)
-	{
-		$class = get_called_class();
-		$args  = func_get_args() and array_shift($args);
+    /**
+     * Constructs a new instance to the factory driver, and passed along any
+     * additional arguments that were defined.
+     *
+     * @param    string           The factory type to be loaded
+     * @param    mixed            Argument #n to be passed along to the driver
+     * @return object An instance to the appropriate driver, determined through factory
+     */
+    public static function instance($driver = null)
+    {
+        $class = get_called_class();
+        $args  = func_get_args() and array_shift($args);
 
-		if($driver === null)
-		{
-			if(static::$defaultDriver === null)
-			{
-				throw new \InvalidArgumentException('A $driver was not specified during '.$class.'::instance(), and no $defaultDriver is available. Please specify the driver you wish to use');
-			}
+        if ($driver === null) {
+            if (static::$defaultDriver === null) {
+                throw new \InvalidArgumentException('A $driver was not specified during '.$class.'::instance(), and no $defaultDriver is available. Please specify the driver you wish to use');
+            }
 
-			$driver = static::$defaultDriver;
-		}
+            $driver = static::$defaultDriver;
+        }
 
-		// If the driver used is namespaced, do not use the
-		// default folder to resolve the path.
-		if (strpos($driver, '\\') !== false)
-		{
-			$instance = $driver;
-		}
-		else
-		{
-			$instance = $class.'\\'.ucfirst(static::$factoryType).'\\'.ucfirst($driver);
-		}
+        // If the driver used is namespaced, do not use the
+        // default folder to resolve the path.
+        if (strpos($driver, '\\') !== false) {
+            $instance = $driver;
+        } else {
+            $instance = $class.'\\'.ucfirst(static::$factoryType).'\\'.ucfirst($driver);
+        }
 
-		$key = str_replace('\\', '_', $class);
+        $key = str_replace('\\', '_', $class);
 
-		if(!isset(self::$instances[$key]))
-		{
-			self::$instances[$key] = [];
-		}
+        if (!isset(self::$instances[$key])) {
+            self::$instances[$key] = [];
+        }
 
-		if(!isset(self::$instances[$key][$driver]))
-		{
-			if (!class_exists($instance))
-			{
-				throw new \OutOfBoundsException($instance.' class does not exist, and cannot be loaded through the SingletonFactory.');
-			}
-			elseif ($instance instanceof \Nerd\Design\Creational\Singleton)
-			{
-				throw new \OutOfBoundsException('The '.$instance.' class could not be loaded, as it does not follow the SingletonFactory access layer specification');
-			}
+        if (!isset(self::$instances[$key][$driver])) {
+            if (!class_exists($instance)) {
+                throw new \OutOfBoundsException($instance.' class does not exist, and cannot be loaded through the SingletonFactory.');
+            } elseif ($instance instanceof \Nerd\Design\Creational\Singleton) {
+                throw new \OutOfBoundsException('The '.$instance.' class could not be loaded, as it does not follow the SingletonFactory access layer specification');
+            }
 
-			self::$instances[$key][$driver] = call_user_func($instance.'::instance', $args);
-		}
+            self::$instances[$key][$driver] = call_user_func($instance.'::instance', $args);
+        }
 
-		return self::$instances[$key][$driver];
-	}
+        return self::$instances[$key][$driver];
+    }
 }

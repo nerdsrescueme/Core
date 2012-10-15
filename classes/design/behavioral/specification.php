@@ -31,10 +31,10 @@ namespace Nerd\Design\Behavioral;
  * @package    Nerd
  * @subpackage Design
  */
-interface Specification {
-
-	/**
-	 * @return   boolean          Returns true or false
-	 */
-	public function isSatisfiedBy($candidate);
+interface Specification
+{
+    /**
+     * @return boolean Returns true or false
+     */
+    public function isSatisfiedBy($candidate);
 }

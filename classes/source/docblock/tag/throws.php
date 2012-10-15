@@ -20,46 +20,45 @@ namespace Nerd\Source\Docblock\Tag;
 */
 class Throws extends \Nerd\Source\Docblock\Tag
 {
-	/**
-	 * Parameter description
-	 *
-	 * @var    string
-	 */
-	protected $description;
+    /**
+     * Parameter description
+     *
+     * @var    string
+     */
+    protected $description;
 
-	/**
-	 * Class Constructor
-	 *
-	 * Parses dockblock tag line
-	 *
-	 * @param     string     Dockblock tag line
-	 * @return    Nerd\Source\Docblock\Tag\Throws
-	 */
-	public function __construct($tag)
-	{
-		preg_match('#^@(\w+)\s+([^\s]+)(?:\s+(.*))?#', $tag, $matches);
-		
-		$this->name = 'throws';
-		$this->type = $matches[2];
+    /**
+     * Class Constructor
+     *
+     * Parses dockblock tag line
+     *
+     * @param     string     Dockblock tag line
+     * @return Nerd\Source\Docblock\Tag\Throws
+     */
+    public function __construct($tag)
+    {
+        preg_match('#^@(\w+)\s+([^\s]+)(?:\s+(.*))?#', $tag, $matches);
 
-		if(isset($matches[3]))
-		{
-			$this->description = preg_replace('#\s+#', ' ', $matches[3]);
-		}
-	}
+        $this->name = 'throws';
+        $this->type = $matches[2];
 
-	/**
-	 * Get this throw tag's description
-	 *
-	 * @return    string     Paramater description
-	 */
-	public function getDescription()
-	{
-		return $this->description;
-	}
+        if (isset($matches[3])) {
+            $this->description = preg_replace('#\s+#', ' ', $matches[3]);
+        }
+    }
 
-	public function __toString()
-	{
-		return "    {$this->type}".PHP_EOL;
-	}
+    /**
+     * Get this throw tag's description
+     *
+     * @return string Paramater description
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function __toString()
+    {
+        return "    {$this->type}".PHP_EOL;
+    }
 }

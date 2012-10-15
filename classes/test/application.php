@@ -2,6 +2,6 @@
 
 namespace Nerd\Test;
 
-class Application extends \Test {
-	
+class Application extends \Test
+{
 }

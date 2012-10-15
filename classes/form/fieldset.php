@@ -23,30 +23,29 @@ namespace Nerd\Form;
  */
 class Fieldset extends Container
 {
-	public $element = 'fieldset';
-	public $legend;
+    public $element = 'fieldset';
+    public $legend;
 
-	public function legend($legend, array $options = [])
-	{
-		$this->legend = new Legend($legend, $options, $this);
-		return $this;
-	}
+    public function legend($legend, array $options = [])
+    {
+        $this->legend = new Legend($legend, $options, $this);
 
-	public function render()
-	{
-		$out  = ($this->label ?: '');
-		$out .= "<{$this->element}{$this->attributes(true)}>";
+        return $this;
+    }
 
-		if (isset($this->legend) and $this->legend !== null)
-		{
-			$out .= (string) $this->legend->render();
-		}
+    public function render()
+    {
+        $out  = ($this->label ?: '');
+        $out .= "<{$this->element}{$this->attributes(true)}>";
 
-		$this->fields->each(function($field) use (&$out)
-		{
-			$out .= (string) $field->render().' '; // space is important for visuals?
-		});
+        if (isset($this->legend) and $this->legend !== null) {
+            $out .= (string) $this->legend->render();
+        }
 
-		return $out . "</{$this->element}>";
-	}
+        $this->fields->each(function($field) use (&$out) {
+            $out .= (string) $field->render().' '; // space is important for visuals?
+        });
+
+        return $out . "</{$this->element}>";
+    }
 }

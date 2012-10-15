@@ -22,32 +22,31 @@ namespace Nerd\Source;
 */
 class Parameter extends \ReflectionParameter
 {
-	use \Nerd\Source\Traits\Parentclass;
+    use \Nerd\Source\Traits\Parentclass;
 
-	/**
-	 * Get this parameters calling (@see Nerd\Source\Klass) object
-	 *
-	 * @return Nerd\Source\Klass
-	 */
-	public function getClass()
-	{
-		return new Klass(parent::getClass()->getName());
-	}
+    /**
+     * Get this parameters calling (@see Nerd\Source\Klass) object
+     *
+     * @return Nerd\Source\Klass
+     */
+    public function getClass()
+    {
+        return new Klass(parent::getClass()->getName());
+    }
 
-	/**
-	 * Get this parameters declaring (@see Nerd\Source\Funktion) object
-	 *
-	 * @return Nerd\Source\Funktion
-	 */
-	public function getDeclaringFunction()
-	{
-		$function = parent::getDeclaringFunction();
+    /**
+     * Get this parameters declaring (@see Nerd\Source\Funktion) object
+     *
+     * @return Nerd\Source\Funktion
+     */
+    public function getDeclaringFunction()
+    {
+        $function = parent::getDeclaringFunction();
 
-		if($function instanceof \ReflectionMethod)
-		{
-			return new Method($this->getDeclaringClass()->getName(), $function->getName());
-		}
+        if ($function instanceof \ReflectionMethod) {
+            return new Method($this->getDeclaringClass()->getName(), $function->getName());
+        }
 
-		return new Funktion($function->getName());
-	}
+        return new Funktion($function->getName());
+    }
 }

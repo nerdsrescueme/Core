@@ -21,22 +21,21 @@ namespace Nerd\Form\Field;
  */
 class Time extends Input
 {
-	/**
-	 * Option/Attribute assignment overload
-	 *
-	 * Extends the value property allowing for automatic conversion of dates
-	 *
-	 * @param    string          Option/Attribute to set
-	 * @param    string          Value to set to this option
-	 */
-	public function option($option, $value = null)
-	{
-		if ($option == 'value')
-		{
-			// For date inputs date must be: hh:mm:ss
-			$value = date('h:i:s', strtotime($value));
-		}
+    /**
+     * Option/Attribute assignment overload
+     *
+     * Extends the value property allowing for automatic conversion of dates
+     *
+     * @param    string          Option/Attribute to set
+     * @param    string          Value to set to this option
+     */
+    public function option($option, $value = null)
+    {
+        if ($option == 'value') {
+            // For date inputs date must be: hh:mm:ss
+            $value = date('h:i:s', strtotime($value));
+        }
 
-		return parent::option($option, $value);
-	}
+        return parent::option($option, $value);
+    }
 }

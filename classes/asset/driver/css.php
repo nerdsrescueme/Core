@@ -18,15 +18,16 @@ namespace Nerd\Asset\Driver;
  */
 class Css extends \Nerd\Asset\Driver
 {
-	public function compress()
-	{
-		parent::compress();
-		$this->contents = str_replace(array("\n","   "), ' ', $this->contents);
-		return $this;
-	}
+    public function compress()
+    {
+        parent::compress();
+        $this->contents = str_replace(array("\n","   "), ' ', $this->contents);
 
-	public function tag()
-	{
-		return "<link rel=\"stylesheet\" media=\"all\" href=\"{$this->file}\">";
-	}
+        return $this;
+    }
+
+    public function tag()
+    {
+        return "<link rel=\"stylesheet\" media=\"all\" href=\"{$this->file}\">";
+    }
 }

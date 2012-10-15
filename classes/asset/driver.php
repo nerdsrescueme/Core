@@ -25,92 +25,88 @@ use \Nerd\Config
  */
 abstract class Driver
 {
-	// Traits
-	use \Nerd\Design\Renderable;
+    // Traits
+    use \Nerd\Design\Renderable;
 
-	/**
-	 * Path to the asset file
-	 *
-	 * @var    Nerd\Uri\Driver
-	 */
-	public $uri;
+    /**
+     * Path to the asset file
+     *
+     * @var    Nerd\Uri\Driver
+     */
+    public $uri;
 
-	/**
-	 * Full path to the asset file
-	 *
-	 * @var    string
-	 */
-	public $fullPath;
+    /**
+     * Full path to the asset file
+     *
+     * @var    string
+     */
+    public $fullPath;
 
-	/**
-	 * The rendered contents of the asset file
-	 *
-	 * @var    string
-	 */
-	protected $contents;
+    /**
+     * The rendered contents of the asset file
+     *
+     * @var    string
+     */
+    protected $contents;
 
-	/**
-	 * Instance Constructor
-	 *
-	 * @param    string                  Path to file relative to DOCROOT
-	 * @throws   OutOfBoundsException    When the asset cannot be located
-	 * @return   Nerd\Asset\Type
-	 */
-	public function __construct($file)
-	{
-		$this->file = Url::asset($file);
-		$this->fullPath = \Nerd\DOCROOT.DS.'assets'.DS.trim($file, '/');
+    /**
+     * Instance Constructor
+     *
+     * @param    string                  Path to file relative to DOCROOT
+     * @throws OutOfBoundsException When the asset cannot be located
+     * @return Nerd\Asset\Type
+     */
+    public function __construct($file)
+    {
+        $this->file = Url::asset($file);
+        $this->fullPath = \Nerd\DOCROOT.DS.'assets'.DS.trim($file, '/');
 
-		if(!file_exists($this->fullPath))
-		{
-			throw new \OutOfBoundsException("The asset [$file] could not be found.");
-		}
-	}
+        if (!file_exists($this->fullPath)) {
+            throw new \OutOfBoundsException("The asset [$file] could not be found.");
+        }
+    }
 
-	/**
-	 * Default compression method (no compression)
-	 *
-	 * Asset files are routinely compressed to save bandwidth and increase page load
-	 * times. This method allows us to programatically compress the contents of our
-	 * asset files depending on which driver we specify.
-	 *
-	 * @return    Nerd\Asset\Type
-	 */
-	public function compress()
-	{
-		$this->contents = (string) $this;
-		return $this;
-	}
+    /**
+     * Default compression method (no compression)
+     *
+     * Asset files are routinely compressed to save bandwidth and increase page load
+     * times. This method allows us to programatically compress the contents of our
+     * asset files depending on which driver we specify.
+     *
+     * @return Nerd\Asset\Type
+     */
+    public function compress()
+    {
+        $this->contents = (string) $this;
 
-	/**
-	 * Get the contents of this asset file
-	 *
-	 * @throws    \RuntimeException  When an asset file cannot be read
-	 * @return    string             Contents of asset file
-	 */
-	public function render()
-	{
-		if ($this->contents === null)
-		{
-			try
-			{
-				$this->contents = file_get_contents($this->fullPath);
-			}
-			catch(\Exception $e)
-			{
-				throw new \RuntimeException("Unable to read the asset file ['{$this->path}'] ensure you have proper permission to read this file.");
-			}
-		}
+        return $this;
+    }
 
-		return $this->contents;
-	}
+    /**
+     * Get the contents of this asset file
+     *
+     * @throws \RuntimeException When an asset file cannot be read
+     * @return string            Contents of asset file
+     */
+    public function render()
+    {
+        if ($this->contents === null) {
+            try {
+                $this->contents = file_get_contents($this->fullPath);
+            } catch (\Exception $e) {
+                throw new \RuntimeException("Unable to read the asset file ['{$this->path}'] ensure you have proper permission to read this file.");
+            }
+        }
 
-	/**
-	 * Tag function
-	 *
-	 * Each sub-class must be able to render itself as an HTML tag.
-	 *
-	 * @return    string          HTML tag
-	 */
-	abstract public function tag();
+        return $this->contents;
+    }
+
+    /**
+     * Tag function
+     *
+     * Each sub-class must be able to render itself as an HTML tag.
+     *
+     * @return string HTML tag
+     */
+    abstract public function tag();
 }

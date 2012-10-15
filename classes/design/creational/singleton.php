@@ -45,32 +45,31 @@ namespace Nerd\Design\Creational;
  */
 trait Singleton
 {
-	/**
-	 * Registered instances
-	 *
-	 * @var object
-	 */
-	private static $instance;
+    /**
+     * Registered instances
+     *
+     * @var object
+     */
+    private static $instance;
 
-	/**
-	 * Construct a new object instance. In the event an object has previously
-	 * been initialized, the previous instance will be returned.
-	 *
-	 * @return   object           The singleton instance to the object
-	 */
-	final public static function instance()
-	{
-		if (!self::$instance instanceof self)
-		{
-			self::$instance = new self;
-		}
+    /**
+     * Construct a new object instance. In the event an object has previously
+     * been initialized, the previous instance will be returned.
+     *
+     * @return object The singleton instance to the object
+     */
+    final public static function instance()
+    {
+        if (!self::$instance instanceof self) {
+            self::$instance = new self;
+        }
 
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 
-	// Disables the ability to construct the object, use `::instance()` instead
-	final protected function __construct() {}
+    // Disables the ability to construct the object, use `::instance()` instead
+    final protected function __construct() {}
 
-	// Disables the ability to clone the object, use `::instance()` instead
-	final protected function __clone() {}
+    // Disables the ability to clone the object, use `::instance()` instead
+    final protected function __clone() {}
 }

@@ -24,175 +24,166 @@ namespace Nerd\Design;
  */
 class Collection extends \Nerd\Design\Enumerable
 {
-	/**
-	 * Add an item to the enumerable array
-	 *
-	 * @param     mixed     Item to add to the collection
-	 * @param     boolean   Prepend the item to the collection
-	 * @return    void
-	 */
-	public function add($item, $prepend = false)
-	{
-		if($prepend)
-		{
-			array_unshift($this->enumerable, $item);
-		}
-		else
-		{
-			$this->enumerable []= $item;
-		}
-		
-		return $this;
-	}
+    /**
+     * Add an item to the enumerable array
+     *
+     * @param     mixed     Item to add to the collection
+     * @param     boolean   Prepend the item to the collection
+     * @return void
+     */
+    public function add($item, $prepend = false)
+    {
+        if ($prepend) {
+            array_unshift($this->enumerable, $item);
+        } else {
+            $this->enumerable []= $item;
+        }
 
-	/**
-	 * Get values from the enumerable array with keys between $start 
-	 * and $end
-	 *
-	 * @param     integer     Starting key
-	 * @param     integer     Ending key
-	 * @param     boolean     Keep the current key indexes
-	 * @return    array       Segment of enumerable array
-	 */
-	public function between($start, $end, $preserve_keys = true)
-	{
-		$result = [];
+        return $this;
+    }
 
-		foreach($this as $key => $value)
-		{
-			if($key >= $start and $key <= $end)
-			{
-				if($preserve_keys)
-				{
-					$result[$key] = $value;
-					continue;
-				}
+    /**
+     * Get values from the enumerable array with keys between $start
+     * and $end
+     *
+     * @param     integer     Starting key
+     * @param     integer     Ending key
+     * @param     boolean     Keep the current key indexes
+     * @return array Segment of enumerable array
+     */
+    public function between($start, $end, $preserve_keys = true)
+    {
+        $result = [];
 
-				$result []= $value;
-			}
-		}
+        foreach ($this as $key => $value) {
+            if ($key >= $start and $key <= $end) {
+                if ($preserve_keys) {
+                    $result[$key] = $value;
+                    continue;
+                }
 
-		return $result;
-	}
+                $result []= $value;
+            }
+        }
 
-	/**
-	 * Alias for Collection::add($item, true)
-	 *
-	 * @see \Nerd\Design\Collection::add()
-	 */
-	public function prepend($items)
-	{
-		$this->add($items, true);
-	}
+        return $result;
+    }
 
-	/**
-	 * Remove an item from the collection array
-	 *
-	 * @param     mixed     Item(s) to remove from the collection
-	 * @return    void
-	 */
-	public function remove($offsets = null)
-	{
-		if($offsets === null)
-		{
-			return $this->enumerable = [];
-		}
+    /**
+     * Alias for Collection::add($item, true)
+     *
+     * @see \Nerd\Design\Collection::add()
+     */
+    public function prepend($items)
+    {
+        $this->add($items, true);
+    }
 
-		$offsets = (array) $offsets;
+    /**
+     * Remove an item from the collection array
+     *
+     * @param     mixed     Item(s) to remove from the collection
+     * @return void
+     */
+    public function remove($offsets = null)
+    {
+        if ($offsets === null) {
+            return $this->enumerable = [];
+        }
 
-		foreach($offsets as $offset)
-		{
-			$this->offsetUnset($offset);
-		}
-	}
+        $offsets = (array) $offsets;
 
-	/**
-	 * Replace an item in the collection array
-	 *
-	 * @param    mixed          Item to search for
-	 * @param    mixed          Replacement value
-	 * @return   boolean        Was the replacement successful?
-	 */
-	public function replace($current, $replacement)
-	{
-		$lamda = function($value) use (&$current)
-		{
-			return $current === $value;
-		};
+        foreach ($offsets as $offset) {
+            $this->offsetUnset($offset);
+        }
+    }
 
-		$index = $this->index($lamda);
+    /**
+     * Replace an item in the collection array
+     *
+     * @param    mixed          Item to search for
+     * @param    mixed          Replacement value
+     * @return boolean Was the replacement successful?
+     */
+    public function replace($current, $replacement)
+    {
+        $lamda = function($value) use (&$current) {
+            return $current === $value;
+        };
 
-		if (!$index or !isset($this->enumerable[$index]))
-		{
-			return false;
-		}
+        $index = $this->index($lamda);
 
-		$this->enumerable[$index] = $replacement;
-		return true;
-	}
+        if (!$index or !isset($this->enumerable[$index])) {
+            return false;
+        }
 
-	/**
-	 * Return the first entry in the collection array, alternatively returning
-	 * the first entry to match $lambda if it is supplied.
-	 *
-	 * @param     \callable     Used to evaluate enum values, returns boolean
-	 * @return    mixed        The first value to find or match
-	 */
-	public function first(callable $lambda = null)
-	{
-		$lambda === null and $lambda = function() { return true; };
+        $this->enumerable[$index] = $replacement;
 
-		$this->rewind();
+        return true;
+    }
 
-		return $this->find($lambda);
-	}
+    /**
+     * Return the first entry in the collection array, alternatively returning
+     * the first entry to match $lambda if it is supplied.
+     *
+     * @param     \callable     Used to evaluate enum values, returns boolean
+     * @return mixed The first value to find or match
+     */
+    public function first(callable $lambda = null)
+    {
+        $lambda === null and $lambda = function() { return true; };
 
-	/**
-	 * Get an array of this collections array keys
-	 *
-	 * @return    array     Array keys for this collection
-	 */
-	public function keys()
-	{
-		return array_keys($this->enumerable);
-	}
+        $this->rewind();
 
-	/**
-	 * Return the last item in the collection array, alternatively returning
-	 * the last item to match $lambda if it is supplied.
-	 *
-	 * @param     callable     Used to evaluate enum values, returns boolean
-	 * @return    mixed        The last value to find or match
-	 */
-	public function last(callable $lambda = null)
-	{
-		$lambda === null and $lambda = function() { return true; };
+        return $this->find($lambda);
+    }
 
-		$result = $this->findAll($lambda);
+    /**
+     * Get an array of this collections array keys
+     *
+     * @return array Array keys for this collection
+     */
+    public function keys()
+    {
+        return array_keys($this->enumerable);
+    }
 
-		return end($result);
-	}
+    /**
+     * Return the last item in the collection array, alternatively returning
+     * the last item to match $lambda if it is supplied.
+     *
+     * @param     callable     Used to evaluate enum values, returns boolean
+     * @return mixed The last value to find or match
+     */
+    public function last(callable $lambda = null)
+    {
+        $lambda === null and $lambda = function() { return true; };
 
-	/**
-	 * Get an array of this collections array values
-	 *
-	 * @return    array     Array values for this collection
-	 */
-	public function values()
-	{
-		return array_values($this->enumerable);
-	}
+        $result = $this->findAll($lambda);
 
-	/**
-	 * Convert the collection array to a different format using Nerd's
-	 * format classes.
-	 *
-	 * @param     string     Formatter to use
-	 * @param     mixed      Flags for the selected formatter
-	 * @return    mixed      Formatter version of the collection array
-	 */
-	public function to($format, $flags = null)
-	{
-		return \Nerd\Format::instance($format)->to($this->enumerable);
-	}
+        return end($result);
+    }
+
+    /**
+     * Get an array of this collections array values
+     *
+     * @return array Array values for this collection
+     */
+    public function values()
+    {
+        return array_values($this->enumerable);
+    }
+
+    /**
+     * Convert the collection array to a different format using Nerd's
+     * format classes.
+     *
+     * @param     string     Formatter to use
+     * @param     mixed      Flags for the selected formatter
+     * @return mixed Formatter version of the collection array
+     */
+    public function to($format, $flags = null)
+    {
+        return \Nerd\Format::instance($format)->to($this->enumerable);
+    }
 }

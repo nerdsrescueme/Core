@@ -22,27 +22,27 @@ namespace Nerd\Crypt;
  */
 interface Driver
 {
-	/**
-	 * Encrypt a value
-	 *
-	 * ## Usage
-	 *
-	 *     $driver->encrypt($string);
-	 *
-	 * @param    string           The value to encrypt
-	 * @return   string           The encrypted value
-	 */
-	public function encrypt($string);
+    /**
+     * Encrypt a value
+     *
+     * ## Usage
+     *
+     *     $driver->encrypt($string);
+     *
+     * @param    string           The value to encrypt
+     * @return string The encrypted value
+     */
+    public function encrypt($string);
 
-	/**
-	 * Decrypt a value
-	 *
-	 * ## Usage
-	 *
-	 *     $driver->decrypt($string);
-	 *
-	 * @param    string           The encrypted value
-	 * @return   string           The decrypted value
-	 */
-	public function decrypt($string);
+    /**
+     * Decrypt a value
+     *
+     * ## Usage
+     *
+     *     $driver->decrypt($string);
+     *
+     * @param    string           The encrypted value
+     * @return string The decrypted value
+     */
+    public function decrypt($string);
 }
