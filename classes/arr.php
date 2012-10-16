@@ -113,14 +113,14 @@ class Arr
         $keys = \explode('.', $key);
 
         foreach ($keys as $segment) {
-            if (!static::is($array) or !isset($array[$segment])) {
-                return \is_callable($default) ? \call_user_func($default) : $default;
+            if (!is_array($array) or !isset($array[$segment])) {
+                return \is_callable($default) ? $default() : $default;
             }
 
             $array = $array[$segment];
         }
 
-        return (($array instanceof \Closure) and $useClosure) ? \call_user_func($array) : $array;
+        return (($array instanceof \Closure) and $useClosure) ? $array() : $array;
     }
 
     /**

@@ -137,7 +137,7 @@ abstract class SingletonFactory
                 throw new \OutOfBoundsException('The '.$instance.' class could not be loaded, as it does not follow the SingletonFactory access layer specification');
             }
 
-            self::$instances[$key][$driver] = call_user_func($instance.'::instance', $args);
+            self::$instances[$key][$driver] = forward_static_call_array($instance.'::instance', $args);
         }
 
         return self::$instances[$key][$driver];

@@ -67,7 +67,7 @@ class File
      */
     public static function __callStatic($name, array $arguments)
     {
-        return call_user_func_array(static::$functionMap[$name]['function'], $arguments);
+        return forward_static_call_array(static::$functionMap[$name]['function'], $arguments);
     }
 
     /**

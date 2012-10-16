@@ -122,7 +122,11 @@ class Event
     {
         if (isset($this->events[$key])) {
             foreach ($this->events[$key] as $func) {
-                call_user_func_array($func, $args);
+                if (count($args)) {
+                    call_user_func_array($func, $args);
+                    continue;
+                }
+                $func();
             }
 
             return true;

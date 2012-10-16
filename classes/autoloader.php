@@ -87,18 +87,18 @@ class Autoloader
 
         $path = \Nerd\LIBRARY_PATH.$namespace.'classes'.DS.strtolower(trim(str_replace('\\', DS, $class))).'.php';
 
-        if (!is_file($path)) {
+        if (!@include($path)) {
             return false;
         }
 
-        include $path;
+
 
         if (!static::exists($name)) {
             return false;
         }
 
         if (($ifaces = class_implements($name, true)) !== false and isset($ifaces['Nerd\Design\Initializable'])) {
-            call_user_func($name.'::__initialize');
+            $name::__initialize();
         }
 
         return true;

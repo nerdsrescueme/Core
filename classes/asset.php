@@ -57,7 +57,7 @@ class Asset
      */
     public static function __callStatic($method, array $params)
     {
-        return call_user_func_array('static::guess', $params);
+        return forward_static_call_array('guess', $params);
     }
 
     /**

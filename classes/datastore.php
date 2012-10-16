@@ -56,29 +56,11 @@ class Datastore extends Design\Creational\SingletonFactory implements Design\Ini
      */
     public static function __initialize()
     {
-        if (!\is_dir(\Nerd\STORAGE_PATH) and !\mkdir(\Nerd\STORAGE_PATH)) {
+        if (!is_dir(\Nerd\STORAGE_PATH) and !mkdir(\Nerd\STORAGE_PATH)) {
             throw new \RuntimeException('Could not create the STORAGE_PATH ['.\Nerd\STORAGE_PATH.'], please create this directory as a writable path in order to utilize the Datastore');
         }
 
         static::$defaultDriver = Config::get('datastore.driver', 'file');
-    }
-
-    /**
-     * The magic call static method is triggered when invoking inaccessible
-     * methods in a static context.
-     *
-     * ## Usage
-     *
-     * This method exists to allow dynaimc static usage of non-static driver
-     * methods.
-     *
-     * @param    string           The method name being called
-     * @param    array            The arguments being passed to the method call
-     * @return mixed Returns the value of the intercepted method call
-     */
-    public static function __callStatic($method, $parameters)
-    {
-        return call_user_func_array(array(static::instance(), $method), $parameters);
     }
 
     /**

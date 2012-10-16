@@ -13,7 +13,8 @@ namespace Nerd;
 
 // Aliasing rules
 use Nerd\Model\Column
-  , Nerd\Model\Constraint;
+  , Nerd\Model\Constraint
+  , Nerd\Datastore;
 
 /**
  * Model Class
@@ -146,13 +147,22 @@ abstract class Model implements Design\Serializable
      */
     public static function __initialize()
     {
+        // Read from cache if possible
+        $dsname    = static::$table.'.model-cache';
+        $datastore = Datastore::instance('file');
+
+        if ($datastore->exists($dsname)) {
+            list(self::$columns, self::$constraints, self::$primary) = $datastore->read($dsname);
+
+            return;
+        }
+
         try {
             self::$columns     = new \Nerd\Design\Collection();
             self::$constraints = new \Nerd\Design\Collection();
             self::$primary     = null;
 
             $query =  static::connection()->prepare('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
-            self::$lastQuery = $query;
             $query->execute(array(static::connection()->database, static::$table));
 
             while ($column = $query->fetchObject('\\Nerd\\Model\\Column')) {
@@ -168,12 +178,15 @@ abstract class Model implements Design\Serializable
             }
 
             $query = static::connection()->prepare('SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
-            static::$lastQuery = $query;
             $query->execute(array(static::connection()->database, static::$table));
 
             while ($constraint = $query->fetchObject('\\Nerd\\Model\\Constraint')) {
                 self::$constraints->add($constraint);
             }
+
+            // Cache
+            $data = [self::$columns, self::$constraints, self::$primary];
+            $datastore->write($dsname, $data);
         } catch (\PDOException $e) {
             self::$informed = false;
         }
@@ -275,7 +288,7 @@ abstract class Model implements Design\Serializable
         ($finder == 'One' or $finder == 'First') and $sql .= ' LIMIT 1';
         array_unshift($params, $sql);
 
-        return call_user_func_array('static::find', $params);
+        return forward_static_call_array('self::find', $params);
     }
 
     /**
@@ -294,8 +307,8 @@ abstract class Model implements Design\Serializable
         }
 
         return (strpos($params[0], 'LIMIT 1') !== false)
-            ? call_user_func_array('static::findOne', $params)
-            : call_user_func_array('static::findAll', $params);
+            ? forward_static_call_array('self::findOne', $params)
+            : forward_static_call_array('self::findAll', $params);
     }
 
     /**

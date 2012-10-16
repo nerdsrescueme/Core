@@ -56,7 +56,7 @@ class Config
         list($package, $file, $key) = static::parse($key);
 
         if (!static::load($package, $file)) {
-            return is_callable($default) ? call_user_func($default) : $default;
+            return is_callable($default) ? $default() : $default;
         }
 
         if ($key === null) {

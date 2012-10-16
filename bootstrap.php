@@ -20,14 +20,14 @@ define('Nerd\DOCROOT', dirname(\Nerd\LIBRARY_PATH).'/public');
 /**
  * Get and register the Nerd autoloader.
  */
-require \Nerd\LIBRARY_PATH.'/nerd/classes/autoloader.php';
+include \Nerd\LIBRARY_PATH.'/nerd/classes/autoloader.php';
 Autoloader::register();
 
 /**
  * Test for CLI, load either application or Geek bootstrap.
  */
 if (PHP_SAPI === 'cli') {
-    require \Nerd\LIBRARY_PATH.DS.'geek/bootstrap.php';
+    include \Nerd\LIBRARY_PATH.DS.'geek/bootstrap.php';
 } else {
-    require \Nerd\LIBRARY_PATH.DS.'application/bootstrap.php';
+    include \Nerd\LIBRARY_PATH.DS.'application/bootstrap.php';
 }

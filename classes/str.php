@@ -76,7 +76,7 @@ class Str implements Design\Initializable
      */
     public static function __callStatic($name, $arguments)
     {
-        return call_user_func_array(static::$functionMap[$name][((static::$mbString === true) ? 0 : 1)], $arguments);
+        return forward_static_call_array(static::$functionMap[$name][((static::$mbString === true) ? 0 : 1)], $arguments);
     }
 
     /**
