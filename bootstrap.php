@@ -18,6 +18,11 @@ define('Nerd\VENDOR_PATH', dirname(\Nerd\LIBRARY_PATH).'/vendor');
 define('Nerd\DOCROOT', dirname(\Nerd\LIBRARY_PATH).'/public');
 
 /**
+ * Throw exceptions instead of errors
+ */
+set_error_handler(function ($n, $s, $f, $l) { throw new \ErrorException($s, $n, 0, $f, $l); });
+
+/**
  * Get and register the Nerd autoloader.
  */
 include \Nerd\LIBRARY_PATH.'/nerd/Nerd/autoloader.php';

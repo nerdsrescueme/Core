@@ -87,16 +87,12 @@ class Autoloader
 
         $path = join(DS, [\Nerd\LIBRARY_PATH, strtolower($namespace), ucfirst($namespace), str_replace('\\', DS, "{$class}.php")]);
 
-        if (!@include($path)) {
+        if (!include($path)) {
             return false;
         }
 
         if (!static::exists($name)) {
             return false;
-        }
-
-        if (($ifaces = class_implements($name, false)) !== false and isset($ifaces['Nerd\Design\Initializable'])) {
-            $name::__initialize();
         }
 
         return true;

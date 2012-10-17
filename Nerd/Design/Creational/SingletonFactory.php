@@ -95,6 +95,13 @@ abstract class SingletonFactory
      */
     private static $instances = [];
 
+	/**
+	 * Has this instance been initialized?
+	 *
+	 * @var boolean
+	 */
+	public static $initialized = false;
+
     /**
      * Constructs a new instance to the factory driver, and passed along any
      * additional arguments that were defined.
@@ -107,6 +114,11 @@ abstract class SingletonFactory
     {
         $class = get_called_class();
         $args  = func_get_args() and array_shift($args);
+
+		if (!$class::$initialized and method_exists($class, '__initialize')) {
+			$class::$initialized = true;
+			$class::__initialize();
+		}
 
         if ($driver === null) {
             if (static::$defaultDriver === null) {

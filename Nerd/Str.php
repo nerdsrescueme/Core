@@ -24,6 +24,9 @@ namespace Nerd;
  */
 class Str implements Design\Initializable
 {
+	// Traits
+	use Design\Creational\Singleton;
+
     /**
      * Function map
      *

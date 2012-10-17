@@ -25,6 +25,9 @@ namespace Nerd;
 */
 class Input implements Design\Initializable
 {
+	// Traits
+	use Design\Creational\Singleton;
+
     /**
      * Is the current request an AJAX request?
      *

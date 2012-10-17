@@ -56,7 +56,7 @@ class Lint extends \Geek\Design\Task
         $command   = 'php '
                    . join(DS, [\Nerd\VENDOR_PATH, 'fabpot', 'php-cs-fixer', 'php-cs-fixer']) . ' fix '
                    . $directory . ' '
-                   . '--verbose --fixers=indentation,linefeed,trailing_spaces,unused_use,php_closing_tag,return,visibility,braces,phpdoc_params,eof_ending,controls_spaces';
+                   . '--verbose --level=psr2';
 
         exec($command, $return);
 

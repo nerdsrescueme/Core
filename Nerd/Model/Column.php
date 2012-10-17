@@ -59,7 +59,11 @@ class Column
         $this->assumptions = new \Nerd\Design\Collection([]);
 
         preg_match("/([a-z]+)(\(([A-Za-z0-9,\']+)\))?\s?(unsigned)?\s?(zerofill)?/", $this->COLUMN_TYPE, $parts);
-        @list($null, $this->type, $null, $this->constraint, $this->unsigned, $this->zerofill) = $parts;
+		isset($parts[1]) and $this->type = $parts[1];
+		isset($parts[3]) and $this->constraint = $parts[3];
+		isset($parts[5]) and $this->unsigned = true;
+		isset($parts[6]) and $this->zerofill = true;
+
         $this->unsigned !== null and $this->unsigned = true;
         $this->zerofill !== null and $this->zerofill = true;
 
@@ -179,11 +183,11 @@ class Column
 
             // If assumption doesn't exist within the library, use the current
             // application's namespace.
-            if (!class_exists($assumption)) {
+            if (!class_exists($assumption, false)) {
                 $assumption = str_replace('Nerd', ucfirst(\Nerd\APPLICATION_NS), $assumption);
             }
 
-            if (class_exists($assumption)) {
+            if (class_exists($assumption, false)) {
                 if (count($extra) > 1) {
                     $this->assumptions->add(new $assumption($this, $extra[1]));
                 } else {

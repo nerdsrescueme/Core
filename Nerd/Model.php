@@ -49,10 +49,20 @@ use Nerd\Model\Column
  * @package    Nerd
  * @subpackage Core
  */
-abstract class Model implements Design\Serializable
+abstract class Model implements Design\Serializable, Design\Initializable
 {
     use Design\Eventable
       , Design\Formattable;
+
+public static function __initialize()
+{
+	static::inform();
+}
+
+public function __construct()
+{
+	!static::$informed and static::inform();
+}
 
     /**
      * Database connection instance
@@ -113,7 +123,7 @@ abstract class Model implements Design\Serializable
      *
      * @var boolean
      */
-    protected static $informed = true;
+    protected static $informed = false;
 
     /**
      * Ignore column and constraint assumptions?
@@ -145,7 +155,7 @@ abstract class Model implements Design\Serializable
      *
      * @return void
      */
-    public static function __initialize()
+    public static function inform()
     {
         // Read from cache if possible
         $dsname    = static::$table.'.model-cache';
@@ -153,11 +163,10 @@ abstract class Model implements Design\Serializable
 
         if ($datastore->exists($dsname)) {
             list(self::$columns, self::$constraints, self::$primary) = $datastore->read($dsname);
-
             return;
         }
 
-        try {
+        //try {
             self::$columns     = new \Nerd\Design\Collection();
             self::$constraints = new \Nerd\Design\Collection();
             self::$primary     = null;
@@ -187,9 +196,11 @@ abstract class Model implements Design\Serializable
             // Cache
             $data = [self::$columns, self::$constraints, self::$primary];
             $datastore->write($dsname, $data);
-        } catch (\PDOException $e) {
-            self::$informed = false;
-        }
+
+			self::$informed = true;
+        //} catch (\PDOException $e) {
+        //    throw ne
+        //}
     }
 
     /**
@@ -249,6 +260,8 @@ abstract class Model implements Design\Serializable
      */
     public static function optimizeSql($sql)
     {
+		!static::$informed and static::inform();
+
         // Replace "*" with a list of columns, reducing DB lookups
         $sql = str_replace('*', static::listColumns(), $sql);
 
@@ -281,6 +294,7 @@ abstract class Model implements Design\Serializable
      */
     public static function __callStatic($method, array $params)
     {
+		!self::$informed and static::inform();
         $terms = ['find','By', 'And'];
 
         list($trash, $finder, $field) = explode('_', str_replace($terms, '_', $method));
@@ -302,6 +316,8 @@ abstract class Model implements Design\Serializable
      */
     public static function find()
     {
+		!static::$informed and static::inform();
+
         if (count($params = func_get_args()) === 0) {
             throw new \InvalidArgumentException('No arguments were provided, you must at least include a SQL statement.');
         }
@@ -322,6 +338,8 @@ abstract class Model implements Design\Serializable
      */
     public static function findOne()
     {
+		!static::$informed and static::inform();
+
         $params = func_get_args();
         $sql    = static::optimizeSql(array_shift($params));
 
@@ -350,6 +368,8 @@ abstract class Model implements Design\Serializable
      */
     public static function findAll()
     {
+		!static::$informed and static::inform();
+
         $params = func_get_args();
         $sql    = static::optimizeSql(array_shift($params));
         $class  = get_called_class();
@@ -384,6 +404,8 @@ abstract class Model implements Design\Serializable
      */
     public static function listColumns()
     {
+		!self::$informed and static::inform();
+
         $columns = [];
         $exclude = func_get_args();
 
