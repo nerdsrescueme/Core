@@ -153,7 +153,6 @@ abstract class Model implements Design\Serializable
 
         if ($datastore->exists($dsname)) {
             list(self::$columns, self::$constraints, self::$primary) = $datastore->read($dsname);
-
             return;
         }
 

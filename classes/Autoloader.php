@@ -91,13 +91,11 @@ class Autoloader
             return false;
         }
 
-
-
         if (!static::exists($name)) {
             return false;
         }
 
-        if (($ifaces = class_implements($name, true)) !== false and isset($ifaces['Nerd\Design\Initializable'])) {
+        if (($ifaces = class_implements($name, false)) !== false and isset($ifaces['Nerd\Design\Initializable'])) {
             $name::__initialize();
         }
 
@@ -113,6 +111,6 @@ class Autoloader
      */
     public static function exists($name)
     {
-        return class_exists($name, false) or interface_exists($name, false);
+        return class_exists($name, false) or interface_exists($name, false) or trait_exists($name);
     }
 }
