@@ -16,6 +16,6 @@ define('Nerd\APPLICATION_NS', 'nerd');
 /**
  * Get and register the Nerd autoloader.
  */
-include join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'classes', 'autoloader.php']);
+include join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'Nerd', 'autoloader.php']);
 
 \Nerd\Autoloader::register(true);

@@ -20,7 +20,7 @@ define('Nerd\DOCROOT', dirname(\Nerd\LIBRARY_PATH).'/public');
 /**
  * Get and register the Nerd autoloader.
  */
-include \Nerd\LIBRARY_PATH.'/nerd/classes/autoloader.php';
+include \Nerd\LIBRARY_PATH.'/nerd/Nerd/autoloader.php';
 Autoloader::register();
 
 /**
