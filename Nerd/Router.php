@@ -21,8 +21,8 @@ namespace Nerd;
  */
 class Router implements Design\Initializable
 {
-	//Traits
-	use Design\Creational\Singleton;
+    //Traits
+    use Design\Creational\Singleton;
 
     /**
      * Default controller namespace

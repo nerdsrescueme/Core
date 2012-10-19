@@ -20,7 +20,7 @@ namespace Nerd;
  * @package    Nerd
  * @subpackage Core
  */
-abstract class HTTP
+abstract class Http
 {
     /**
      * HTTP status codes

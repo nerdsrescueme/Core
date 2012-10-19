@@ -63,10 +63,6 @@ trait Singleton
     {
         if (!self::$instance instanceof self) {
             self::$instance = new self;
-
-			if (method_exists(self::$instance, '__initialize')) {
-				self::__initialize();
-			}
         }
 
         return self::$instance;

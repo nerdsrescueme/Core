@@ -59,10 +59,10 @@ class Column
         $this->assumptions = new \Nerd\Design\Collection([]);
 
         preg_match("/([a-z]+)(\(([A-Za-z0-9,\']+)\))?\s?(unsigned)?\s?(zerofill)?/", $this->COLUMN_TYPE, $parts);
-		isset($parts[1]) and $this->type = $parts[1];
-		isset($parts[3]) and $this->constraint = $parts[3];
-		isset($parts[5]) and $this->unsigned = true;
-		isset($parts[6]) and $this->zerofill = true;
+        isset($parts[1]) and $this->type = $parts[1];
+        isset($parts[3]) and $this->constraint = $parts[3];
+        isset($parts[5]) and $this->unsigned = true;
+        isset($parts[6]) and $this->zerofill = true;
 
         $this->unsigned !== null and $this->unsigned = true;
         $this->zerofill !== null and $this->zerofill = true;

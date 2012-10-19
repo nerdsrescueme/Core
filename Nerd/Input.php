@@ -25,9 +25,6 @@ namespace Nerd;
 */
 class Input implements Design\Initializable
 {
-	// Traits
-	use Design\Creational\Singleton;
-
     /**
      * Is the current request an AJAX request?
      *
@@ -74,7 +71,7 @@ class Input implements Design\Initializable
      */
     public static function cookie($key = null, $default = null)
     {
-        return $key === null ? $_COOKIE : \Nerd\Arr::get($_COOKIE, $key, $default);
+        return $key === null ? $_COOKIE : Arr::get($_COOKIE, $key, $default);
     }
 
     /**
@@ -86,7 +83,7 @@ class Input implements Design\Initializable
      */
     public static function env($key = null, $default = null)
     {
-        return $key === null ? $_ENV : \Nerd\Arr::get($_ENV, $key, $default);
+        return $key === null ? $_ENV : Arr::get($_ENV, $key, $default);
     }
 
     /**
@@ -98,8 +95,30 @@ class Input implements Design\Initializable
      */
     public static function file($key = null, $default = null)
     {
-        return $key === null ? $_FILES : \Nerd\Arr::get($_FILES, $key, $default);
+        return $key === null ? $_FILES : Arr::get($_FILES, $key, $default);
     }
+
+	/**
+	 * Retrieve data from a superglobal array and filter it on the way in
+	 *
+	 * @param    string          Which superglobal to use
+	 * @param    string          Dot notated path to data
+	 * @param    integer         Filter to run
+	 * @param    integer         Flags for a given filter
+	 * @return   mixed           Filtered data
+	 */
+	public static function filter($type, $key, $filter, $flags = null)
+	{
+		if (($data = static::{$type}($key)) === null) {
+			return null;
+		}
+
+		if (is_array($data)) {
+			throw new \InvalidArgumentException('The data returned from the superglobal cannot be an array');
+		}
+
+		return filter_var($data, $filter, $flags ?: null);
+	}
 
     /**
      * Retrieve data from the $_GET superglobal array
@@ -110,7 +129,7 @@ class Input implements Design\Initializable
      */
     public static function get($key = null, $default = null)
     {
-        return $key === null ? $_GET : \Nerd\Arr::get($_GET, $key, $default);
+        return $key === null ? $_GET : Arr::get($_GET, $key, $default);
     }
 
     /**
@@ -151,7 +170,7 @@ class Input implements Design\Initializable
      */
     public static function post($key = null, $default = null)
     {
-        return $key === null ? $_POST : \Nerd\Arr::get($_POST, $key, $default);
+        return $key === null ? $_POST : Arr::get($_POST, $key, $default);
     }
 
     /**
@@ -186,7 +205,7 @@ class Input implements Design\Initializable
             parse_str(file_get_contents('php://input'), static::$_PUT);
         }
 
-        return $key === null ? static::$_PUT : \Nerd\Arr::get(static::$_PUT, $key, $default);
+        return $key === null ? static::$_PUT : Arr::get(static::$_PUT, $key, $default);
     }
 
     /**
@@ -198,6 +217,6 @@ class Input implements Design\Initializable
      */
     public static function server($key = null, $default = null)
     {
-        return $key === null ? $_SERVER : \Nerd\Arr::get($_SERVER, strtoupper($key), $default);
+        return $key === null ? $_SERVER : Arr::get($_SERVER, strtoupper($key), $default);
     }
 }

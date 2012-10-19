@@ -56,12 +56,7 @@ abstract class Model implements Design\Serializable, Design\Initializable
 
 public static function __initialize()
 {
-	static::inform();
-}
-
-public function __construct()
-{
-	!static::$informed and static::inform();
+    static::inform();
 }
 
     /**
@@ -197,7 +192,7 @@ public function __construct()
             $data = [self::$columns, self::$constraints, self::$primary];
             $datastore->write($dsname, $data);
 
-			self::$informed = true;
+            self::$informed = true;
         //} catch (\PDOException $e) {
         //    throw ne
         //}
@@ -260,7 +255,7 @@ public function __construct()
      */
     public static function optimizeSql($sql)
     {
-		!static::$informed and static::inform();
+        !static::$informed and static::inform();
 
         // Replace "*" with a list of columns, reducing DB lookups
         $sql = str_replace('*', static::listColumns(), $sql);
@@ -294,7 +289,7 @@ public function __construct()
      */
     public static function __callStatic($method, array $params)
     {
-		!self::$informed and static::inform();
+        !self::$informed and static::inform();
         $terms = ['find','By', 'And'];
 
         list($trash, $finder, $field) = explode('_', str_replace($terms, '_', $method));
@@ -316,7 +311,7 @@ public function __construct()
      */
     public static function find()
     {
-		!static::$informed and static::inform();
+        !static::$informed and static::inform();
 
         if (count($params = func_get_args()) === 0) {
             throw new \InvalidArgumentException('No arguments were provided, you must at least include a SQL statement.');
@@ -338,7 +333,7 @@ public function __construct()
      */
     public static function findOne()
     {
-		!static::$informed and static::inform();
+        !static::$informed and static::inform();
 
         $params = func_get_args();
         $sql    = static::optimizeSql(array_shift($params));
@@ -368,7 +363,7 @@ public function __construct()
      */
     public static function findAll()
     {
-		!static::$informed and static::inform();
+        !static::$informed and static::inform();
 
         $params = func_get_args();
         $sql    = static::optimizeSql(array_shift($params));
@@ -404,7 +399,7 @@ public function __construct()
      */
     public static function listColumns()
     {
-		!self::$informed and static::inform();
+        !self::$informed and static::inform();
 
         $columns = [];
         $exclude = func_get_args();

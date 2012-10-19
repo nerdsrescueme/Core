@@ -50,13 +50,11 @@ class Lint extends \Geek\Design\Task
         $this->geek->write(PHP_EOL.'Running syntax fixer, this may take a minute'.PHP_EOL);
 
         // Setup iterator and variables
-        $library   = $this->geek->flag('library', null);
-        $directory = \Nerd\LIBRARY_PATH.($library ? DS.$library : '');
+        $library   = $this->geek->flag('library', 'nerd');
+		$binary    = join(DS, [\Nerd\VENDOR_PATH, 'fabpot', 'php-cs-fixer', 'php-cs-fixer']);
+        $directory = join(DS, [\Nerd\LIBRARY_PATH, $library, ucfirst($library)]);
         $return    = [];
-        $command   = 'php '
-                   . join(DS, [\Nerd\VENDOR_PATH, 'fabpot', 'php-cs-fixer', 'php-cs-fixer']) . ' fix '
-                   . $directory . ' '
-                   . '--verbose --level=psr2';
+        $command   = "php $binary fix $directory --verbose --level=psr2";
 
         exec($command, $return);
 

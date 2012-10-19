@@ -8,23 +8,12 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
     // Not sure how to test that.
 
     protected $ref;
+	protected $al;
 
     public function setUp()
     {
         $this->ref = new \ReflectionClass('\\Nerd\\Autoloader');
-    }
-
-    /**
-     * @covers \Nerd\Autoloader
-     */
-    public function testAutoloaderAllMethodsStatic()
-    {
-        $methods = $this->ref->getMethods();
-        $this->assertNotEmpty($methods, 'Autoloader does not contain any methods');
-
-        foreach ($methods as $method) {
-            $this->assertTrue($method->isStatic(), 'Autoloader::'.$method->getName().' is not a static method');
-        }
+		$this->al  = new \Nerd\Autoloader();
     }
 
     /**
@@ -40,7 +29,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderDenamespace()
     {
-        $actual = Autoloader::denamespace('\\Nerd\\Test\\Klass');
+        $actual = $this->al->denamespace('\\Nerd\\Test\\Klass');
         $this->assertEquals($actual, 'Klass', 'Autoloader::denamespace cannot determine the correct class name');
     }
 
@@ -58,7 +47,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsSuccess()
     {
-        $result = Autoloader::exists('\\Nerd\\Autoloader');
+        $result = $this->al->exists('\\Nerd\\Autoloader');
         $this->assertTrue($result, 'Autoloader::exists can not determine if a class exists');
     }
 
@@ -68,7 +57,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsSuccessReturnsBoolean()
     {
-        $result = Autoloader::exists('\\Nerd\\Autoloader');
+        $result = $this->al->exists('\\Nerd\\Autoloader');
         $this->assertTrue(is_bool($result), 'Autoloader::exists does not return a boolean value on success');
     }
 
@@ -77,7 +66,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsFail()
     {
-        $result = Autoloader::exists('\\Nerd\\Shouldfail');
+        $result = $this->al->exists('\\Nerd\\Shouldfail');
         $this->assertFalse($result, 'Autoloader::exists falsely identifies classes that do not exist');
     }
 
@@ -87,7 +76,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderExistsFailReturnsBoolean()
     {
-        $result = Autoloader::exists('\\Nerd\\Shouldfail');
+        $result = $this->al->exists('\\Nerd\\Shouldfail');
         $this->assertTrue(is_bool($result), 'Autoloader::exists does not return a boolean value on failure');
     }
 
@@ -96,7 +85,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadSucceed()
     {
-        $result = \Nerd\Autoloader::load('\\Nerd\\Autoloader');
+        $result = $this->al->load('\\Nerd\\Autoloader');
         $this->assertTrue($result, 'Autoloader::load can not load an existing class');
     }
 
@@ -105,7 +94,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadSuccessReturnsBoolean()
     {
-        $result = \Nerd\Autoloader::load('\\Nerd\\Autoloader');
+        $result = $this->al->load('\\Nerd\\Autoloader');
         $this->assertTrue(is_bool($result), 'Autoloader::load does not return a boolean value on success');
     }
 
@@ -114,7 +103,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadFail()
     {
-        $result = \Nerd\Autoloader::load('\\Nerd\\ShouldFail');
+        $result = $this->al->load('\\Nerd\\ShouldFail');
         $this->assertFalse($result, 'Autoloader::load falsely reports it can load a class that does not exist');
     }
 
@@ -123,7 +112,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAutoloaderLoadFailReturnsBoolean()
     {
-        $result = \Nerd\Autoloader::load('\\Nerd\\ShouldFail');
+        $result = $this->al->load('\\Nerd\\ShouldFail');
         $this->assertTrue(is_bool($result), 'Autoloader::load does not return a boolean value on failure');
     }
 }

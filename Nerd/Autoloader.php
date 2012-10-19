@@ -30,27 +30,7 @@ namespace Nerd;
  */
 class Autoloader
 {
-    /**
-     * Adds the Autoloader to the SPL autoloader stack
-     *
-     * @return boolean Returns true on success, otherwise false
-     */
-    public static function register($prepend = false)
-    {
-        return spl_autoload_register('Nerd\Autoloader::load', true, $prepend);
-    }
-
-    /**
-     * Removes the Autoloader from the SPL autoloader stack.
-     *
-     * @return boolean Returns true on success, otherwise false
-     */
-    public static function unregister()
-    {
-        return spl_autoload_unregister('Nerd\Autoloader::load');
-    }
-
-    /**
+	/**
      * Removes the namespace from a given class string, leaving you with just the
      * class name without its namespace.
      *
@@ -65,37 +45,61 @@ class Autoloader
     }
 
     /**
+     * Adds the Autoloader to the SPL autoloader stack
+     *
+     * @return boolean Returns true on success, otherwise false
+     */
+    public function register($prepend = false)
+    {
+        return spl_autoload_register([$this, 'load'], true, $prepend);
+    }
+
+    /**
+     * Removes the Autoloader from the SPL autoloader stack.
+     *
+     * @return boolean Returns true on success, otherwise false
+     */
+    public function unregister()
+    {
+        return spl_autoload_unregister([$this, 'load']);
+    }
+
+    /**
      * Autoloads a class, interface or trait. When called by the SPL autoload stack,
      * the failure of this method results in an exception being thrown.
      *
      * @param    string           The class or interface
      * @return boolean Returns true if the class was loaded, otherwise false
      */
-    public static function load($name)
+    public function load($name)
     {
-        if (static::exists($name)) {
-            return true;
-        }
+		if ($this->exists($name)) {
+			return true;
+		}
 
-        $class = str_replace('_', '\\', $name);
-        $namespace = '';
+		$position  = strpos($name, '\\');
+		$namespace = '';
+		$class     = $name;
 
-        if (($position = strpos($class, '\\')) !== false) {
-            $namespace .= substr($class, 0, $position);
-            $class      = substr($class, ($position + 1));
+        if ($position !== false) {
+            $namespace .= substr($name, 0, $position);
+            $class      = substr($name, ($position + 1));
         }
 
         $path = join(DS, [\Nerd\LIBRARY_PATH, strtolower($namespace), ucfirst($namespace), str_replace('\\', DS, "{$class}.php")]);
 
-        if (!include($path)) {
+        if (!is_file($path)) {
             return false;
         }
 
-        if (!static::exists($name)) {
-            return false;
-        }
+		include($path);
 
-        return true;
+		$interfaces = class_implements($name, false);
+		if (in_array('Nerd\Design\Initializable', $interfaces)) {
+			$name::__initialize();
+		}
+
+        return $this->exists($name);
     }
 
     /**
@@ -105,8 +109,10 @@ class Autoloader
      * @param    string           The class or interface
      * @return boolean Returns true if the class or interface exists, otherwise false
      */
-    public static function exists($name)
+    public function exists($name)
     {
-        return class_exists($name, false) or interface_exists($name, false) or trait_exists($name);
+        return class_exists($name, false)
+		    or interface_exists($name, false)
+			or trait_exists($name);
     }
 }

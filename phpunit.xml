@@ -7,7 +7,7 @@
          bootstrap="tests/bootstrap.php"
          strict="true">
 	<testsuites>
-		<testsuite name="Core Test Suite">
+		<testsuite name="Nerd Core Test Suite">
 			<directory suffix="Test.php">tests</directory>
 		</testsuite>
 	</testsuites>

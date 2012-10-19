@@ -27,9 +27,6 @@ namespace Nerd;
  */
 class Environment implements Design\Initializable
 {
-	// Traits
-	use Design\Creational\Singleton;
-
     // Environment modes
     const MODE_DEVELOPMENT = 'development';
     const MODE_TESTING     = 'testing';

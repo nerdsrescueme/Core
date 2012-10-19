@@ -18,4 +18,4 @@ define('Nerd\APPLICATION_NS', 'nerd');
  */
 include join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'Nerd', 'autoloader.php']);
 
-\Nerd\Autoloader::register(true);
+(new \Nerd\Autoloader)->register(true);
