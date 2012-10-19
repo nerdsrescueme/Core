@@ -420,7 +420,7 @@ public static function __initialize()
      *
      * @var array
      */
-    private $_dirty = [];
+    protected $_dirty = [];
 
     /**
      * Errors
@@ -434,7 +434,7 @@ public static function __initialize()
      *
      * @var array
      */
-    private $_values = [];
+    protected $_values = [];
 
 
     /**
@@ -742,4 +742,9 @@ public static function __initialize()
             return $this->_values[$property];
         }
     }
+
+	public function __isset($property)
+	{
+		return isset($this->_values[$property]);
+	}
 }
