@@ -7,12 +7,7 @@
 
 namespace
 {
-	if (!function_exists('import')) {
-		function import() {
-			$path = func_get_args() and array_unshift($path, \Nerd\LIBRARY_PATH);
-			return include join(DS, $path);
-		}
-	}
+	include 'functions.php';
 }
 
 namespace Nerd
@@ -32,8 +27,10 @@ namespace Nerd
 	 * Test for CLI, load either application or Geek bootstrap.
 	 */
 	$application = PHP_SAPI === 'cli'
-		? import('geek', 'bootstrap.php')
-		: import('application', 'bootstrap.php');
+		? import('geek', 'resolve.php')
+		: import('application', 'resolve.php');
+
+	$vars = $application();
 
 	/**
 	 * Get and register the Composer autoloader as a secondary loader.
@@ -47,8 +44,8 @@ namespace Nerd
 	 * would simply create another subfolder in LIBRARY_PATH with its own Application
 	 * class...
 	 */
-	define('Nerd\APPLICATION_NS', $application());
-	define('Nerd\STORAGE_PATH', join(DS, [LIBRARY_PATH, APPLICATION_NS, 'storage']));
+	define('Nerd\APPLICATION_NS', $vars['namespace']);
+	define('Nerd\STORAGE_PATH', join(DS, [LIBRARY_PATH, $vars['storage'], 'storage']));
 
 	/**
 	 * Setup the current environment
