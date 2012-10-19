@@ -98,27 +98,27 @@ class Input implements Design\Initializable
         return $key === null ? $_FILES : Arr::get($_FILES, $key, $default);
     }
 
-	/**
-	 * Retrieve data from a superglobal array and filter it on the way in
-	 *
-	 * @param    string          Which superglobal to use
-	 * @param    string          Dot notated path to data
-	 * @param    integer         Filter to run
-	 * @param    integer         Flags for a given filter
-	 * @return   mixed           Filtered data
-	 */
-	public static function filter($type, $key, $filter, $flags = null)
-	{
-		if (($data = static::{$type}($key)) === null) {
-			return null;
-		}
+    /**
+     * Retrieve data from a superglobal array and filter it on the way in
+     *
+     * @param    string          Which superglobal to use
+     * @param    string          Dot notated path to data
+     * @param    integer         Filter to run
+     * @param    integer         Flags for a given filter
+     * @return   mixed           Filtered data
+     */
+    public static function filter($type, $key, $filter, $flags = null)
+    {
+        if (($data = static::{$type}($key)) === null) {
+            return null;
+        }
 
-		if (is_array($data)) {
-			throw new \InvalidArgumentException('The data returned from the superglobal cannot be an array');
-		}
+        if (is_array($data)) {
+            throw new \InvalidArgumentException('The data returned from the superglobal cannot be an array');
+        }
 
-		return filter_var($data, $filter, $flags ?: null);
-	}
+        return filter_var($data, $filter, $flags ?: null);
+    }
 
     /**
      * Retrieve data from the $_GET superglobal array

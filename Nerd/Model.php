@@ -743,8 +743,8 @@ public static function __initialize()
         }
     }
 
-	public function __isset($property)
-	{
-		return isset($this->_values[$property]);
-	}
+    public function __isset($property)
+    {
+        return isset($this->_values[$property]);
+    }
 }

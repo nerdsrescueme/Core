@@ -7,8 +7,8 @@ class Test extends \Geek\Design\Task
     public function run()
     {
         $library = $this->geek->flag('library', 'nerd');
-		$binary  = join(DS, [\Nerd\VENDOR_PATH, 'bin', 'phpunit']);
-		$config  = join(DS, [\Nerd\LIBRARY_PATH, $library, 'phpunit.xml']);
+        $binary  = join(DS, [\Nerd\VENDOR_PATH, 'bin', 'phpunit']);
+        $config  = join(DS, [\Nerd\LIBRARY_PATH, $library, 'phpunit.xml']);
         $command = "$binary -v -c $config";
 
         $this->geek->write('Running tests, please wait for results');

@@ -30,7 +30,7 @@ namespace Nerd;
  */
 class Autoloader
 {
-	/**
+    /**
      * Removes the namespace from a given class string, leaving you with just the
      * class name without its namespace.
      *
@@ -73,13 +73,13 @@ class Autoloader
      */
     public function load($name)
     {
-		if ($this->exists($name)) {
-			return true;
-		}
+        if ($this->exists($name)) {
+            return true;
+        }
 
-		$position  = strpos($name, '\\');
-		$namespace = '';
-		$class     = $name;
+        $position  = strpos($name, '\\');
+        $namespace = '';
+        $class     = $name;
 
         if ($position !== false) {
             $namespace .= substr($name, 0, $position);
@@ -92,12 +92,12 @@ class Autoloader
             return false;
         }
 
-		include($path);
+        include($path);
 
-		$interfaces = class_implements($name, false);
-		if (in_array('Nerd\Design\Initializable', $interfaces)) {
-			$name::__initialize();
-		}
+        $interfaces = class_implements($name, false);
+        if (in_array('Nerd\Design\Initializable', $interfaces)) {
+            $name::__initialize();
+        }
 
         return $this->exists($name);
     }
@@ -112,7 +112,7 @@ class Autoloader
     public function exists($name)
     {
         return class_exists($name, false)
-		    or interface_exists($name, false)
-			or trait_exists($name);
+            or interface_exists($name, false)
+            or trait_exists($name);
     }
 }

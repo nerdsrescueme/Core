@@ -51,7 +51,7 @@ class Lint extends \Geek\Design\Task
 
         // Setup iterator and variables
         $library   = $this->geek->flag('library', 'nerd');
-		$binary    = join(DS, [\Nerd\VENDOR_PATH, 'fabpot', 'php-cs-fixer', 'php-cs-fixer']);
+        $binary    = join(DS, [\Nerd\VENDOR_PATH, 'fabpot', 'php-cs-fixer', 'php-cs-fixer']);
         $directory = join(DS, [\Nerd\LIBRARY_PATH, $library, ucfirst($library)]);
         $return    = [];
         $command   = "php $binary fix $directory --verbose --level=psr2";

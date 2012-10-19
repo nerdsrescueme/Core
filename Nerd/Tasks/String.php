@@ -31,14 +31,14 @@ class String extends \Geek\Design\Task
         $this->geek->write('');
     }
 
-	public function password()
-	{
-		list($t, $password) = $this->geek->args();
+    public function password()
+    {
+        list($t, $password) = $this->geek->args();
 
-		$this->geek->write('');
+        $this->geek->write('');
         $this->geek->write('Encrypted password: '.md5($password));
         $this->geek->write('');
-	}
+    }
 
     /**
      * {@inheritdoc}
