@@ -291,6 +291,10 @@ trait Attributable
      */
     public function __isset($property)
     {
+		if ($property === 'class') {
+			return ! empty($this->classes);
+		}
+
         return array_key_exists($property, $this->options);
     }
 }
