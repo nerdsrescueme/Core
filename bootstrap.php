@@ -52,13 +52,6 @@ namespace Nerd
 	 */
 	Environment::$active;
 
-	/**
-	 * The following items need to be done for every request, but since they require
-	 * APPLICATION_NS to be defined, the must be done in the application bootstrap file.
-	 *
-	 *   [!!] Edit at your own risk
-	 *
-	 */
 	error_reporting(Config::get('error.reporting'));
 	ini_set('display_errors', (Config::get('error.display', true) ? 'On' : 'Off'));
 	date_default_timezone_set(Config::get('application.timezone', 'UTC'));
