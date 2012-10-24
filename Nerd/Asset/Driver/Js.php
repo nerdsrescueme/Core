@@ -18,6 +18,8 @@ namespace Nerd\Asset\Driver;
  */
 class Js extends \Nerd\Asset\Driver
 {
+    public static $folder = 'js';
+
     public function compress()
     {
         parent::compress();

@@ -24,7 +24,7 @@ class JSON implements \Nerd\Format\Driver
      */
     public function from($data, $flags = null)
     {
-        return json_decode($data, true);
+        return json_encode($data);
     }
 
     /**
@@ -32,6 +32,6 @@ class JSON implements \Nerd\Format\Driver
      */
     public function to($data, $flags = null)
     {
-        return json_encode($data);
+        return json_decode($data, true);
     }
 }

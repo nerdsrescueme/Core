@@ -60,7 +60,7 @@ namespace Nerd\Design\Creational;
  * @package    Nerd
  * @subpackage Design
  */
-abstract class Multiton
+trait Multiton
 {
     /**
      * Registered instances

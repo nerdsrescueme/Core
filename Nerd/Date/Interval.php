@@ -35,14 +35,12 @@ class Interval extends \DateInterval
 
     public function getSpec()
     {
-        $output  = 'P';
-        $output .= ($this->y > 1) ? $this->y.'Y' : '';
-        $output .= ($this->m > 1) ? $this->m.'M' : '';
-        $output .= ($this->d > 1) ? $this->d.'D' : '';
-        $output .= ($this->h > 1) ? $this->h.'H' : '';
-        $output .= ($this->i > 1) ? $this->i.'M' : '';
-        $output .= ($this->s > 1) ? $this->s.'S' : '';
-
-        return $output;
+        return 'P'
+        . (($this->y > 1) ? $this->y.'Y' : '')
+        . (($this->m > 1) ? $this->m.'M' : '')
+        . (($this->d > 1) ? $this->d.'D' : '')
+        . (($this->h > 1) ? $this->h.'H' : '')
+        . (($this->i > 1) ? $this->i.'M' : '')
+        . (($this->s > 1) ? $this->s.'S' : '');
     }
 }

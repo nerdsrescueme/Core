@@ -56,10 +56,14 @@ abstract class Driver
      * @throws OutOfBoundsException When the asset cannot be located
      * @return Nerd\Asset\Type
      */
-    public function __construct($file)
+    public function __construct($file, $folder = '')
     {
+        if (!empty($folder)) {
+            $file = trim($folder, '/').DS.$file;
+        }
+
         $this->file = Url::asset($file);
-        $this->fullPath = \Nerd\DOCROOT.DS.'assets'.DS.trim($file, '/');
+        $this->fullPath = join(DS, [\Nerd\DOCROOT, trim($file, '/')]);
 
         if (!file_exists($this->fullPath)) {
             throw new \OutOfBoundsException("The asset [$file] could not be found.");

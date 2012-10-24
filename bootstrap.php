@@ -13,8 +13,8 @@ namespace
 namespace Nerd
 {
 	define('Nerd\LIBRARY_PATH', dirname(__DIR__));
-	define('Nerd\VENDOR_PATH', dirname(LIBRARY_PATH).'/vendor');
-	define('Nerd\DOCROOT', dirname(LIBRARY_PATH).'/public');
+	define('Nerd\VENDOR_PATH', dirname(LIBRARY_PATH).DIRECTORY_SEPARATOR.'vendor');
+	define('Nerd\DOCROOT', dirname(LIBRARY_PATH).DIRECTORY_SEPARATOR.'public');
 
 	if (!defined('DS')) {
 		define('DS', DIRECTORY_SEPARATOR);

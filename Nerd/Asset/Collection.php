@@ -68,6 +68,8 @@ class Collection extends \Nerd\Design\Collection
      */
     public $tags = true;
 
+    public $folder = 'assets';
+
     /**
      * Instance constructor
      *
@@ -83,6 +85,23 @@ class Collection extends \Nerd\Design\Collection
 
         $this->triggerEvent('asset.collect', array($this));
         $this->assets = &$this->enumerable;
+    }
+
+    public function add($assets, $prepend = false)
+    {
+        if (!is_array($assets)) {
+            $assets = array($assets);
+        }
+
+        foreach ($assets as $asset) {
+            if ($asset instanceof \Nerd\Asset\Driver) {
+                parent::add($asset);
+            } else {
+                parent::add(\Nerd\Asset::guess($asset, $this->folder));
+            }
+        }
+
+        return $this;
     }
 
     public function render()

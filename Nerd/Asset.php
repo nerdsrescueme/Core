@@ -42,6 +42,44 @@ class Asset
       , Design\Eventable;
 
     /**
+     * Create an enumerable collection of assets.
+     *
+     * @param    array          Array of assets to load within the collection
+     * @return \Nerd\Asset\Collection
+     */
+    public static function collection(array $assets = [], $folder = null)
+    {
+        $collection = new Asset\Collection();
+
+        if ($folder !== null) {
+            $collection->folder = $folder;
+        }
+
+        foreach ($assets as $key => $asset) {
+            if (!$asset instanceof Nerd\Asset\Driver) {
+                $assets[$key] = static::guess($asset, $collection->folder);
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Attempts to guess what type of asset is currently being loaded and returns an
+     * instance of that Asset driver.
+     *
+     * @param    string    Path to Asset file
+     * @return \Nerd\Asset\Type
+     */
+    public static function guess($file, $folder = '')
+    {
+        $file = str_replace([DS, '/'], DS, $file);
+        $file = explode('.', $file);
+
+        return static::instance(end($file), implode('.', $file), $folder);
+    }
+
+    /**
      * The magic call static method is triggered when invoking inaccessible
      * methods in a static context.
      *
@@ -58,36 +96,5 @@ class Asset
     public static function __callStatic($method, array $params)
     {
         return forward_static_call_array('guess', $params);
-    }
-
-    /**
-     * Create an enumerable collection of assets.
-     *
-     * @param    array          Array of assets to load within the collection
-     * @return \Nerd\Asset\Collection
-     */
-    public static function collection(array $assets = [])
-    {
-        foreach ($assets as $key => $asset) {
-            if (!$asset instanceof Nerd\Asset\Driver) {
-                $assets[$key] = static::guess($asset);
-            }
-        }
-
-        return new Asset\Collection($assets);
-    }
-
-    /**
-     * Attempts to guess what type of asset is currently being loaded and returns an
-     * instance of that Asset driver.
-     *
-     * @param    string    Path to Asset file
-     * @return \Nerd\Asset\Type
-     */
-    protected static function guess($file)
-    {
-        $file = explode('.', $file);
-
-        return static::instance(end($file), implode('.', $file));
     }
 }

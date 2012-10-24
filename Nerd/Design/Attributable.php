@@ -186,41 +186,39 @@ trait Attributable
      */
     public function attributes($asString = false)
     {
-        if (isset(self::$attributeDefaults)) {
-            foreach (self::$attributeDefaults as $attribute => $value) {
-                $this->{$attribute} = $value;
-            }
-        }
-
         $attributes = array_intersect_key($this->options, self::allowedAttributes());
         $attributes['class'] = $this->option('class');
 
         // Add in data-* attributes
+        $this->_detectDataAttributes($attributes);
+
+        if (!$asString) {
+            return $attributes;
+        } else {
+            $out = '';
+
+            foreach ($attributes as $attribute => $value) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $out .= is_bool($value) and $value ? " $attribute" : " $attribute=\"$value\"";
+                }
+            }
+        }
+
+        return ' '.trim($out);
+    }
+
+    private function & _detectDataAttributes(&$attributes)
+    {
         foreach ($this->options as $key => $value) {
             if (strpos($key, 'data-') !== false) {
                 $attributes[$key] = $value;
             }
         }
 
-        if (!$asString) {
-            return $attributes;
-        }
-
-        $out = '';
-
-        foreach ($attributes as $attribute => $value) {
-            if (empty($value)) {
-                continue;
-            }
-
-            if (is_bool($value) and $value === true) {
-                $out .= " $attribute";
-            } else {
-                $out .= " $attribute=\"$value\"";
-            }
-        }
-
-        return ' '.trim($out);
+        return $attributes;
     }
 
     /**
@@ -291,9 +289,9 @@ trait Attributable
      */
     public function __isset($property)
     {
-		if ($property === 'class') {
-			return ! empty($this->classes);
-		}
+        if ($property === 'class') {
+            return ! empty($this->classes);
+        }
 
         return array_key_exists($property, $this->options);
     }
