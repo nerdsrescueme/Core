@@ -56,7 +56,7 @@ class Config
         list($package, $file, $key) = static::parse($key);
 
         if (!static::load($package, $file)) {
-            return is_callable($default) ? $default() : $default;
+            return $default instanceof \Closure ? $default() : $default;
         }
 
         if ($key === null) {

@@ -91,7 +91,7 @@ class Method extends \ReflectionMethod
                 $return .= '$'.$param->getName();
 
                 if ($param->isDefaultValueAvailable()) {
-                    $return .= '='.\Nerd\Source::convertValue($param->getDefaultValue());
+                    //$return .= '='.\Nerd\Source::convertValue($param->getDefaultValue());
                 }
 
                 $return .= ', ';

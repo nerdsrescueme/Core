@@ -149,11 +149,11 @@ abstract class Driver
      * @param     integer     Array offset requested
      * @returns   string      Path at $offset
      */
-    public function segment($offset)
+    public function segment($offset, $default = null)
     {
         $segments = explode('/', trim($this->path, '/'));
 
-        return $segments[$offset];
+        return isset($segments[$offset]) ? $segments[$offset] : $default;
     }
 
     /**

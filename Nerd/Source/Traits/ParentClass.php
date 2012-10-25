@@ -11,6 +11,6 @@ trait ParentClass
      */
     public function getDeclaringClass()
     {
-        return new Klass(parent::getDeclaringClass()->getName());
+        return new \Nerd\Source\Klass(parent::getDeclaringClass()->getName());
     }
 }

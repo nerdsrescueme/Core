@@ -19,7 +19,7 @@ trait Docblock
     public function getDocblock()
     {
         if ($this->docblock === null) {
-            $this->docblock = new Docblock($this);
+            $this->docblock = new \Nerd\Source\Docblock($this);
         }
 
         return $this->docblock;

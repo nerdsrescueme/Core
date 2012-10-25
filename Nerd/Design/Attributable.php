@@ -203,7 +203,6 @@ trait Attributable
                 }
 
                 $out .= is_bool($value) and $value ? " $attribute" : " $attribute=\"$value\"";
-                }
             }
         }
 

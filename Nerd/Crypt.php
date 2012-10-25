@@ -54,7 +54,7 @@ class Crypt extends Design\Creational\SingletonFactory implements Design\Initial
      */
     public static function __initialize()
     {
-        if ((static::$key = Config::get('crypt.key')) == '') {
+        if ((static::$key = Config::get('application.securityKey')) == '') {
             throw new \Exception('The Crypt class cannot be used without providing a shared key. Please specify on in your crypt configuration file');
         }
 
