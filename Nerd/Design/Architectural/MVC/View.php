@@ -71,7 +71,7 @@ class View implements \Nerd\Design\Initializable
      */
     public static function set($keys, $value = null)
     {
-        if (!\is_array($keys)) {
+        if (!is_array($keys)) {
             static::$global_data[$keys] = $value;
         } else {
             foreach ($keys as $key => $data) {

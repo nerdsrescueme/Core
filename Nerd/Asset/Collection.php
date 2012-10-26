@@ -79,10 +79,11 @@ class Collection extends \Nerd\Design\Collection
      * @param    array    Array of assets to import into the collection
      * @return Nerd\Asset\Collection
      */
-    public function __construct(array $assets = [])
+    public function __construct(array $assets = [], $folder = null)
     {
         parent::__construct($assets);
 
+		$this->folder = $folder ?: $this->folder;
         $this->triggerEvent('asset.collect', array($this));
         $this->assets = &$this->enumerable;
     }

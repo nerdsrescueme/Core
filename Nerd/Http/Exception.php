@@ -10,7 +10,8 @@
 namespace Nerd\Http;
 
 // Aliasing rules
-use Nerd\Config;
+use Nerd\Config
+  , Nerd\Http;
 
 /**
  * Exception class
@@ -43,15 +44,7 @@ class Exception extends \Exception
             throw new \Exception('An invalid call to Nerd\\Http\\Exception was made. This exception is meant to handle errors for Http, and was called with a '.$code);
         }
 
-        if ($response === null) {
-            $response = new Response();
-        }
-
-        $response
-            ->setStatus($code)
-            ->setBody(call_user_func(Config::get('error.http_error_handler', null, false), $code))
-            ->send();
-
-        exit;
+		$this->code = $code;
+		$this->message = Http::$statuses[$code];
     }
 }

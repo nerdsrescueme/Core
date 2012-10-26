@@ -49,6 +49,13 @@ abstract class Driver
      */
     protected $contents;
 
+	/**
+	 * Asset folder on the filesystem
+	 *
+	 * @var    string
+	 */
+	protected $base;
+
     /**
      * Instance Constructor
      *
@@ -56,13 +63,17 @@ abstract class Driver
      * @throws OutOfBoundsException When the asset cannot be located
      * @return Nerd\Asset\Type
      */
-    public function __construct($file, $folder = '')
+    public function __construct($file, $base = '')
     {
-        if (!empty($folder)) {
-            $file = trim($folder, '/').DS.$file;
-        }
+        if (!empty($base)) {
+			$this->base = trim($base, '/');
+		}
 
-        $this->file = Url::asset($file);
+        $file = ($this->base   ? $this->base.'/'   : '').
+		        ($this->folder ? $this->folder.'/' : '').
+                $file;
+
+        $this->file     = Url::asset($file);
         $this->fullPath = join(DS, [\Nerd\DOCROOT, trim($file, '/')]);
 
         if (!file_exists($this->fullPath)) {

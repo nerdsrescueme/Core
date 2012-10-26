@@ -20,7 +20,7 @@ class Asset extends Site
     public function __construct($resource)
     {
         // NEED CONFIGURATION SOMEHOW
-        $resource = '/assets'.'/'.ltrim($resource, '/');
+        $resource = ltrim($resource, '/');
 
         return parent::__construct($resource);
     }

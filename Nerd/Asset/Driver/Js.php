@@ -18,7 +18,7 @@ namespace Nerd\Asset\Driver;
  */
 class Js extends \Nerd\Asset\Driver
 {
-    public static $folder = 'js';
+    public $folder = 'js';
 
     public function compress()
     {
@@ -30,6 +30,7 @@ class Js extends \Nerd\Asset\Driver
 
     public function tag()
     {
-        return "<script src=\"{$this->file}\" type=\"text/javascript\"></script>";
+		$file = str_replace(DS, '/', $this->file);
+        return "<script src=\"{$file}\" type=\"text/javascript\"></script>";
     }
 }

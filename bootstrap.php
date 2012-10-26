@@ -70,5 +70,6 @@ namespace Nerd
 	} else {
 		$application->send();
 	}
+
 	$application->triggerEvent('application.shutdown');
 }

@@ -18,7 +18,7 @@ namespace Nerd\Asset\Driver;
  */
 class Css extends \Nerd\Asset\Driver
 {
-    public static $folder = 'css';
+    public $folder = 'css';
 
     public function compress()
     {
@@ -30,6 +30,7 @@ class Css extends \Nerd\Asset\Driver
 
     public function tag()
     {
-        return "<link rel=\"stylesheet\" media=\"all\" href=\"{$this->file}\">";
+		$file = str_replace(DS, '/', $this->file);
+        return "<link rel=\"stylesheet\" media=\"all\" href=\"{$file}\">";
     }
 }
