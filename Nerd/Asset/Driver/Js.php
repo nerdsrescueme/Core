@@ -30,7 +30,7 @@ class Js extends \Nerd\Asset\Driver
 
     public function tag()
     {
-		$file = str_replace(DS, '/', $this->file);
+        $file = str_replace(DS, '/', $this->file);
         return "<script src=\"{$file}\" type=\"text/javascript\"></script>";
     }
 }

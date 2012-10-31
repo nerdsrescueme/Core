@@ -61,7 +61,7 @@ class Asset
             }
         }
 
-		$collection->add($assets);
+        $collection->add($assets);
 
         return $collection;
     }

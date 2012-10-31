@@ -83,7 +83,7 @@ class Collection extends \Nerd\Design\Collection
     {
         parent::__construct($assets);
 
-		$this->folder = $folder ?: $this->folder;
+        $this->folder = $folder ?: $this->folder;
         $this->triggerEvent('asset.collect', array($this));
         $this->assets = &$this->enumerable;
     }

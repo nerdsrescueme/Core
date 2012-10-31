@@ -49,12 +49,12 @@ abstract class Driver
      */
     protected $contents;
 
-	/**
-	 * Asset folder on the filesystem
-	 *
-	 * @var    string
-	 */
-	protected $base;
+    /**
+     * Asset folder on the filesystem
+     *
+     * @var    string
+     */
+    protected $base;
 
     /**
      * Instance Constructor
@@ -66,11 +66,11 @@ abstract class Driver
     public function __construct($file, $base = '')
     {
         if (!empty($base)) {
-			$this->base = trim($base, '/');
-		}
+            $this->base = trim($base, '/');
+        }
 
         $file = ($this->base   ? $this->base.'/'   : '').
-		        ($this->folder ? $this->folder.'/' : '').
+                ($this->folder ? $this->folder.'/' : '').
                 $file;
 
         $this->file     = Url::asset($file);

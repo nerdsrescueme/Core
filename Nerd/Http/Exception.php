@@ -44,7 +44,7 @@ class Exception extends \Exception
             throw new \Exception('An invalid call to Nerd\\Http\\Exception was made. This exception is meant to handle errors for Http, and was called with a '.$code);
         }
 
-		$this->code = $code;
-		$this->message = Http::$statuses[$code];
+        $this->code = $code;
+        $this->message = Http::$statuses[$code];
     }
 }
