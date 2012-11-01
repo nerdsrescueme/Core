@@ -61,10 +61,23 @@ class Session implements Design\Initializable, Design\Serializable
             $session->flash = \Nerd\Session\Flash::instance();
         }
 
-        $session->triggerEvent('session.start', array($session));
-        session_start();
-        $session->triggerEvent('session.setup', array($session));
+        // This is a hack!
+        if (Environment::$mode === Environment::MODE_TESTING) {
+            $session->data = [];
+        } else {
+            $session->data = &$_SESSION;
+            $session->triggerEvent('session.start', array($session));
+            session_start();
+            $session->triggerEvent('session.setup', array($session));
+        }
     }
+
+    /**
+     * Session data array
+     *
+     * @var array
+     */
+    public $data;
 
     /**
      * Session flash object
@@ -80,7 +93,7 @@ class Session implements Design\Initializable, Design\Serializable
      */
     public function clear()
     {
-        $_SESSION = [];
+        $this->data = [];
     }
 
     /**
@@ -91,7 +104,7 @@ class Session implements Design\Initializable, Design\Serializable
      */
     public function delete($key)
     {
-        return Arr::delete($_SESSION, $key);
+        return Arr::delete($this->data, $key);
     }
 
     /**
@@ -125,7 +138,7 @@ class Session implements Design\Initializable, Design\Serializable
      */
     public function get($key, $default = null)
     {
-        return Arr::get($_SESSION, $key, $default);
+        return Arr::get($this->data, $key, $default);
     }
 
     /**
@@ -136,7 +149,12 @@ class Session implements Design\Initializable, Design\Serializable
      */
     public function has($key)
     {
-        return Arr::has($_SESSION, $key);
+        return Arr::has($this->data, $key);
+    }
+
+    public function inject(array $data)
+    {
+        $this->data = array_merge($this->data, $data);
     }
 
     /**
@@ -162,7 +180,7 @@ class Session implements Design\Initializable, Design\Serializable
      */
     public function set($key, $data)
     {
-        Arr::set($_SESSION, $key, $data);
+        Arr::set($this->data, $key, $data);
     }
 
     /**
@@ -225,6 +243,6 @@ class Session implements Design\Initializable, Design\Serializable
     {
         $this->triggerEvent('session.sleep', [$this]);
 
-        return $_SESSION;
+        return $this->data;
     }
 }

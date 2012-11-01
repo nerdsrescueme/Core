@@ -14,6 +14,11 @@ define('Nerd\DOCROOT',      dirname(\Nerd\LIBRARY_PATH).DS.'public');
 define('Nerd\APPLICATION_NS', 'nerd');
 
 /**
+ * Require base test case
+ */
+include join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'tests', 'testcase.php']);
+
+/**
  * Get and register the Nerd autoloader.
  */
 include join(DS, [\Nerd\LIBRARY_PATH, 'nerd', 'Nerd', 'autoloader.php']);

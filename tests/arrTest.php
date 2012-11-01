@@ -2,21 +2,52 @@
 
 namespace Nerd;
 
-class ArrTest extends \PHPUnit_Framework_TestCase
+class ArrTest extends TestCase
 {
-    protected $ref;
 
     public function setUp()
     {
-        $this->ref = new \ReflectionClass('\\Nerd\\Arr');
+        $this->setUpReflection('\\Nerd\\Arr');
+
+        $this->fixture = [
+            'Frank' => [
+                'id' => 123,
+                'email' => 'frank@test.com'
+            ],
+            'Antoine' => [
+                'id' => 456,
+                'email' => 'antoine@test.com'
+            ],
+        ];
     }
 
     /**
+     * The Arr class should live in the Nerd namespace
+     * 
      * @covers \Nerd\Arr
      */
     public function testArrInNerdNamespace()
     {
-       $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+        $message  = 'Arr class is not declared in the Nerd namespace';
+        $result   = $this->ref->getNamespaceName();
+        $expected = 'Nerd';
+
+        $this->assertEquals($result, $expected, $message);
+    }
+
+    /**
+     * Make sure the fixture is valid for these tests
+     * 
+     * @coversNothing
+     */
+    public function testArrFixtureIsValid()
+    {
+        $message  = 'The Arr test fixture has changed, correct this problem';
+        $expected = 2;
+
+        $this->assertCount($expected, $this->fixture, "$message: count() should be 2");
+
+        // ... 
     }
 
     /**
@@ -24,113 +55,208 @@ class ArrTest extends \PHPUnit_Framework_TestCase
      */
     public function testArrAllMethodsStatic()
     {
+        $message = 'Arr does not contain any methods';
         $methods = $this->ref->getMethods();
-        $this->assertNotEmpty($methods, 'Arr does not contain any methods');
+
+        $this->assertNotEmpty($methods, $message);
 
         foreach ($methods as $method) {
-            $this->assertTrue($method->isStatic(), 'Arr::'.$method->getName().' is not a static method');
+            $message = 'Arr::'.$method->getName().' is not a static method';
+            $result  = $method->isStatic();
+
+            $this->assertTrue($result, $message);
         }
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::get
+     * @depends testArrFixtureIsValid
      */
-    public function testArrGet($users)
+    public function testArrGet()
     {
-        $actual = Arr::get($users, 'Frank.id');
-        $this->assertEquals($actual, 123, 'Arr::get cannot retrieve values');
+        $message  = 'Arr::get cannot retrieve values';
+        $result   = Arr::get($this->fixture, 'Frank.id');
+        $expected = 123;
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::get
+     * @depends testArrFixtureIsValid
      */
-    public function testArrGetDefaultToNull($users)
+    public function testArrGetDefaultToNull()
     {
-        $this->assertNull(Arr::get($users, 'nonexistent.key'), 'Arr::get does not default to null when no $default is provided');
+        $message = 'Arr::get does not default to null when no $default is provided';
+        $result  = Arr::get($this->fixture, 'nonexistent.key');
+
+        $this->assertNull($result, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::get
+     * @depends testArrFixtureIsValid
      */
-    public function testArrGetDefaultWhenProvided($users)
+    public function testArrGetDefaultWhenProvided()
     {
-        $actual = Arr::get($users, 'nonexistent.key', 'default');
-        $this->assertEquals($actual, 'default', 'Arr::get does not return $default value when no key is present');
+        $message  = 'Arr::get does not return $default value when no key is present';
+        $result   = Arr::get($this->fixture, 'nonexistent.key', 'default');
+        $expected = 'default';
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::get
      * @depends testArrGetDefaultWhenProvided
+     * @depends testArrFixtureIsValid
      */
-    public function testArrGetDefaultClosureIsInvoked($users)
+    public function testArrGetDefaultClosureIsInvoked()
     {
-        $closure = function() { return true; };
-        $actual  = Arr::get($users, 'nonexistent.key', $closure);
+        $message = 'Arr::get does not invoke a closure based default argument';
+        $result  = Arr::get($this->fixture, 'nonexistent.key', function(){return true;});
 
-        $this->assertTrue($actual);
+        $this->assertTrue($result, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::delete
+     * @depends testArrFixtureIsValid
      */
-    public function testArrDelete($users)
+    public function testArrDelete()
     {
-        $this->assertCount(2, $users);
+        $message  = 'Arr::delete does not delete from referenced array';
+        $expected = 1;
 
-        // Remove one key and test count again
-        Arr::delete($users, 'Frank');
-        $this->assertCount(1, $users, 'Arr::delete does not delete from referenced array');
+        Arr::delete($this->fixture, 'Frank'); // Remove one key
+        $this->assertCount($expected, $this->fixture, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::set
+     * @depends testArrFixtureIsValid
      */
-    public function testArrSet($users)
+    public function testArrSet()
     {
-        $this->assertCount(2, $users);
+        $message  = 'Arr::set does not set a value on the referenced array';
+        $expected = 3;
 
-        // Add a key and test count again
-        Arr::set($users, 'NewUser', 'testdata');
-        $this->assertCount(3, $users, 'Arr::set does not set a value on the referenced array');
+        Arr::set($this->fixture, 'NewUser', 'testdata');
+        $this->assertCount($expected, $this->fixture, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::has
+     * @depends testArrFixtureIsValid
      */
-    public function testArrHasSuccess($users)
+    public function testArrHasSuccess()
     {
-        $this->assertTrue(Arr::has($users, 'Frank'), 'Arr::has cannot determine if an array has a key');
+        $message = 'Arr::has cannot determine if an array has an available key';
+        $result  = Arr::has($this->fixture, 'Frank');
+
+        $this->assertTrue($result, $message);
     }
 
     /**
-     * @dataProvider data
      * @covers \Nerd\Arr::has
+     * @depends testArrFixtureIsValid
      */
-    public function testArrHasFail($users)
+    public function testArrHasFail()
     {
-        $this->assertFalse(Arr::has($users, 'nonexistent'), 'Arr::has finds array keys that do not exist');
+        $message = 'Arr::has finds array keys that do not exist';
+        $result  = Arr::has($this->fixture, 'nonexistent');
+
+        $this->assertFalse($result, $message);
     }
 
     /**
-   * @covers \Nerd\Arr::is
-   */
+     * @covers \Nerd\Arr::operate
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function testArrOperateNeedsArrayForArg1()
+    {
+        $var = 'string'; // Must be passed by reference
+
+        Arr::operate($var, function(){});
+    }
+
+    /**
+     * @covers \Nerd\Arr::operate
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function testArrOperateNeedsCallableForArg2()
+    {
+        Arr::operate($this->fixture, 'notcallable');
+    }
+
+    /**
+     * @covers \Nerd\Arr::operate
+     * @depends testArrFixtureIsValid
+     */
+    public function testArrOperateAcceptsArrayForArg1()
+    {
+        $message = 'Arr::operate does not accept an array as its first argument';
+        $result  = Arr::operate($this->fixture, function($arr) { return true; });
+
+        $this->assertTrue($result, $message);
+    }
+
+    /**
+     * @covers \Nerd\Arr::operate
+     * @depends testArrFixtureIsValid
+     */
+    public function testArrOperateAcceptsClosureForArg2()
+    {
+        $message = 'Arr::operate cannot execute a closure callable';
+        $result  = Arr::operate($this->fixture, function($arr) { return true; });
+
+        $this->assertTrue($result, $message);
+    }
+
+    /**
+     * @covers \Nerd\Arr::operate
+     * @depends testArrFixtureIsValid
+     */
+    public function testArrOperateAcceptsStringCallableForArg2()
+    {
+        $message = 'Arr::oprate cannot execute a string callable';
+        $result  = Arr::operate($this->fixture, 'array_pop');
+
+        $this->assertArray($result, $message);
+    }
+
+    /**
+     * @covers \Nerd\Arr::operate
+     * @depends testArrFixtureIsValid
+     */
+    public function testArrOperateSimpleTest()
+    {
+        $message  = 'Arr::operate cannot perform a simple test';
+        $expected = end($this->fixture);
+        $result   = Arr::operate($this->fixture, function($arr) { return end($arr); });
+        
+        $this->assertEquals($expected, $result, $message);
+    }
+
+    /**
+     * Arr::is should be able to check if ONE argument passed is an array
+     * @covers \Nerd\Arr::is
+     */
     public function testArrIsSuccess()
     {
-        $this->assertTrue(Arr::is( [1] ), 'Arr::is is unable to properly determine if it had an array passed to it');
+        $message = 'Arr::is is unable to properly determine if it had an array passed to it';
+        $result  = Arr::is( [1] );
+
+        $this->assertTrue($result, $message);
     }
 
     /**
-   * @covers \Nerd\Arr::is
-   */
+     * @covers \Nerd\Arr::is
+     */
     public function testArrIsFail()
     {
+        // refactor
+
         $this->assertFalse(Arr::is('string'), 'Arr::is believes that strings are arrays');
         $this->assertFalse(Arr::is(123), 'Arr::is believes that integers are arrays');
         $this->assertFalse(Arr::is(false), 'Arr::is believes that booleans are arrays');
@@ -138,64 +264,68 @@ class ArrTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-   * @covers \Nerd\Arr::is
-   */
+     * Arr::is should be able to check if ALL arguments are arrays
+     * 
+     * @covers \Nerd\Arr::is
+     */
     public function testArrIsMultipleSucceed()
     {
-        $this->assertTrue(Arr::is( [1], [2] ), 'Arr::is is unable to determine if it had multiple arrays passed to it');
+        $message = 'Arr::is is unable to determine if it had multiple arrays passed to it';
+        $result  = Arr::is( [1], [2] );
+
+        $this->assertTrue($result, $message);
     }
 
     /**
-   * @covers \Nerd\Arr::is
-   */
+     * Arr::is should fail if ANY of the arguments passed are not an array
+     * 
+     * @covers \Nerd\Arr::is
+     */
     public function testArrIsMultipleFail()
     {
-        $this->assertFalse(Arr::is([1], 'string'), 'Arr::is does not fail if an array and another non-array is passed to it');
+        $message = 'Arr::is does not fail if an array and another non-array is passed to it';
+        $result  = Arr::is([1], 'string');
+
+        $this->assertFalse($result, $message);
     }
 
     /**
-   * @covers \Nerd\Arr::toEnumerable
-   */
+     * Arr::toEnumerable should create a new enumerable object
+     * 
+     * @covers \Nerd\Arr::toEnumerable
+     */
     public function testArrToEnum()
     {
-        $enum = Arr::toEnumerable([1, 2, 3]);
+        $message  = 'Arr::toEnumerable is unable to convert an array to an enumerable object';
+        $result   = Arr::toEnumerable([1, 2, 3]);
+        $expected = '\Nerd\Design\Enumerable';
 
-        $this->assertTrue($enum instanceof \Nerd\Design\Enumerable, 'Arr::toEnumerable is unable to convert an array to an enumerable object');
+        $this->assertInstanceOf($expected, $result, $message);
     }
 
     /**
-   * @covers \Nerd\Arr::toObject
-   */
+     * Arr::toObject should create an object when an associative array is passed to it
+     * 
+     * @covers \Nerd\Arr::toObject
+     */
     public function testArrToObjectSucceed()
     {
-        // Should succeed on an assoc array
-        $obj = Arr::toObject(['test' => 'one']);
-        $this->assertTrue(is_object($obj), 'Arr::toObject is unable to convert an array to an object');
+        $message = 'Arr::toObject is unable to convert an array to an object';
+        $result  = Arr::toObject(['test' => 'one']);
+
+        $this->assertObject($result, $message);
     }
 
     /**
-   * @covers \Nerd\Arr::toObject
-   */
+     * Arr::toObject should fail when a non-associative array is passed to it
+     * 
+     * @covers \Nerd\Arr::toObject
+     */
     public function testArrToObjectFail()
     {
-        // Should fail on a normal array
-        $obj = Arr::toObject([1,2,3]);
-        $this->assertFalse(is_object($obj), 'Arr::toObject is able to convert a non-associative array to an object, it shouldnt');
-    }
+        $message = 'Arr::toObject is able to convert a non-associative array to an object, it shouldnt';
+        $result  = Arr::toObject([1,2,3]);
 
-    public function data()
-    {
-        return [[[
-
-            'Frank' => [
-                'id' => 123,
-                'email' => 'frank@test.com'
-            ],
-
-            'Antoine' => [
-                'id' => 456,
-                'email' => 'antoine@test.com'
-            ],
-        ]]];
+        $this->assertNotObject($result, $message);
     }
 }

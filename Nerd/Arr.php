@@ -149,6 +149,19 @@ class Arr
     }
 
     /**
+     * Perform a function on a given array returning the value returned from the
+     * closure or function provided.
+     *
+     * @param    array          The array on which to operate
+     * @param    callable       Closure or function with which to operate
+     * @return   mixed          Result of operation on given array
+     */
+    public static function operate(array &$array, callable $operation)
+    {
+        return $operation($array);
+    }
+
+    /**
      * Determine whether a variable, or multiple variables, is of the array
      * type. The only difference of this function compared to the native
      * is_array function is that it allows you to pass multiple arrays.

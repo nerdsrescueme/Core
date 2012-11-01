@@ -32,7 +32,6 @@ class Environment implements Design\Initializable
     const MODE_TESTING     = 'testing';
     const MODE_STAGING     = 'staging';
     const MODE_PRODUCTION  = 'production';
-    const MODE_CLI         = 'cli';
 
     /**
      * The active environment identifier
@@ -69,8 +68,8 @@ class Environment implements Design\Initializable
     {
         // Test for CLI
         if (PHP_SAPI === 'cli') {
-            static::$active = 'cli';
-            static::$mode = static::MODE_CLI;
+            static::$active = 'testing';
+            static::$mode   = static::MODE_TESTING;
 
             return;
         }

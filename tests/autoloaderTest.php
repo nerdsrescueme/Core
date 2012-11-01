@@ -1,118 +1,162 @@
 <?php
 
-use \Nerd\Autoloader;
+namespace Nerd;
 
-class AutoloaderTest extends \PHPUnit_Framework_TestCase
+class AutoloaderTest extends TestCase
 {
     // We kind of just have to trust that register and unregister work...
     // Not sure how to test that.
 
-    protected $ref;
-	protected $al;
-
     public function setUp()
     {
-        $this->ref = new \ReflectionClass('\\Nerd\\Autoloader');
-		$this->al  = new \Nerd\Autoloader();
+        $this->setUpReflection('\\Nerd\\Autoloader');
+		$this->setUpInstance(new \Nerd\Autoloader());
     }
 
     /**
+	 * Class should live within the Nerd namespace
+	 * 
      * @covers \Nerd\Autoloader
      */
     public function testAutoloaderInNerdNamespace()
     {
-       $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+		$message  = 'The Autoloader does not live within the Nerd namespace';
+		$result   = $this->ref->getNamespaceName();
+		$expected = 'Nerd';
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
+	 * Should determine the correct class name
+	 * 
      * @covers \Nerd\Autoloader::denamespace
      */
     public function testAutoloaderDenamespace()
     {
-        $actual = $this->al->denamespace('\\Nerd\\Test\\Klass');
-        $this->assertEquals($actual, 'Klass', 'Autoloader::denamespace cannot determine the correct class name');
+		$message  = 'Autoloader::denamespace cannot determine the correct class name';
+        $result   = $this->ins->denamespace('\\Nerd\\Test\\Klass');
+		$expected = 'Klass';
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
+	 * Should return a string value
+	 * 
      * @covers \Nerd\Autoloader::denamespace
      */
     public function testAutoloaderDenamespaceReturnsString()
     {
-        $actual = Autoloader::denamespace('\\Nerd\\Test\\Klass');
-        $this->assertTrue(is_string($actual), 'Autoloader::denamespace does not return a string value');
+		$message = 'Autoloader::denamespace does not return a string value';
+        $result  = Autoloader::denamespace('\\Nerd\\Test\\Klass');
+
+        $this->assertString($result, $message);
     }
 
     /**
+	 * Should determine that a valid class exists
+	 * 
      * @covers \Nerd\Autoloader::exists
      */
     public function testAutoloaderExistsSuccess()
     {
-        $result = $this->al->exists('\\Nerd\\Autoloader');
-        $this->assertTrue($result, 'Autoloader::exists can not determine if a class exists');
+		$message = 'Autoloader::exists can not determine if a class exists';
+        $result  = $this->ins->exists('\\Nerd\\Autoloader');
+
+        $this->assertTrue($result, $message);
     }
 
     /**
+	 * Should return a boolean value
+	 * 
      * @covers \Nerd\Autoloader::exists
      * @depends testAutoloaderExistsSuccess
      */
     public function testAutoloaderExistsSuccessReturnsBoolean()
     {
-        $result = $this->al->exists('\\Nerd\\Autoloader');
-        $this->assertTrue(is_bool($result), 'Autoloader::exists does not return a boolean value on success');
+		$message = 'Autoloader::exists does not return a boolean value on success';
+        $result  = $this->ins->exists('\\Nerd\\Autoloader');
+
+        $this->assertBoolean($result, $message);
     }
 
     /**
+	 * Should fail when an invalid class is passed
+	 * 
      * @covers \Nerd\Autoloader::exists
      */
     public function testAutoloaderExistsFail()
     {
-        $result = $this->al->exists('\\Nerd\\Shouldfail');
-        $this->assertFalse($result, 'Autoloader::exists falsely identifies classes that do not exist');
+		$message = 'Autoloader::exists falsely identifies classes that do not exist';
+        $result  = $this->ins->exists('\\Nerd\\Shouldfail');
+
+        $this->assertFalse($result, $message);
     }
 
     /**
+	 * Should return a boolean value
+	 * 
      * @covers \Nerd\Autoloader::exists
      * @depends testAutoloaderExistsFail
      */
     public function testAutoloaderExistsFailReturnsBoolean()
     {
-        $result = $this->al->exists('\\Nerd\\Shouldfail');
-        $this->assertTrue(is_bool($result), 'Autoloader::exists does not return a boolean value on failure');
+		$message = 'Autoloader::exists does not return a boolean value on failure';
+        $result  = $this->ins->exists('\\Nerd\\Shouldfail');
+
+        $this->assertBoolean($result, $message);
     }
 
     /**
+	 * Should succeed in loading an existing class
+	 * 
      * @covers \Nerd\Autoloader::load
      */
     public function testAutoloaderLoadSucceed()
     {
-        $result = $this->al->load('\\Nerd\\Autoloader');
-        $this->assertTrue($result, 'Autoloader::load can not load an existing class');
+		$message = 'Autoloader::load can not load an existing class';
+        $result  = $this->ins->load('\\Nerd\\Autoloader');
+
+        $this->assertTrue($result, $message);
     }
 
     /**
+	 * Should return a boolean value
+	 * 
      * @covers \Nerd\Autoloader::load
      */
     public function testAutoloaderLoadSuccessReturnsBoolean()
     {
-        $result = $this->al->load('\\Nerd\\Autoloader');
-        $this->assertTrue(is_bool($result), 'Autoloader::load does not return a boolean value on success');
+		$message = 'Autoloader::load does not return a boolean value on success';
+        $result  = $this->ins->load('\\Nerd\\Autoloader');
+
+        $this->assertBoolean($result, $message);
     }
 
     /**
+	 * Should fail when loading a non existing class
+	 * 
      * @covers \Nerd\Autoloader::load
      */
     public function testAutoloaderLoadFail()
     {
-        $result = $this->al->load('\\Nerd\\ShouldFail');
-        $this->assertFalse($result, 'Autoloader::load falsely reports it can load a class that does not exist');
+		$message = 'Autoloader::load falsely reports it can load a class that does not exist';
+        $result  = $this->ins->load('\\Nerd\\ShouldFail');
+
+        $this->assertFalse($result, $message);
     }
 
     /**
+	 * Should return a boolean value
+	 * 
      * @covers \Nerd\Autoloader::load
      */
     public function testAutoloaderLoadFailReturnsBoolean()
     {
-        $result = $this->al->load('\\Nerd\\ShouldFail');
-        $this->assertTrue(is_bool($result), 'Autoloader::load does not return a boolean value on failure');
+		$message = 'Autoloader::load does not return a boolean value on failure';
+        $result  = $this->ins->load('\\Nerd\\ShouldFail');
+
+        $this->assertBoolean($result, $message);
     }
 }
