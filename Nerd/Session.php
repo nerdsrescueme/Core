@@ -65,9 +65,9 @@ class Session implements Design\Initializable, Design\Serializable
         if (Environment::$mode === Environment::MODE_TESTING) {
             $session->data = [];
         } else {
-            $session->data = &$_SESSION;
             $session->triggerEvent('session.start', array($session));
             session_start();
+            $session->data = &$_SESSION;
             $session->triggerEvent('session.setup', array($session));
         }
     }
@@ -89,7 +89,7 @@ class Session implements Design\Initializable, Design\Serializable
     /**
      * Clear the current session of all data
      *
-     * @returns    void
+     * @return    void
      */
     public function clear()
     {

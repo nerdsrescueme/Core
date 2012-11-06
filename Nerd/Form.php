@@ -253,20 +253,14 @@ class Form
     {
         $out = "<form{$this->attributes(true)}>";
 
-        if (Config::get('form.csrf.enabled', false)) {
-            $state = md5(serialize($this));
-            $this->triggerEvent('form.csrf', [$this, $state]);
-            $out .= $this->field('hidden', ['name' => '@@state', 'value' => $state], null);
-        }
-
         $this->fields->each(function($field) use (&$out) {
             if ($field instanceof Form\Container) {
-                $out .= (string) $field->render();
+                $out .= $field->render();
 
                 return;
             }
 
-            $out .= (string) $field->render();
+            $out .= $field->render();
         });
 
         return $out . '</form>';

@@ -9,7 +9,7 @@
 namespace Nerd\Session;
 
 // Aliasing rules
-use \Nerd\Arr;
+use Nerd\Arr;
 
 /**
 * Flash Class

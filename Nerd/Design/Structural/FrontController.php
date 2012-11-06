@@ -68,7 +68,7 @@ class FrontController
         $segments  = array_merge(array_filter(explode('/', ltrim($uri, '/'))), []);
 
         // Determine if we're attempting to load a package or the application
-        if (isset($segments[0]) and \strtolower($segments[0]) !== \strtolower($namespace) and \is_dir($directory.$segments[0])) {
+        if (isset($segments[0]) and $segments[0] !== $namespace and \is_dir($directory.$segments[0])) {
             $namespace = $segments[0];
             $directory .= $segments[0].\DS;
             $segments = array_slice($segments, 1);
@@ -76,7 +76,7 @@ class FrontController
             $directory .= $namespace.\DS;
         }
 
-        $directory .= 'classes'.\DS.'controller'.\DS;
+        $directory .= $namespace.\DS.'Controller'.\DS;
         //$response   = \Nerd\Http\Response::instance();
 
         if (count($segments)) {

@@ -31,12 +31,16 @@ class SessionTest extends TestCase
         $this->assertEquals($result, $expected, $message);
     }
 
+    /**
+     * Clear should empty all session data
+     *
+     * @covers \Nerd\Session::clear
+     */
     public function testSessionClear()
     {
-        $message = 'Session::clear should remove all data from the session array, excepting flash data';
+        $message = 'Session::clear should remove all data from the session array';
 
         $this->ins->clear();
-
         $this->assertEmpty($this->ins->data, $message);
     }
 }

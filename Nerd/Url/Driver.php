@@ -122,8 +122,8 @@ abstract class Driver
         if ($resource === null) {
             $uri  = $this->path !== null ? '/'.ltrim($this->path, '/') : '';
             $uri .= $this->format !== null ? '.'.$this->format : '';
-            $uri .= count($this->parameters) > 0 ? '?'.http_build_query($this->parameters) : '';
-            $uri .= $this->fragment !== null ? '#'.$this->fragment : '';
+            //$uri .= count($this->parameters) > 0 ? '?'.http_build_query($this->parameters) : '';
+            //$uri .= $this->fragment !== null ? '#'.$this->fragment : '';
 
             return $uri;
         }

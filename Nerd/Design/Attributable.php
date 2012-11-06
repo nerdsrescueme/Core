@@ -186,8 +186,13 @@ trait Attributable
      */
     public function attributes($asString = false)
     {
-        $attributes = array_intersect_key($this->options, self::allowedAttributes());
-        $attributes['class'] = $this->option('class');
+        $attributes = self::$attributeDefaults + $this->options;
+        $attributes = array_intersect_key($attributes, self::allowedAttributes());
+        $class      = $this->option('class');
+
+        if (!empty($class)) {
+            $attributes['class'] = $class;
+        }
 
         // Add in data-* attributes
         $this->_detectDataAttributes($attributes);
@@ -202,11 +207,15 @@ trait Attributable
                     continue;
                 }
 
-                $out .= is_bool($value) and $value ? " $attribute" : " $attribute=\"$value\"";
+                if (is_bool($value) and $value == true) {
+                    $out .= " $attribute";
+                } else {
+                    $out .= " $attribute=\"$value\"";
+                }
             }
-        }
 
-        return ' '.trim($out);
+            return ' '.trim($out);
+        }
     }
 
     private function & _detectDataAttributes(&$attributes)
