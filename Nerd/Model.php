@@ -148,54 +148,43 @@ public static function __initialize()
      *
      * _More explanation to come when it's finished_
      *
+     * [!!] As it stands, Nerd Model's only support columns with up to 2 primary keys
+     *      defined. Implementation will break on tables with more than 2.
+     *
+     * @todo Implement model caching
      * @return void
      */
     public static function inform()
     {
-        // Read from cache if possible
-        $dsname    = static::$table.'.model-cache';
-        $datastore = Datastore::instance('file');
+        self::$columns     = new \Nerd\Design\Collection();
+        self::$constraints = new \Nerd\Design\Collection();
+        self::$primary     = null;
 
-        if ($datastore->exists($dsname)) {
-            list(self::$columns, self::$constraints, self::$primary) = $datastore->read($dsname);
-            return;
+        $c = static::connection();
+
+        $query = $c->prepare('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
+        $query->execute(array($c->database, static::$table));
+
+        while ($column = $query->fetchObject('\\Nerd\\Model\\Column')) {
+            if ($column->primary) {
+                if (self::$primary === null) {
+                    self::$primary = $column;
+                } else {
+                    self::$primary = [self::$primary, $column];
+                }
+            }
+
+            self::$columns->add($column);
         }
 
-        //try {
-            self::$columns     = new \Nerd\Design\Collection();
-            self::$constraints = new \Nerd\Design\Collection();
-            self::$primary     = null;
+        $query = $c->prepare('SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
+        $query->execute(array($c->database, static::$table));
 
-            $query =  static::connection()->prepare('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
-            $query->execute(array(static::connection()->database, static::$table));
+        while ($constraint = $query->fetchObject('\\Nerd\\Model\\Constraint')) {
+            self::$constraints->add($constraint);
+        }
 
-            while ($column = $query->fetchObject('\\Nerd\\Model\\Column')) {
-                if ($column->primary) {
-                    if (self::$primary === null) {
-                        self::$primary = $column;
-                    } else {
-                        self::$primary = [self::$primary, $column];
-                    }
-                }
-
-                self::$columns->add($column);
-            }
-
-            $query = static::connection()->prepare('SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
-            $query->execute(array(static::connection()->database, static::$table));
-
-            while ($constraint = $query->fetchObject('\\Nerd\\Model\\Constraint')) {
-                self::$constraints->add($constraint);
-            }
-
-            // Cache
-            $data = [self::$columns, self::$constraints, self::$primary];
-            $datastore->write($dsname, $data);
-
-            self::$informed = true;
-        //} catch (\PDOException $e) {
-        //    throw ne
-        //}
+        self::$informed = true;
     }
 
     /**
@@ -255,8 +244,6 @@ public static function __initialize()
      */
     public static function optimizeSql($sql)
     {
-        !static::$informed and static::inform();
-
         // Replace "*" with a list of columns, reducing DB lookups
         $sql = str_replace('*', static::listColumns(), $sql);
 
@@ -289,7 +276,6 @@ public static function __initialize()
      */
     public static function __callStatic($method, array $params)
     {
-        !self::$informed and static::inform();
         $terms = ['find','By', 'And'];
 
         list($trash, $finder, $field) = explode('_', str_replace($terms, '_', $method));
@@ -311,8 +297,6 @@ public static function __initialize()
      */
     public static function find()
     {
-        !static::$informed and static::inform();
-
         if (count($params = func_get_args()) === 0) {
             throw new \InvalidArgumentException('No arguments were provided, you must at least include a SQL statement.');
         }
@@ -333,8 +317,6 @@ public static function __initialize()
      */
     public static function findOne()
     {
-        !static::$informed and static::inform();
-
         $params = func_get_args();
         $sql    = static::optimizeSql(array_shift($params));
 
@@ -359,15 +341,12 @@ public static function __initialize()
      * must be a SQL statement, followed by the subsequent parameters passed to that
      * prepared statement.
      *
-     * @return array Array of all found Model objects
+     * @return Nerd\Design\Collection Collection of all found Model objects
      */
     public static function findAll()
     {
-        !static::$informed and static::inform();
-
         $params = func_get_args();
         $sql    = static::optimizeSql(array_shift($params));
-        $class  = get_called_class();
 
         static::$lastQuery = $sql;
 
@@ -378,7 +357,7 @@ public static function __initialize()
 
         static::bypass(true);
 
-        while ($result = $statement->fetchObject($class)) {
+        while ($result = $statement->fetchObject(get_called_class())) {
             $result->clean();
             $results []= $result;
         }
@@ -399,15 +378,10 @@ public static function __initialize()
      */
     public static function listColumns()
     {
-        !self::$informed and static::inform();
-
         $columns = [];
-        $exclude = func_get_args();
 
-        self::$columns->each(function($column) use (&$columns, &$exclude) {
-            if (!in_array($column->field, $exclude)) {
-                $columns []= "`$column->field`";
-            }
+        self::$columns->each(function($column) use (&$columns) {
+            $columns []= "`$column->field`";
         });
 
         return join(', ', $columns);
@@ -453,7 +427,7 @@ public static function __initialize()
     public function delete()
     {
         if (static::$primary === null) {
-            throw new \Nerd\DB\Exception('A primaty key must be defined in order to create a delete query.');
+            throw new \Nerd\DB\Exception('A primary key must be defined in order to create a delete query.');
         }
 
         $sql   = 'DELETE FROM `'.static::$table.'`';
