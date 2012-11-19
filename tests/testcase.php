@@ -58,6 +58,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertTrue(\is_object($item), $message);
     }
 
+    public function assertInteger($item, $message = null)
+    {
+        $this->assertTrue(\is_int($item), $message);
+    }
+
     // Test not type
 
     public function assertNotArray($item, $message = null)
@@ -78,5 +83,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
     public function assertNotObject($item, $message = null)
     {
         $this->assertFalse(\is_object($item), $message);
+    }
+
+    public function assertNotInteger($item, $message = null)
+    {
+        $this->assertFalse(\is_int($item), $message);
     }
 }

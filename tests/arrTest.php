@@ -4,7 +4,6 @@ namespace Nerd;
 
 class ArrTest extends TestCase
 {
-
     public function setUp()
     {
         $this->setUpReflection('\\Nerd\\Arr');
@@ -239,7 +238,6 @@ class ArrTest extends TestCase
     }
 
     /**
-     * Arr::is should be able to check if ONE argument passed is an array
      * @covers \Nerd\Arr::is
      */
     public function testArrIsSuccess()
@@ -287,6 +285,34 @@ class ArrTest extends TestCase
         $result  = Arr::is([1], 'string');
 
         $this->assertFalse($result, $message);
+    }
+
+    /**
+     * Arr::isMultiDimensional should succeed checking if an array contains arrays
+     *
+     * @covers \Nerd\Arr::isMultiDimensional
+     * @depends testArrFixtureIsValid
+     */
+    public function testArrIsMultiDimensionalSuccess()
+    {
+        $message = 'Arr::isMultiDimensional cannot read a multi-dimensional array';
+        $result  = Arr::isMultiDimensional($this->fixture);
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     * Arr::isMultiDimensional should fail if not reading a single level array
+     *
+     * @covers \Nerd\Arr::isMultiDimensional
+     * @depends testArrFixtureIsValid
+     */
+    public function testArrIsMultiDimensionalFail()
+    {
+        $message = 'Arr::isMultiDimensional falsely reads a non-dimensional array';
+        $result  = Arr::isMultiDimensional(['test' => 'value']);
+
+        $this->assertFalse($result);
     }
 
     /**

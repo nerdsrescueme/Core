@@ -29,62 +29,25 @@ class Arr
      *
      *     Arr::delete($myArray, 'some.key');
      *
-     * @param    string|array     s
      * @param    array            The array to search
-     * @param    string           The dot-notated key or array of keys
+     * @param    string           The dot-notated key
      * @return boolean Returns true if the array key was removed, otherwise false
      */
     public static function delete(array &$array, $key)
     {
-        if (\is_null($key)) {
+        if (is_null($key)) {
             return false;
         }
 
-        if (static::is($key)) {
-            $return = [];
+        $parts = explode('.', $key);
 
-            foreach ($key as $k) {
-                $return[$k] = static::delete($array, $k);
-            }
-
-            return $return;
-        }
-
-        $key_parts = \explode('.', $key);
-
-        if (!static::is($array) or !isset($array[$key_parts[0]])) {
+        if (!static::is($array) or !isset($array[$parts[0]])) {
             return false;
         }
 
-        $this_key = \array_shift($key_parts);
-
-        if (!empty($key_parts)) {
-            $key = implode('.', $key_parts);
-
-            return static::delete($array[$this_key], $key);
-        } else {
-            unset($array[$this_key]);
-        }
+        unset($array[array_shift($parts)]);
 
         return true;
-    }
-
-    /**
-     * @todo Document and test
-     */
-    public static function flatten(array $array)
-    {
-        for ($x = 0; $x <= count($array); $x++) {
-            if (is_array($array[$x])) {
-                $return = array_flatten($array[$x],$return);
-            } else {
-                if ($array[$x]) {
-                    $return[] = $array[$x];
-                }
-            }
-        }
-
-        return $return;
     }
 
     /**
@@ -96,31 +59,30 @@ class Arr
      *
      * ## Usage
      *
-     *     Arr::get($myArray, 'parentKey.childKey', 'defaultValue');
+     *     Arr::get($array, 'parent.child', 'default');
      *
      * @param    array            The array to be searched
      * @param    string           The key to retrieve, using "dot" style notation
      * @param    mixed            A default value to provide if none if found, defaults to null
-     * @param    boolean          In the event a closure is encountered, call it. Defaults to true
      * @return mixed Returns the value of the key, otherwise the default
      */
-    public static function get(array $array, $key, $default = null, $useClosure = true)
+    public static function get(array $array, $key, $default = null)
     {
         if ($key === null) {
             return $array;
         }
 
-        $keys = \explode('.', $key);
+        $keys = explode('.', $key);
 
         foreach ($keys as $segment) {
             if (!is_array($array) or !isset($array[$segment])) {
-                return \is_callable($default) ? $default() : $default;
+                return is_callable($default) ? $default() : $default;
             }
 
             $array = $array[$segment];
         }
 
-        return (($array instanceof \Closure) and $useClosure) ? $array() : $array;
+        return ($array instanceof \Closure) ? $array() : $array;
     }
 
     /**
@@ -137,12 +99,12 @@ class Arr
      */
     public static function has(array $array, $key)
     {
-        foreach (\explode('.', $key) as $key_part) {
-            if (!static::is($array) or !isset($array[$key_part])) {
+        foreach (explode('.', $key) as $part) {
+            if (!static::is($array) or !isset($array[$part])) {
                 return false;
             }
 
-            $array = $array[$key_part];
+            $array = $array[$part];
         }
 
         return true;
@@ -173,18 +135,18 @@ class Arr
      *     $return = Arr::is($array1, $array2, $array3);
      *
      * @param    mixed            Argument #n of variables to check
-     * @return boolean Returns true if all variables passed are arrays, otherwise false
+     * @return   boolean          Returns true if all variables passed are arrays
      */
     public static function is()
     {
-        $args = \func_get_args();
+        $args = func_get_args();
 
-        if (!\count($args)) {
+        if (!count($args)) {
             return false;
         }
 
         foreach ($args as $var) {
-            if (!(\is_array($var) or ($var instanceof \ArrayAccess))) {
+            if (!is_array($var) or $var instanceof \ArrayAccess) {
                 return false;
             }
         }
@@ -193,9 +155,16 @@ class Arr
     }
 
     /**
-     * @todo Document and test
+     * Determine whether a given array contains other arrays
+     *
+     * ## Usage
+     *
+     *     Arr::isMultiDimensional($array);
+     *
+     * @param    array          Array to test
+     * @return   boolean        Returns true if array contains arrays
      */
-    public static function isMulti($array)
+    public static function isMultiDimensional(array $array)
     {
         return count(array_filter($array, 'is_array')) > 0;
     }
@@ -226,10 +195,10 @@ class Arr
             return $array = $value;
         }
 
-        $keys = \explode('.', $key);
+        $keys = explode('.', $key);
 
-        while (\count($keys) > 1) {
-            $key = \array_shift($keys);
+        while (count($keys) > 1) {
+            $key = array_shift($keys);
 
             if (!isset($array[$key]) or !static::is($array[$key])) {
                 $array[$key] = [];
@@ -238,7 +207,7 @@ class Arr
             $array =& $array[$key];
         }
 
-        $array[\array_shift($keys)] = $value;
+        $array[array_shift($keys)] = $value;
     }
 
     /**
@@ -248,8 +217,8 @@ class Arr
      *
      *     $enum = Arr::toEnumerable($myArray);
      *
-     * @param    array                      The array to convert
-     * @return Nerd\Design\Enumerable The converted array
+     * @param    array                  The array to convert
+     * @return   Nerd\Design\Enumerable The converted array
      */
     public static function toEnumerable(array $array)
     {
@@ -268,6 +237,6 @@ class Arr
      */
     public static function toObject(array $array)
     {
-        return \json_decode(\json_encode((array) $array));
+        return json_decode(json_encode($array));
     }
 }

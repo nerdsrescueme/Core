@@ -76,7 +76,7 @@ class Event
      * any of the folders within the LIBRARY_PATH folder.
      *
      * @param    string          Dot notated event to load
-     * @return boolean Was the file loaded?
+     * @return   boolean Was the file loaded?
      */
     private function load($key)
     {
@@ -116,7 +116,7 @@ class Event
      *
      * @param    string          Event name with namespace
      * @param    array           Arguments to pass to the event function
-     * @return boolean Were we able to execute any functions?
+     * @return   boolean Were we able to execute any functions?
      */
     public function trigger($key, array $args = [])
     {
@@ -124,9 +124,9 @@ class Event
             foreach ($this->events[$key] as $func) {
                 if (count($args)) {
                     call_user_func_array($func, $args);
-                    continue;
+                } else {
+                    $func();
                 }
-                $func();
             }
 
             return true;
@@ -158,7 +158,7 @@ class Event
      *
      * @param    string          Event name with namespace
      * @param    callable        Function to execute
-     * @return void
+     * @return   void
      */
     public function bind($event, callable $func)
     {
@@ -176,7 +176,7 @@ class Event
      *     Event::instance()->unbind('view.myevent');
      *
      * @param    string          Event name with namespace
-     * @return boolean
+     * @return   boolean
      */
     public function unbind($event)
     {

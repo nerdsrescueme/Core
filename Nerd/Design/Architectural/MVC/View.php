@@ -126,7 +126,7 @@ class View implements \Nerd\Design\Initializable
             throw new \InvalidArgumentException("View [{$this->path}] does not exist");
         }
 
-        $this->triggerEvent('view.setup');
+        $this->triggerEvent('view.setup', [$this]);
     }
 
     /**

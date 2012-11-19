@@ -2,13 +2,13 @@
 
 namespace Nerd;
 
-class StrTest extends \PHPUnit_Framework_TestCase
+class StrTest extends TestCase
 {
     protected $ref;
 
     public function setUp()
     {
-        $this->ref = new \ReflectionClass('\\Nerd\\Str');
+        $this->setUpReflection('\\Nerd\\Str');
     }
 
     /**
@@ -45,7 +45,11 @@ class StrTest extends \PHPUnit_Framework_TestCase
      */
     public function testStrLower()
     {
-        $this->assertEquals('name', Str::lower('NaMe'));
+        $message  = 'Str::lower cannot convert a value to lower case';
+        $result   = Str::lower('NaMe');
+        $expected = 'name';
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
@@ -53,7 +57,11 @@ class StrTest extends \PHPUnit_Framework_TestCase
      */
     public function testStrUpper()
     {
-        $this->assertEquals('NAME', Str::upper('NaMe'));
+        $message  = 'Str::upper cannot convert a value to upper case';
+        $result   = Str::upper('NaMe');
+        $expected = 'NAME';
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
@@ -61,7 +69,11 @@ class StrTest extends \PHPUnit_Framework_TestCase
      */
     public function testStrLength()
     {
-        $this->assertEquals(4, Str::length('NaMe'));
+        $message  = 'Str::length cannot count the characters in a string properly';
+        $result   = Str::length('name');
+        $expected = 4;
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
@@ -77,7 +89,11 @@ class StrTest extends \PHPUnit_Framework_TestCase
      */
     public function testStrMbstringSet()
     {
-        $this->assertEquals(function_exists('mb_get_info'), Str::$mbString);
+        $message  = 'Str::$mbString is not being set properly';
+        $result   = function_exists('mb_get_info');
+        $expected = Str::$mbString;
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**

@@ -2,13 +2,11 @@
 
 namespace Nerd;
 
-class VersionTest extends \PHPUnit_Framework_TestCase
+class VersionTest extends TestCase
 {
-    protected $ref;
-
     public function setUp()
     {
-        $this->ref = new \ReflectionClass('\\Nerd\\Version');
+        $this->setUpReflection('\\Nerd\\Version');
     }
 
     /**
@@ -16,7 +14,11 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionInNerdNamespace()
     {
-       $this->assertEquals($this->ref->getNamespaceName(), 'Nerd');
+        $message  = 'Version is not declared within the Nerd namespace';
+        $result   = $this->ref->getNamespaceName();
+        $expected = 'Nerd';
+
+        $this->assertEquals($result, $expected, $message);
     }
 
     /**
@@ -24,7 +26,10 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionIsUninstantiable()
     {
-        $this->assertFalse($this->ref->hasMethod('__construct'));
+        $message = 'Version should not contain a __construct method';
+        $result  = $this->ref->hasMethod('__construct');
+
+        $this->assertFalse($result, $message);
     }
 
     /**
@@ -32,7 +37,18 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionHasNoMethods()
     {
-        $this->assertEmpty($this->ref->getMethods());
+        $message = 'Version should not contain any methods';
+        $result  = $this->ref->getMethods();
+
+        $this->assertEmpty($result, $message);
+    }
+
+    private function constantExists($constant)
+    {
+        $message = "Version should declare the constant $constant";
+        $result  = $this->ref->hasConstant($constant);
+
+        $this->assertTrue($result);
     }
 
     /**
@@ -40,7 +56,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionSimpleExists()
     {
-        $this->assertTrue($this->ref->hasConstant('SIMPLE'));
+        $this->constantExists('SIMPLE');
     }
 
     /**
@@ -48,7 +64,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionMajorExists()
     {
-        $this->assertTrue($this->ref->hasConstant('MAJOR'));
+        $this->constantExists('MAJOR');
     }
 
     /**
@@ -56,7 +72,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionMinorExists()
     {
-        $this->assertTrue($this->ref->hasConstant('MINOR'));
+       $this->constantExists('MINOR');
     }
 
     /**
@@ -64,7 +80,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionReleaseExists()
     {
-        $this->assertTrue($this->ref->hasConstant('RELEASE'));
+        $this->constantExists('RELEASE');
     }
 
     /**
@@ -72,7 +88,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionIdExists()
     {
-        $this->assertTrue($this->ref->hasConstant('ID'));
+        $this->constantExists('ID');
     }
 
     /**
@@ -80,7 +96,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionPreviewExists()
     {
-        $this->assertTrue($this->ref->hasConstant('PREVIEW'));
+        $this->constantExists('PREVIEW');
     }
 
     /**
@@ -88,7 +104,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionPreviewTypeExists()
     {
-        $this->assertTrue($this->ref->hasConstant('PREVIEW_TYPE'));
+        $this->constantExists('PREVIEW_TYPE');
     }
 
     /**
@@ -96,7 +112,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionPreviewNumberExists()
     {
-        $this->assertTrue($this->ref->hasConstant('PREVIEW_NUMBER'));
+        $this->constantExists('PREVIEW_NUMBER');
     }
 
     /**
@@ -104,7 +120,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionFullExists()
     {
-        $this->assertTrue($this->ref->hasConstant('FULL'));
+        $this->constantExists('FULL');
     }
 
     /**
@@ -112,7 +128,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionSimpleType()
     {
-        $this->assertTrue(is_string(Version::SIMPLE));
+        $message = 'Version::SIMPLE should be a string';
+
+        $this->assertString(Version::SIMPLE, $message);
     }
 
     /**
@@ -120,7 +138,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionMajorType()
     {
-        $this->assertTrue(is_int(Version::MAJOR));
+        $message = 'Version::MAJOR should be an integer';
+
+        $this->assertInteger(Version::MAJOR, $message);
     }
 
     /**
@@ -128,7 +148,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionMinorType()
     {
-        $this->assertTrue(is_int(Version::MINOR));
+        $message = 'Version::MINOR should be an integer';
+
+        $this->assertInteger(Version::MINOR, $message);
     }
 
     /**
@@ -136,7 +158,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionReleaseType()
     {
-        $this->assertTrue(is_int(Version::RELEASE));
+        $message = 'Version::RELEASE should be an integer';
+
+        $this->assertInteger(Version::RELEASE, $message);
     }
 
     /**
@@ -144,7 +168,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionIdType()
     {
-        $this->assertTrue(is_int(Version::ID));
+        $message = 'Version::ID should be an integer';
+
+        $this->assertInteger(Version::ID, $message);
     }
 
     /**
@@ -152,7 +178,9 @@ class VersionTest extends \PHPUnit_Framework_TestCase
      */
     public function testVersionPreviewType()
     {
-        $this->assertTrue(is_bool(Version::PREVIEW));
+        $message = 'Version::PREVIEW should be a boolean value';
+
+        $this->assertBoolean(Version::PREVIEW, $message);
     }
 
     /**
@@ -161,7 +189,7 @@ class VersionTest extends \PHPUnit_Framework_TestCase
     public function testVersionPreviewTypeOnlyIfPreviewIsTrue()
     {
         if (Version::PREVIEW) {
-            $this->assertTrue(is_string(Version::PREVIEW_TYPE));
+            $this->assertString(Version::PREVIEW_TYPE);
             $this->assertTrue(strlen(Version::PREVIEW_TYPE) > 0);
         } else {
             $this->assertNull(Version::PREVIEW_TYPE);

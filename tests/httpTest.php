@@ -2,13 +2,13 @@
 
 namespace Nerd;
 
-class HttpTest extends \PHPUnit_Framework_TestCase
+class HttpTest extends TestCase
 {
     protected $ref;
 
     public function setUp()
     {
-        $this->ref = new \ReflectionClass('\\Nerd\\Http');
+        $this->setUpReflection('\\Nerd\\Http');
     }
 
     /**
