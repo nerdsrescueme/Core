@@ -2,13 +2,11 @@
 
 namespace Nerd;
 
-class FormTest extends \PHPUnit_Framework_TestCase
+class FormTest extends TestCase
 {
-    protected $ref;
-
     public function setUp()
     {
-        $this->ref = new \ReflectionClass('\\Nerd\\Form');
+        $this->setUpReflection('\\Nerd\\Form');
     }
 
     /**
