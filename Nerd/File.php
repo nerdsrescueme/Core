@@ -19,17 +19,22 @@ namespace Nerd;
  * functions, while others exist to help solve common issues that arise that
  * file functions do not directly solve.
  *
+ * Additionally, the File class inherits SPL's File Object class functionality
+ * so it is able to operate directly on a file when not used in static context.
+ *
+ * @see http://www.php.net/manual/en/class.splfileobject.php
+ *
  * @package    Nerd
  * @subpackage Core
  */
-class File
+class File extends \SplFileObject
 {
     /**
      * MIME configuration cache
      *
      * @var    array
      */
-    protected static $mimes;
+    public static $mimes;
 
     /**
      * Function map
@@ -41,15 +46,16 @@ class File
      *
      * @var    array
      */
-    protected static $functionMap = array(
-        'exists'    => array('function' => 'file_exists'),
-        'get'       => array('function' => 'file_get_contents'),
-        'put'       => array('function' => 'file_put_contents', 'arguments' => array(2 => LOCK_EX)),
-        'type'      => array('function' => 'filetype'),
-        'size'      => array('function' => 'filesize'),
-        'modified'  => array('function' => 'filemtime'),
-        'extension' => array('function' => 'pathinfo', 'arguments' => array(1 => PATHINFO_EXTENSION)),
-    );
+    protected static $functionMap = [
+        'exists'    => ['function' => 'file_exists'],
+        'get'       => ['function' => 'file_get_contents'],
+        'put'       => ['function' => 'file_put_contents', 'arguments' => [2 => LOCK_EX]],
+        'type'      => ['function' => 'filetype'],
+        'size'      => ['function' => 'filesize'],
+        'modified'  => ['function' => 'filemtime'],
+        'extension' => ['function' => 'pathinfo', 'arguments' => [1 => PATHINFO_EXTENSION]],
+        'touch'     => ['function' => 'touch'],
+    ];
 
     /**
      * The magic call static method is triggered when invoking inaccessible
@@ -67,6 +73,10 @@ class File
      */
     public static function __callStatic($name, array $arguments)
     {
+        if (isset(static::$functionMap[$name]['arguments'])) {
+            $arguments = $arguments + static::$functionMap[$name]['arguments'];
+        }
+
         return forward_static_call_array(static::$functionMap[$name]['function'], $arguments);
     }
 
@@ -79,11 +89,11 @@ class File
      *     File::create('my-file.txt', 'Some starting content');
      *
      * @param    string           The data to assign to the newly created file
-     * @return boolean Returns true if the new file was created successfully, otherwise false
+     * @return   boolean          File was created successfully
      */
     public static function create($path, $content = null)
     {
-        return ($content === null) ? touch($path) : static::put($path, $content);
+        return ($content === null) ? touch($path) : (static::put($path, $content) !== false);
     }
 
     /**
@@ -96,7 +106,7 @@ class File
      * @param    string           The path to the file
      * @param    string           The contents to write to the file
      * @param    integer          Custom flags
-     * @return integer Returns the number of bytes that were written to the file, otherwise false
+     * @return   integer|false    Number of bytes written, otherwise false
      */
     public static function append($path, $content, $flags = null)
     {
@@ -113,7 +123,7 @@ class File
      *     File::delete('my-file.txt');
      *
      * @param    string           The path to the file
-     * @return void No value is returned
+     * @return   void             No value is returned
      */
     public static function delete($path)
     {
@@ -121,51 +131,29 @@ class File
     }
 
     /**
-     * Get a file MIME type by extension
+     * Get a file MIME type by extension or filename
      *
      * ## Usage
      *
      *     File::mime('my-file.txt');
      *
-     * @param    string           The extension to detect
-     * @param    string           The default MIME to provide, if none is detected. Defaults to null
-     * @return string Returns the MIME associated to the extension, otherwise $default
+     * @param    string           The extension or filename to detect
+     * @param    string           The default MIME to provide
+     * @return   string           MIME associated to the extension, otherwise $default
      */
     public static function mime($extension, $default = null)
     {
-        static::$mimes === null and Config::get('mimes', []);
+        static::$mimes === null and static::$mimes = Config::get('mimes', []);
+
+        if (strpos($extension, '.') !== false) {
+            $extension = explode('.', $extension);
+            $extension = array_pop($extension);
+        }
 
         if (!isset(static::$mimes[$extension])) {
             return $default;
         }
 
-        return (Arr::is(static::$mimes[$extension])) ? static::$mimes[$extension][0] : static::$mimes[$extension];
-    }
-
-    /**
-     * Determine if a file is of a given type.
-     *
-     * The Fileinfo PHP extension will be used to determine the MIME type of the
-     * file.
-     *
-     *     File::is('my-file.txt', 'txt');
-     *
-     * @param    string           The path to the file
-     * @param    string|array     An extension, or array of extensions to match
-     * @return boolean Returns true if the file type matched the extension, otherwise false
-     */
-    public static function is($path, $extensions)
-    {
-        static::$mimes === null and Config::get('mimes', []);
-
-        foreach ((array) $extensions as $extension) {
-            $mime = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
-
-            if (isset($mimes[$extension]) and in_array(static::$mimes, (array) $mimes[$extension])) {
-                return true;
-            }
-        }
-
-        return false;
+        return (is_array(static::$mimes[$extension])) ? static::$mimes[$extension][0] : static::$mimes[$extension];
     }
 }

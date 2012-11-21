@@ -26,12 +26,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
     protected $ins;
 
 
-    public function setUpReflection($class)
+    protected function setUpReflection($class)
     {
         $this->ref = new \ReflectionClass($class);
     }
 
-    public function setUpInstance($instance)
+    protected function setUpInstance($instance)
     {
         $this->ins = $instance;
     }
