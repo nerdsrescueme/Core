@@ -209,6 +209,29 @@ class Input implements Design\Initializable
     }
 
     /**
+     * Recursively sanitize a given array
+     *
+     * 1. Standardize newlines to "\n"
+     *
+     * @param    mixed          Input value or array
+     * @return   mixed          Sanitized input value or array
+     */
+    public static function sanitize($value)
+    {
+        if (is_array($value) OR is_object($value)) {
+            foreach ($value as $key => $val) {
+                $value[$key] = static::sanitize($val);
+            }
+        } elseif (is_string($value)) {
+            if (strpos($value, "\r") !== FALSE) {
+                $value = str_replace(array("\r\n", "\r"), "\n", $value);
+            }
+        }
+
+        return $value;
+    }
+
+    /**
      * Retrieve data from the $_SERVER superglobal array
      *
      * @param     string     Dot notated path to data
