@@ -54,10 +54,10 @@ abstract class Model implements Design\Serializable, Design\Initializable
     use Design\Eventable
       , Design\Formattable;
 
-public static function __initialize()
-{
-    static::inform();
-}
+    public static function __initialize()
+    {
+        static::inform();
+    }
 
     /**
      * Database connection instance
@@ -84,6 +84,15 @@ public static function __initialize()
      * @var Nerd\Design\Collection
      */
     protected static $columns;
+
+    /**
+     * Column names
+     *
+     * Holds only column names for simplified existence checking
+     *
+     * @var array
+     */
+    protected static $columnNames;
 
     /**
      * Primary column reference
@@ -156,9 +165,14 @@ public static function __initialize()
      */
     public static function inform()
     {
-        self::$columns     = new \Nerd\Design\Collection();
-        self::$constraints = new \Nerd\Design\Collection();
-        self::$primary     = null;
+        if (!static::$table) {
+            return;
+        }
+
+        static::$columns     = new \Nerd\Design\Collection();
+        static::$constraints = new \Nerd\Design\Collection();
+        static::$columnNames = [];
+        static::$primary     = null;
 
         $c = static::connection();
 
@@ -167,24 +181,25 @@ public static function __initialize()
 
         while ($column = $query->fetchObject('\\Nerd\\Model\\Column')) {
             if ($column->primary) {
-                if (self::$primary === null) {
-                    self::$primary = $column;
+                if (static::$primary === null) {
+                    static::$primary = $column;
                 } else {
-                    self::$primary = [self::$primary, $column];
+                    static::$primary = [static::$primary, $column];
                 }
             }
 
-            self::$columns->add($column);
+            static::$columnNames[] = $column->field;
+            static::$columns->add($column);
         }
 
         $query = $c->prepare('SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
         $query->execute(array($c->database, static::$table));
 
         while ($constraint = $query->fetchObject('\\Nerd\\Model\\Constraint')) {
-            self::$constraints->add($constraint);
+            static::$constraints->add($constraint);
         }
 
-        self::$informed = true;
+        static::$informed = true;
     }
 
     /**
@@ -283,7 +298,7 @@ public static function __initialize()
         ($finder == 'One' or $finder == 'First') and $sql .= ' LIMIT 1';
         array_unshift($params, $sql);
 
-        return forward_static_call_array('self::find', $params);
+        return forward_static_call_array('static::find', $params);
     }
 
     /**
@@ -302,8 +317,8 @@ public static function __initialize()
         }
 
         return (strpos($params[0], 'LIMIT 1') !== false)
-            ? forward_static_call_array('self::findOne', $params)
-            : forward_static_call_array('self::findAll', $params);
+            ? forward_static_call_array('static::findOne', $params)
+            : forward_static_call_array('static::findAll', $params);
     }
 
     /**
@@ -380,7 +395,7 @@ public static function __initialize()
     {
         $columns = [];
 
-        self::$columns->each(function($column) use (&$columns) {
+        static::$columns->each(function($column) use (&$columns) {
             $columns []= "`$column->field`";
         });
 
@@ -483,7 +498,7 @@ public static function __initialize()
         $model   = $this;
         $params  = [];
 
-        self::$columns->each(function($column) use (&$model, &$params) {
+        static::$columns->each(function($column) use (&$model, &$params) {
             $params[':'.$column->field] = isset($model->_values[$column->field]) ? $model->_values[$column->field] : null;
         });
 
@@ -542,18 +557,18 @@ public static function __initialize()
              . 'SET '
              . join(', ', $columns);
 
-        if (is_array(self::$primary)) {
-            $sql .= ' WHERE `'.self::$primary[0]->field.'` = :pk'.self::$primary[0]->field;
-            $sql .= ' AND `'.self::$primary[1]->field.'` = :pk'.self::$primary[1]->field;
+        if (is_array(static::$primary)) {
+            $sql .= ' WHERE `'.static::$primary[0]->field.'` = :pk'.static::$primary[0]->field;
+            $sql .= ' AND `'.static::$primary[1]->field.'` = :pk'.static::$primary[1]->field;
 
-            $params[':pk'.self::$primary[0]->field] = $this->{self::$primary[0]->field};
-            $params[':pk'.self::$primary[1]->field] = $this->{self::$primary[1]->field};
+            $params[':pk'.static::$primary[0]->field] = $this->{static::$primary[0]->field};
+            $params[':pk'.static::$primary[1]->field] = $this->{static::$primary[1]->field};
         } else {
-            $sql .= ' WHERE `'.self::$primary->field.'` = :pk'.self::$primary->field;
-            $params[':pk'.self::$primary->field] = $this->{self::$primary->field};
+            $sql .= ' WHERE `'.static::$primary->field.'` = :pk'.static::$primary->field;
+            $params[':pk'.static::$primary->field] = $this->{static::$primary->field};
         }
 
-        self::$lastQuery = $sql;
+        static::$lastQuery = $sql;
 
         try {
             $statement = static::connection()->prepare($sql);
@@ -595,7 +610,7 @@ public static function __initialize()
         $class    = strtolower(Autoloader::denamespace(get_class($this)));
         $fieldset = $form->fieldset();
 
-        self::$columns->each(function($column) use (&$form, &$fieldset, $class) {
+        static::$columns->each(function($column) use (&$form, &$fieldset, $class) {
             $type = 'text';
 
             if ($column->is(Column::TYPE_DATE)) {
@@ -689,13 +704,14 @@ public static function __initialize()
      */
     public function __set($property, $value)
     {
-        $column = self::$columns->find(function($column) use ($property) {
-            return $column->field == $property;
-        });
-
-        if ($column === null) {
+        if (!in_array($property, static::$columnNames)) {
+            die(var_dump(static::$columnNames));
             throw new \InvalidArgumentException("Property [$property] does not exist on ".get_class($this));
         }
+
+        $column = static::$columns->find(function($column) use ($property) {
+            return $column->field == $property;
+        });
 
         if (static::bypass()) {
             array_push($this->_dirty, $property);
