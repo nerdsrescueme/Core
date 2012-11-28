@@ -60,6 +60,18 @@ abstract class Model implements Design\Serializable, Design\Initializable
     }
 
     /**
+     * Holds various metadata pertaining to individual models
+     *
+     * columns:     Collection of column data
+     * columnNames: Array of column nanes
+     * constraints: Collection of table constraints
+     * primary:     Primary columns
+     *
+     * @var array
+     */
+    protected static $meta = [];
+
+    /**
      * Database connection instance
      *
      * @var Nerd\DB
@@ -72,62 +84,6 @@ abstract class Model implements Design\Serializable, Design\Initializable
      * @var string
      */
     protected static $table;
-
-    /**
-     * Enumerable collection of Column objects
-     *
-     * Holds the schema definitions for each column within the model's database
-     * table. It is automatically populated within the first object construction, and
-     * held as static for each subsequent object.
-     *
-     * @see Nerd\Model\Column
-     * @var Nerd\Design\Collection
-     */
-    protected static $columns;
-
-    /**
-     * Column names
-     *
-     * Holds only column names for simplified existence checking
-     *
-     * @var array
-     */
-    protected static $columnNames;
-
-    /**
-     * Primary column reference
-     *
-     * If there is only one column marked as primary within the table schema this
-     * will hold a reference link to the column within static::$columns. If there are
-     * more than one primary column, it will be an array of references.
-     *
-     * @see Nerd\Model\Column
-     * @var array|Nerd\Model\Column
-     */
-    protected static $primary;
-
-    /**
-     * Enumerable collection of Constraint objects
-     *
-     * Holds the schema definitions for each constraint in the table schema. It is
-     * automatically populated within the first object construction, and held as
-     * static for each subsequent object.
-     *
-     * @see Nerd\Model\Constraint
-     * @var Nerd\Model\Collection
-     */
-    protected static $constraints;
-
-    /**
-     * Information present?
-     *
-     * If the model has loaded it's definition information then it is considered
-     * "informed". If it has not, functionality of this model will be very limited
-     * in terms of automation.
-     *
-     * @var boolean
-     */
-    protected static $informed = false;
 
     /**
      * Ignore column and constraint assumptions?
@@ -165,41 +121,41 @@ abstract class Model implements Design\Serializable, Design\Initializable
      */
     public static function inform()
     {
-        if (!static::$table) {
-            return;
-        }
+        if (!static::$table) return;
 
-        static::$columns     = new \Nerd\Design\Collection();
-        static::$constraints = new \Nerd\Design\Collection();
-        static::$columnNames = [];
-        static::$primary     = null;
+        $class = get_called_class();
 
-        $c = static::connection();
+        static::$meta[$class] = [
+            'columns' => new \Nerd\Design\Collection(),
+            'columnNames' => [],
+            'constraints' => new \Nerd\Design\Collection(),
+            'primary' => null,
+        ];
 
+        $meta  = &static::$meta[$class];
+        $c     = static::connection();
         $query = $c->prepare('SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
         $query->execute(array($c->database, static::$table));
 
         while ($column = $query->fetchObject('\\Nerd\\Model\\Column')) {
             if ($column->primary) {
-                if (static::$primary === null) {
-                    static::$primary = $column;
+                if ($meta['primary'] === null) {
+                    $meta['primary'] = $column;
                 } else {
-                    static::$primary = [static::$primary, $column];
+                    $meta['primary'] = [$meta['primary'], $column];
                 }
             }
 
-            static::$columnNames[] = $column->field;
-            static::$columns->add($column);
+            $meta['columnNames'][] = $column->field;
+            $meta['columns']->add($column);
         }
 
         $query = $c->prepare('SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?');
         $query->execute(array($c->database, static::$table));
 
         while ($constraint = $query->fetchObject('\\Nerd\\Model\\Constraint')) {
-            static::$constraints->add($constraint);
+            $meta['constraints']->add($constraint);
         }
-
-        static::$informed = true;
     }
 
     /**
@@ -243,7 +199,9 @@ abstract class Model implements Design\Serializable, Design\Initializable
 
     public static function definition()
     {
-        return static::$columns;
+        $class = get_called_class();
+
+        return static::$meta[$class]['columns'];
     }
 
     /**
@@ -393,9 +351,10 @@ abstract class Model implements Design\Serializable, Design\Initializable
      */
     public static function listColumns()
     {
+        $class = get_called_class();
         $columns = [];
 
-        static::$columns->each(function($column) use (&$columns) {
+        static::$meta[$class]['columns']->each(function($column) use (&$columns) {
             $columns []= "`$column->field`";
         });
 
@@ -441,27 +400,28 @@ abstract class Model implements Design\Serializable, Design\Initializable
      */
     public function delete()
     {
-        if (static::$primary === null) {
+        $class = get_class($this);
+        $primary &= static::$meta[$class]['primary'];
+
+        if ($primary === null) {
             throw new \Nerd\DB\Exception('A primary key must be defined in order to create a delete query.');
         }
 
         $sql   = 'DELETE FROM `'.static::$table.'`';
 
-        if (is_array(static::$primary)) {
-            $sql .= ' WHERE '.static::$primary[0]->field.' = :'.static::$primary[0]->field;
-            $sql .= ' AND '.static::$primary[1]->field.' = :'.static::$primary[1]->field;
+        if (is_array($primary)) {
+            $sql .= ' WHERE '.$primary[0]->field.' = :'.$primary[0]->field;
+            $sql .= ' AND '.$primary[1]->field.' = :'.$primary[1]->field;
             $params = array(
-                ':'.static::$primary[0]->field => $this->{static::$primary[0]->field},
-                ':'.static::$primary[1]->field => $this->{static::$primary[1]->field},
+                ':'.$primary[0]->field => $this->{$primary[0]->field},
+                ':'.$primary[1]->field => $this->{$primary[1]->field},
             );
         } else {
-            $sql .= ' WHERE '.static::$primary->field.' = :'.static::$primary->field;
+            $sql .= ' WHERE '.$primary->field.' = :'.$primary->field;
             $params = array(
-                ':'.static::$primary->field => $this->{static::$primary->field},
+                ':'.$primary->field => $this->{$primary->field},
             );
         }
-
-        static::$lastQuery = $sql;
 
         try {
             $statement = static::connection()->prepare($sql);
@@ -495,10 +455,11 @@ abstract class Model implements Design\Serializable, Design\Initializable
      */
     public function insert($replace = false)
     {
+        $class   = get_class($this);
         $model   = $this;
         $params  = [];
 
-        static::$columns->each(function($column) use (&$model, &$params) {
+        static::$meta[$class]['columns']->each(function($column) use (&$model, &$params) {
             $params[':'.$column->field] = isset($model->_values[$column->field]) ? $model->_values[$column->field] : null;
         });
 
@@ -546,6 +507,7 @@ abstract class Model implements Design\Serializable, Design\Initializable
 
         $params  = [];
         $columns = [];
+        $primary &= static::$meta[get_class($this)]['primary'];
 
         foreach ($this->_dirty as $field) {
             $columns []= "`$field` = :$field";
@@ -557,15 +519,15 @@ abstract class Model implements Design\Serializable, Design\Initializable
              . 'SET '
              . join(', ', $columns);
 
-        if (is_array(static::$primary)) {
-            $sql .= ' WHERE `'.static::$primary[0]->field.'` = :pk'.static::$primary[0]->field;
-            $sql .= ' AND `'.static::$primary[1]->field.'` = :pk'.static::$primary[1]->field;
+        if (is_array($primary)) {
+            $sql .= ' WHERE `'.$primary[0]->field.'` = :pk'.$primary[0]->field;
+            $sql .= ' AND `'.$primary[1]->field.'` = :pk'.$primary[1]->field;
 
-            $params[':pk'.static::$primary[0]->field] = $this->{static::$primary[0]->field};
-            $params[':pk'.static::$primary[1]->field] = $this->{static::$primary[1]->field};
+            $params[':pk'.$primary[0]->field] = $this->{$primary[0]->field};
+            $params[':pk'.$primary[1]->field] = $this->{$primary[1]->field};
         } else {
-            $sql .= ' WHERE `'.static::$primary->field.'` = :pk'.static::$primary->field;
-            $params[':pk'.static::$primary->field] = $this->{static::$primary->field};
+            $sql .= ' WHERE `'.$primary->field.'` = :pk'.$primary->field;
+            $params[':pk'.$primary->field] = $this->{$primary->field};
         }
 
         static::$lastQuery = $sql;
@@ -610,7 +572,7 @@ abstract class Model implements Design\Serializable, Design\Initializable
         $class    = strtolower(Autoloader::denamespace(get_class($this)));
         $fieldset = $form->fieldset();
 
-        static::$columns->each(function($column) use (&$form, &$fieldset, $class) {
+        static::$meta[get_class($this)]['columns']->each(function($column) use (&$form, &$fieldset, $class) {
             $type = 'text';
 
             if ($column->is(Column::TYPE_DATE)) {
@@ -704,12 +666,14 @@ abstract class Model implements Design\Serializable, Design\Initializable
      */
     public function __set($property, $value)
     {
-        if (!in_array($property, static::$columnNames)) {
-            die(var_dump(static::$columnNames));
+        $columns = &static::$meta[get_class($this)]['columns'];
+        $names   = &static::$meta[get_class($this)]['columnNames'];
+
+        if (!in_array($property, $names)) {
             throw new \InvalidArgumentException("Property [$property] does not exist on ".get_class($this));
         }
 
-        $column = static::$columns->find(function($column) use ($property) {
+        $column = $columns->find(function($column) use ($property) {
             return $column->field == $property;
         });
 
