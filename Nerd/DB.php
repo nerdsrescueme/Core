@@ -24,6 +24,9 @@ namespace Nerd;
  */
 class DB extends \PDO
 {
+    // Constants
+    const DRIVER_MYSQL = 'mysql';
+
     /**
      * Database connections
      *
@@ -56,16 +59,20 @@ class DB extends \PDO
      * @param     string     Connection identifier
      * @return \Nerd\DB
      */
-    public static function connection($id = 'default')
+    public static function connection($id = null)
     {
         if (!isset(static::$connections[$id])) {
-            // Get and build DSN from Config
 
-            list($dsn, $user, $password, $options) = array(
-                'mysql:dbname=new_nerd;host=127.0.0.1;charset=UTF-8', 'root', '', []
-            );
+            $id === null and $id = Config::get('db.default');
 
-            static::$connections[$id] = new static($dsn, $user, $password, $options);
+            $env = Environment::$active;
+            $con = Config::get("db.connections.$env.$id");
+            $dsn = $con['driver'].':'
+                 . 'host='.$con['hostname'].';'
+                 . 'dbname='.$con['database'].';'
+                 . 'charset=UTF-8';
+
+            static::$connections[$id] = new static((string) $dsn, $con['username'], $con['password'], $con['options']);
 
             static::$connections[$id]->setAttribute(static::ATTR_ERRMODE, static::ERRMODE_EXCEPTION);
             static::$connections[$id]->setAttribute(static::ATTR_STATEMENT_CLASS,
@@ -73,7 +80,7 @@ class DB extends \PDO
             static::$connections[$id]->setAttribute(static::ATTR_DEFAULT_FETCH_MODE, static::FETCH_OBJ);
 
             static::$connections[$id]->id = $id;
-            static::$connections[$id]->database = 'new_nerd'; // Make dynamic
+            static::$connections[$id]->database = $con['database']; // Make dynamic
         }
 
         static::$activeConnection = &static::$connections[$id];
