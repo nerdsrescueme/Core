@@ -22,46 +22,14 @@ namespace Nerd;
  * @package    Nerd
  * @subpackage Core
  */
-class Crypt extends Design\Creational\SingletonFactory implements Design\Initializable
+class Crypt extends Design\Creational\SingletonFactory
 {
-    /**
-     * The default driver to be utilized by your application in the event a
-     * specific driver isn't called.
-     *
-     * @var    string
-     */
-    public static $defaultDriver;
-
-    /**
-     * The hash type to use in Crypt::$hash
-     *
-     * @var    string
-     */
-    protected static $hasher;
-
     /**
      * The encryption key
      *
      * @var    string
      */
     protected static $key;
-
-    /**
-     * Magic method called when a class is first encountered by the Autoloader,
-     * providing static initialization.
-     *
-     * @return void No value is returned
-     */
-    public static function __initialize()
-    {
-        if ((static::$key = Config::get('application.securityKey')) == '') {
-            throw new \Exception('The Crypt class cannot be used without providing a shared key. Please specify on in your crypt configuration file');
-        }
-
-        static::$defaultDriver = Config::get('crypt.driver', 'xcrypt');
-        static::$hasher        = Config::get('crypt.hasher', 'sha1');
-        static::$key           = md5(static::$key);
-    }
 
     /**
      * Fetch the encryption key
@@ -78,6 +46,10 @@ class Crypt extends Design\Creational\SingletonFactory implements Design\Initial
      */
     public static function key()
     {
+        if (static::$key === null) {
+            static::$key = sha1(Config::get('application.securityKey'));
+        }
+
         return static::$key;
     }
 
@@ -94,6 +66,6 @@ class Crypt extends Design\Creational\SingletonFactory implements Design\Initial
      */
     public static function hash($string)
     {
-        return static::$hasher === 'sha1' ? sha1($string.static::$key) : md5($string.static::$key);
+        return sha1($string.static::$key);
     }
 }

@@ -19,7 +19,7 @@ namespace Nerd;
  * @package    Nerd
  * @subpackage Core
  */
-class Router implements Design\Initializable
+class Router
 {
     //Traits
     use Design\Creational\Singleton;
@@ -65,19 +65,6 @@ class Router implements Design\Initializable
      */
     private static $routes = [];
 
-    /**
-     * Initialize the Router class
-     *
-     * @todo     Load APPLICATION_NS's routes by default…
-     *
-     * @return void No value is returned
-     */
-    public static function __initialize()
-    {
-        static::$defaultNamespace = '\\'.ucfirst(\Nerd\APPLICATION_NS).'\\Controller\\';
-
-        static::registerPackage(\Nerd\APPLICATION_NS);
-    }
 
     /**
      * Create a route connection

@@ -40,7 +40,7 @@ class View implements \Nerd\Design\Initializable
      *
      * @var    string
      */
-    public static $default_path;
+    public static $default_path = \Nerd\LIBRARY_PATH.DS.\Nerd\APPLICATION_NS.DS.'views';
 
     /**
      * Globally defined data available to all views
@@ -49,16 +49,6 @@ class View implements \Nerd\Design\Initializable
      */
     public static $global_data = [];
 
-    /**
-     * Magic method called when a class is first encountered by the Autoloader,
-     * providing static initialization.
-     *
-     * @return void No value is returned
-     */
-    public static function __initialize()
-    {
-        self::$default_path = \Nerd\LIBRARY_PATH.DS.\Nerd\APPLICATION_NS.DS.'views';
-    }
 
     /**
      * Add a key/value pair to the global view data.

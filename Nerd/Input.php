@@ -23,7 +23,7 @@ namespace Nerd;
 * @package Nerd
 * @subpackage Core
 */
-class Input implements Design\Initializable
+class Input
 {
     /**
      * Is the current request an AJAX request?
@@ -46,20 +46,24 @@ class Input implements Design\Initializable
      */
     private static $_PUT;
 
-    /**
-     * Static Constructor
-     *
-     * Checks if the current request is an AJAX request and what HTTP method was used
-     * when submitting the request.
-     *
-     * @return void
-     */
-    public static function __initialize()
-    {
-        $req = static::server('http_x_requested_with', false);
 
-        static::$ajax      = $req and strtolower($req) == 'xmlhttprequest';
-        static::$method    = strtolower(static::server('request_method', 'get'));
+    public static function ajax()
+    {
+        if (static::$ajax === null) {
+            $req = static::server('http_x_requested_with', false);
+            static::$ajax = $req and strtolower($req) == 'xmlhttprequest';
+        }
+
+        return static::$ajax;
+    }
+
+    public static function method()
+    {
+        if (static::$method === null) {
+            static::$method = strtolower(static::server('request_method'));
+        }
+
+        return static::$method;
     }
 
     /**

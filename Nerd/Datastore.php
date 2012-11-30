@@ -21,16 +21,8 @@ namespace Nerd;
  * @package    Nerd
  * @subpackage Core
  */
-class Datastore extends Design\Creational\SingletonFactory implements Design\Initializable
+class Datastore extends Design\Creational\SingletonFactory
 {
-    /**
-     * The default driver to be utilized by your application in the event a
-     * specific driver isn't called.
-     *
-     * @var    string
-     */
-    public static $defaultDriver;
-
     /**
      * The cached datastore key, from the datastore configuration file
      *
@@ -47,21 +39,6 @@ class Datastore extends Design\Creational\SingletonFactory implements Design\Ini
      * @var    integer
      */
     protected static $time = false;
-
-    /**
-     * Magic method called when a class is first encountered by the Autoloader,
-     * providing static initialization.
-     *
-     * @return void No value is returned
-     */
-    public static function __initialize()
-    {
-        if (!is_dir(\Nerd\STORAGE_PATH) and !mkdir(\Nerd\STORAGE_PATH)) {
-            throw new \RuntimeException('Could not create the STORAGE_PATH ['.\Nerd\STORAGE_PATH.'], please create this directory as a writable path in order to utilize the Datastore');
-        }
-
-        static::$defaultDriver = Config::get('datastore.driver', 'file');
-    }
 
     /**
      * Get the Datastore key, as stored in the datastore configuration file.

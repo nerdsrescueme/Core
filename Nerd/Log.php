@@ -21,7 +21,7 @@ namespace Nerd;
  * @package    Nerd
  * @subpackage Core
  */
-class Log extends Design\Creational\SingletonFactory implements Design\Initializable
+class Log extends Design\Creational\SingletonFactory
 {
     // Class constants
     const DEBUG     = 100;
@@ -64,15 +64,13 @@ class Log extends Design\Creational\SingletonFactory implements Design\Initializ
      */
     protected static $timezone;
 
-    /**
-     * Initialize the Log
-     *
-     * Sets information required to insert valid and accurate log entries
-     *
-     * @return void No value is returned
-     */
-    public static function __initialize()
+
+    public static function timezone()
     {
-        static::$timezone = Config::get('application.timezone', 'UTC');
+        if (static::$timezone === null) {
+            static::$timezone = Config::get('application.timezone', 'UTC');
+        }
+
+        return static::$timezone;
     }
 }
